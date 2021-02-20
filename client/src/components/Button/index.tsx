@@ -1,6 +1,8 @@
 import React from "react";
 import { Color } from '../../util/Color';
 
+import "./style.css";
+
 interface ButtonProps {
   children?: React.ReactNode;
   color?: Color;
@@ -20,14 +22,10 @@ const BORDER_WHITE = 30;
 export default function Button({children, color=Color.sky_blue, style}:ButtonProps) {
 
   const buttonStyle: React.CSSProperties = {
-    borderRadius:"4px",
-    boxShadow: "0 1px 2px gray",
     border:`1px solid rgb(${color[0] + BORDER_WHITE},${color[1] + BORDER_WHITE},${color[2] + BORDER_WHITE})`,
-    color:"white",
     backgroundImage: `linear-gradient( rgb(${Math.min(255, color[0] + GLARE)},${Math.min(255, color[1] + GLARE)},${Math.min(255, color[2] + GLARE)}), rgb(${color[0]},${color[1]},${color[2]}))`,
-    textShadow: "0 0 1px black",
     ...style
   }
 
-  return <button style={buttonStyle}>{children}</button>;
+  return <button className="syrup-button" style={buttonStyle}>{children}</button>;
 } 
