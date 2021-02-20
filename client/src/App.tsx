@@ -3,6 +3,8 @@ import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Button from "./components/Button";
 import Panel from "./components/Panel";
+import PanelBody from "./components/PanelBody";
+import { Color } from "./util/Color";
 
 function App() {
   return (
@@ -10,10 +12,10 @@ function App() {
       <Router>
         <Route path="/" exact>
           <Panel style={{color: "blue", position:"absolute", top:"0"}}>
-            <h1>Hi this is rex</h1>
+            <PanelBody style={{margin:"1.5rem 3px 3px 3px", padding:"10px"}}>
+              <Button color={Color.kiwi_green} style={{fontSize:"2rem"}}>Button</Button>
+            </PanelBody>
           </Panel>
-
-          
 
           <div
             style={{
@@ -28,7 +30,7 @@ function App() {
             here are some texts
           </div>
 
-          <Button>Button</Button>
+          
         </Route>
       </Router>
     </div>
