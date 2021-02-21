@@ -11,7 +11,7 @@ interface PanelHeaderProps {
 /**
  * the text will gradient to a darker and lighter color, while middle is the color provided, top will be lighter, and bottom will be darker
  */
-const GRADIENT_RANGE = 60;
+const GRADIENT_RANGE = 130;
 
 export default function PanelHeader({children, style, color=Color.gold} : PanelHeaderProps) {
     const panelHeaderStyle: React.CSSProperties = {
@@ -24,6 +24,7 @@ export default function PanelHeader({children, style, color=Color.gold} : PanelH
         fontFamily: "'VT323', monospace",
         fontWeight: 600,
         fontSize: "1.2rem",
+        padding: "3px",
         ...style
     }
 

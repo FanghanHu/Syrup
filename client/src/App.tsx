@@ -13,28 +13,13 @@ function App() {
     <div className="App">
       <Router>
         <Route path="/" exact>
-          <Panel style={{position:"absolute", top:"0", padding: "3px"}}>
+          <Panel>
             <PanelHeader>The Header</PanelHeader>
-            <PanelBody style={{padding:"10px"}}>
+            <PanelBody>
               <Button color={Color.kiwi_green} style={{fontSize:"2rem"}}>Button</Button>
             </PanelBody>
-            <LabelBar style={{padding: "5px 50px", margin: "2px", color: "white"} }>The Label</LabelBar>
+            <LabelBar>The Label</LabelBar>
           </Panel>
-
-          <div
-            style={{
-              backgroundColor: "black",
-              borderRadius: "50%",
-              height: "100px",
-              width: "100px",
-              color: "white",
-              zIndex: -1,
-            }}
-          >
-            here are some texts
-          </div>
-
-          
         </Route>
       </Router>
     </div>

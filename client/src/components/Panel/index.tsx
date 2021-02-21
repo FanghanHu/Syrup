@@ -23,6 +23,7 @@ export default function Panel({children, color=Color.black, style, ...restOfProp
     backgroundImage: `radial-gradient(90% 1.5rem at 50% -0.8rem, rgba(${Math.min(255, color[0] + GLARE)},${Math.min(255, color[1] + GLARE)},${Math.min(255, color[2] + GLARE)}, ${GLARE_ALPHA}) 80%, rgba(${color[0]},${color[1]},${color[2]}, ${ALPHA}))`,
     backdropFilter: "blur(1px) saturate(100%) contrast(45%) brightness(130%)",
     boxShadow: "0 0 4px black",
+    padding: "3px",
     ...style
   }
 

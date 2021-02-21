@@ -19,6 +19,7 @@ export default function PanelBody ({children, color=Color.white, style, ...restO
     backgroundImage: `linear-gradient(90deg, rgb(${Math.min(color[0] - EDGE_DARKEN, 255)},${Math.min(color[1] - EDGE_DARKEN, 255)},${Math.min(color[2] - EDGE_DARKEN, 255)}) 0%, rgb(${color[0]},${color[1]},${color[2]}) 25%, rgb(${color[0]},${color[1]},${color[2]}) 75%, rgb(${Math.max(color[0] - EDGE_DARKEN, 0)},${Math.max(color[1] - EDGE_DARKEN, 0)},${Math.max(color[2] - EDGE_DARKEN, 0)}) 100%)`,
     borderRadius: "8px",
     boxShadow: "inset 0 0 4px darkgray",
+    padding: "10px",
     ...style
   }
 

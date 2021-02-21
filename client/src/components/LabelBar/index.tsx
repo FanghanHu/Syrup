@@ -45,6 +45,9 @@ export default function LabelBar ({children, color=Color.fire_red, style, ...res
     backgroundBlendMode: "overlay",
     borderRadius: "4px",
     border:`1px solid rgb(${Math.max(color[0] + GRADIENT_RANGE, 0)}, ${Math.max(color[1] + GRADIENT_RANGE, 0)}, ${Math.max(color[2] + GRADIENT_RANGE, 0)})`,
+    padding:"3px",
+    color:"white",
+    textShadow:"0 0 3px black",
     ...style
   }
 
