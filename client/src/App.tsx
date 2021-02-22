@@ -21,7 +21,7 @@ function App() {
             <PanelBody>
               <InputGroup>
                 <Label htmlFor="#input1">some name</Label>
-                <TextInput defaultValue="some text" id="input1"/>
+                <TextInput placeholder="some text" id="input1"/>
               </InputGroup>
               <Button themeColor={Color.kiwi_green} style={{fontSize:"2rem"}}>Button</Button>
             </PanelBody>
