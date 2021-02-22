@@ -7,6 +7,9 @@ import PanelBody from "./components/PanelBody";
 import { Color } from "./util/Color";
 import LabelBar from "./components/LabelBar";
 import PanelHeader from "./components/PanelHeader";
+import InputGroup from "./components/InputGroup";
+import Label from "./components/Label";
+import TextInput from "./components/TextInput";
 
 function App() {
   return (
@@ -16,9 +19,13 @@ function App() {
           <Panel>
             <PanelHeader>The Header</PanelHeader>
             <PanelBody>
-              <Button color={Color.kiwi_green} style={{fontSize:"2rem"}}>Button</Button>
+              <InputGroup>
+                <Label htmlFor="#input1">some name</Label>
+                <TextInput defaultValue="some text" id="input1"/>
+              </InputGroup>
+              <Button themeColor={Color.kiwi_green} style={{fontSize:"2rem"}}>Button</Button>
             </PanelBody>
-            <LabelBar>The Label</LabelBar>
+            <LabelBar>The Label Bar</LabelBar>
           </Panel>
         </Route>
       </Router>

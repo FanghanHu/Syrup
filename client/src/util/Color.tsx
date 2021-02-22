@@ -1,6 +1,7 @@
 export const Color = {
   black: [0, 0, 0],
   light_gray: [222, 222, 222],
+  gray: [150, 150, 150],
   dark_gray: [96, 96, 96],
   white: [255, 255, 255],
   sky_blue: [50, 169, 237],

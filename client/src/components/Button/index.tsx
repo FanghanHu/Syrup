@@ -3,9 +3,9 @@ import { Color } from '../../util/Color';
 
 import "./style.css";
 
-interface ButtonProps {
+interface ButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   children?: React.ReactNode;
-  color?: Color;
+  themeColor?: Color;
   style?: React.CSSProperties;
 }
 
@@ -19,11 +19,11 @@ const GLARE = 60;
  */
 const BORDER_WHITE = 30;
 
-export default function Button({children, color=Color.sky_blue, style}:ButtonProps) {
+export default function Button({children, themeColor=Color.sky_blue, style}:ButtonProps) {
 
   const buttonStyle: React.CSSProperties = {
-    border:`1px solid rgb(${color[0] + BORDER_WHITE},${color[1] + BORDER_WHITE},${color[2] + BORDER_WHITE})`,
-    backgroundImage: `linear-gradient( rgb(${Math.min(255, color[0] + GLARE)},${Math.min(255, color[1] + GLARE)},${Math.min(255, color[2] + GLARE)}), rgb(${color[0]},${color[1]},${color[2]}))`,
+    border:`1px solid rgb(${themeColor[0] + BORDER_WHITE},${themeColor[1] + BORDER_WHITE},${themeColor[2] + BORDER_WHITE})`,
+    backgroundImage: `linear-gradient( rgb(${Math.min(255, themeColor[0] + GLARE)},${Math.min(255, themeColor[1] + GLARE)},${Math.min(255, themeColor[2] + GLARE)}), rgb(${themeColor[0]},${themeColor[1]},${themeColor[2]}))`,
     ...style
   }
 

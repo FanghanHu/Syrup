@@ -1,0 +1,19 @@
+.syrup-input-group {
+    box-shadow: 0 0 3px darkgray;
+    border-radius: 8px;
+    display: flex;
+}
+
+.syrup-input-group * {
+    border-radius: 0;
+    border-left: 1px solid gray;
+}
+
+.syrup-input-group *:first-child {
+    border-radius: 8px 0 0 8px;
+    border-left: none;
+}
+
+.syrup-input-group *:last-child {
+    border-radius: 0 8px 8px 0;
+}
