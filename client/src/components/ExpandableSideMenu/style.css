@@ -1,0 +1,50 @@
+.syrup-expandable-side-menu {
+    position: absolute;
+    top: 0;
+    width: 100VW;
+    height: 100VH;
+    box-sizing: border-box;
+    box-shadow: 1px 0 10px gray;
+    color: white;
+    background:
+        linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+        linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+        linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+        linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+    background-color: #131313;
+    background-size: 20px 20px;
+    transition: all 0.3s ease-in;
+}
+
+.syrup-expandable-side-menu.shrink {
+    transform: translate(calc(2em - 100%));
+    opacity: 0.5;
+}
+
+.syrup-expandable-side-menu-content {
+    margin-top: 2.5em;
+    height: calc(100% - 2.5em);
+    transition: all 0.3s ease-out;
+}
+
+.syrup-expandable-side-menu.shrink .syrup-expandable-side-menu-content {
+    transform: translate(-2em);
+}
+
+.syrup-expandable-side-menu .fa-arrow-left {
+    font-size: 1.5em;
+    margin: 0.5em;
+    transition: all 0.5s ease-in-out;
+}
+
+.syrup-expandable-side-menu.shrink .fa-arrow-left {
+    transform: translateY(calc(50VH - 50%)) rotate(900deg);
+}
+
+@media only screen and (min-width: 768px) {
+    .syrup-expandable-side-menu {
+        width: 300px;
+    }
+}
