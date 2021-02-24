@@ -36,7 +36,15 @@
 .syrup-expandable-side-menu .fa-arrow-left {
     font-size: 1.5em;
     margin: 0.5em;
-    transition: all 0.5s ease-in-out;
+    transition: transform 0.8s ease-in-out,
+    color 0.3s, text-shadow 0.3s;
+    color: lightgray;
+}
+
+.syrup-expandable-side-menu .fa-arrow-left:hover {
+    cursor: pointer;
+    text-shadow: 0 0 3px white;
+    color: white;
 }
 
 .syrup-expandable-side-menu.shrink .fa-arrow-left {
