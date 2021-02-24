@@ -5,6 +5,7 @@ import "./style.css";
 
 interface ButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   children?: React.ReactNode;
+  className?: string;
   themeColor?: Color;
   style?: React.CSSProperties;
 }
@@ -19,13 +20,14 @@ const GLARE = 60;
  */
 const BORDER_WHITE = 30;
 
-export default function Button({children, themeColor=Color.sky_blue, style}:ButtonProps) {
-
+export default function Button({children, className, themeColor=Color.sky_blue, style, ...restOfProps}:ButtonProps) {
+  //merge style if one is given
   const buttonStyle: React.CSSProperties = {
     border:`1px solid rgb(${themeColor[0] + BORDER_WHITE},${themeColor[1] + BORDER_WHITE},${themeColor[2] + BORDER_WHITE})`,
     backgroundImage: `linear-gradient( rgb(${Math.min(255, themeColor[0] + GLARE)},${Math.min(255, themeColor[1] + GLARE)},${Math.min(255, themeColor[2] + GLARE)}), rgb(${themeColor[0]},${themeColor[1]},${themeColor[2]}))`,
     ...style
   }
 
-  return <button className="syrup-button" style={buttonStyle}>{children}</button>;
+  //merge className if one is given, spread rest of the props on button
+  return <button className={className?className + " syrup-button":"syrup-button"} style={buttonStyle} {...restOfProps}>{children}</button>;
 } 
