@@ -11,8 +11,7 @@ export default function Setup(): JSX.Element {
 
     return (
         <Container fluid>
-            <ExpandableSideMenu>
-                
+            <ExpandableSideMenu expanded={true}>
                 <div className="d-flex flex-column justfy-content-center p-2 h-100">
                     <div className="d-flex flex-column flex-grow-1">
                         <LabelBar themeColor={Color.sky_blue} className="m-2 h3 text-center text-nowrap p-3">
