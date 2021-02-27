@@ -18,17 +18,17 @@ export default function Setup(): JSX.Element {
                             <i className="fas fa-cog"></i> Back Office
                         </LabelBar>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            User Setup
+                            <i className="fas fa-users"></i> User Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            Menu Setup
+                            <i className="fas fa-book"></i> Menu Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            Table Setup
+                            <i className="fas fa-chair"></i> Table Setup
                         </Button>
                     </div>
                     <Button themeColor={Color.fire_red} className="m-1">
-                        Exit
+                        <i className="fas fa-sign-out-alt"></i> Exit
                     </Button>
                 </div>
             </ExpandableSideMenu>
