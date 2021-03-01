@@ -1,4 +1,4 @@
-import { AssociationOptions, BelongsToManyOptions, BelongsToOptions, HasManyOptions, HasOneOptions, ModelAttributes, Optional, ModelCtor, Model, ModelOptions, Sequelize, Association} from 'sequelize';
+import { AssociationOptions, BelongsToManyOptions, BelongsToOptions, HasManyOptions, HasOneOptions, ModelAttributes, Optional, ModelCtor, Model, ModelOptions, Sequelize, HasOneGetAssociationMixin, HasOneSetAssociationMixin, HasOneCreateAssociationMixin, BelongsToGetAssociationMixin} from 'sequelize';
 
 /**
  * An instance of a model
@@ -10,28 +10,50 @@ interface ModelInstance<Attributes, CreationAttributes> extends Model<Attributes
 }
 
 /**
- * an object that describ one association towards one other model
+ * any association will be related to a table
  */
-type ModelAssociation<Options extends AssociationOptions> = {
-    model: ModelCtor<Model>;
-    options?: Options;
+type Association = {
+    model: GetModelCtor<any, any>;
+    options?: AssociationOptions;
 }
 
 /**
- * BelongsToMany requires options
+ * different types of association will have different relationship
  */
+type HasOneAssociation = {
+    relationship: "hasOne";
+} & Association;
+
+type BelongsToAssociation = {
+    relationship: "belongsTo";
+} & Association;
+
+type HasManyAssociation = {
+    relationship: "hasMany";
+} & Association;
+
 type BelongsToManyAssociation = {
-    model: ModelCtor<Model>;
+    relationship: "belongsToMany";
     options: BelongsToManyOptions;
-}
+} & Association;
 
 type ModelAssociationDeclearation = {
-    hasOne?: ModelAssociation<HasOneOptions>[];
-    belongsTo?: ModelAssociation<BelongsToOptions>[];
-    hasMany?: ModelAssociation<HasManyOptions>[];
-    belongsToMany?: BelongsToManyAssociation[];
+    [key: string]: HasOneAssociation | BelongsToAssociation | HasManyAssociation | BelongsToManyAssociation;
 }
 
+//TODO: remove these test code
+// type TestType<T, U> = {
+//     [key in keyof U] : U[key] extends HasOneAssociation? string : number;
+// } 
+
+// function test<T extends HasOneAssociation | BelongsToAssociation | HasManyAssociation | BelongsToManyAssociation, U extends ModelAssociationDeclearation>(obj : U): TestType<T, U> {
+//     return {} as TestType<T, U>;
+// }
+
+// let result = test({
+//     User: {relationship: "hasOne", model: {} as ModelCtor<Model>},
+//     Project: {relationship: "belongsToMany", model: {} as ModelCtor<Model>, options: {} as BelongsToManyOptions},
+// });
 
 
 /**
@@ -63,7 +85,10 @@ type ModelStructure = {
 /**
  * This is different from what the sequlize define take, it contains all the information to create a table
  */
-type ModelDeclearation<Structure extends ModelStructure = ModelStructure, AssociationDeclearation extends ModelAssociationDeclearation = ModelAssociationDeclearation> = {
+type ModelDeclearation<
+Structure extends ModelStructure,
+AssociationDeclearation extends ModelAssociationDeclearation
+> = {
     /**
      * name of the model
      */
@@ -82,15 +107,47 @@ type GetAttributes<Structure extends ModelStructure> = {
     [prop in keyof Structure]: Structure[prop][keyof Structure[prop] & "instanceType"]
 }
 
+type GetAssociationMixins<AssociationDeclearation extends ModelAssociationDeclearation> = {
+    [key in keyof AssociationDeclearation as `${AssociationDeclearation[key] extends HasOneAssociation? `get${key & string}`: ""}`]: HasOneGetAssociationMixin<AssociationDeclearation[key]["model"]["_modelType"]>;
+} & {
+    [key in keyof AssociationDeclearation as `${AssociationDeclearation[key] extends HasOneAssociation? `set${key & string}`: ""}`]: HasOneSetAssociationMixin<AssociationDeclearation[key]["model"]["_modelType"], number>;
+} & {
+    [key in keyof AssociationDeclearation as `${AssociationDeclearation[key] extends HasOneAssociation? `create${key & string}`: ""}`]: HasOneCreateAssociationMixin<AssociationDeclearation[key]["model"]["_modelType"]>;
+} & {
+    [key in keyof AssociationDeclearation as `${AssociationDeclearation[key] extends BelongsToAssociation? `get${key & string}`: ""}`]: BelongsToGetAssociationMixin<AssociationDeclearation[key]["model"]["_modelType"]>;
+}
+
 /**
  * create a {@link ModelCtor} type with Model attributes attached
  * TODO: add associations
  */
-type GetModelCtor<Structure extends ModelStructure> = ModelCtor<ModelInstance<GetAttributes<Structure>, Optional<GetAttributes<Structure>, "id">> & GetAttributes<Structure>>;
+type GetModelCtor<
+Structure extends ModelStructure,
+AssociationDeclearation extends ModelAssociationDeclearation
+> = ModelCtor<
+ModelInstance<
+    GetAttributes<Structure>,
+    Optional<GetAttributes<Structure>, "id">
+    > & GetAttributes<Structure> & GetAssociationMixins<AssociationDeclearation>
+> & ModelType<
+ModelInstance<
+    GetAttributes<Structure>,
+    Optional<GetAttributes<Structure>, "id">
+    > & GetAttributes<Structure> & GetAssociationMixins<AssociationDeclearation>>;
 
-function defineModel<Structure extends ModelStructure, AssociationDeclearation extends ModelAssociationDeclearation>
+type ModelType<TModel> = {
+    /**
+     * A dummy variable that doesn't exist on the real object. This exists so Typescript can infer the type of the attributes in static functions. Don't try to access this!
+     */
+    _modelType: TModel;
+}
+
+function defineModel<
+Structure extends ModelStructure, 
+AssociationDeclearation extends ModelAssociationDeclearation
+>
 (modelDeclearaction: ModelDeclearation<Structure, AssociationDeclearation>) :
-GetModelCtor<Structure>
+GetModelCtor<Structure, AssociationDeclearation>
 {
     const sequelize = modelDeclearaction.sequelize;
     if(!sequelize) {
@@ -103,29 +160,26 @@ GetModelCtor<Structure>
     //make associations
     if(modelDeclearaction.associations) {
         const associations = modelDeclearaction.associations;
-        if(associations.hasOne) {
-            for(const association of associations.hasOne) {
-                ctor.hasOne(association.model, association.options);
-            }
-        }
-        if(associations.belongsTo) {
-            for(const association of associations.belongsTo) {
-                ctor.belongsTo(association.model, association.options);
-            }
-        }
-        if(associations.hasMany) {
-            for(const association of associations.hasMany) {
-                ctor.hasMany(association.model, association.options);
-            }
-        }
-        if(associations.belongsToMany) {
-            for(const association of associations.belongsToMany) {
-                ctor.belongsToMany(association.model, association.options);
+        for(const key in associations) {
+            const association = associations[key];
+            switch(association.relationship) {
+                case "hasOne": 
+                    ctor.hasOne(association.model);
+                    break;
+                case "belongsTo":
+                    ctor.belongsTo(association.model);
+                    break;
+                case "hasMany":
+                    ctor.hasMany(association.model);
+                    break;
+                case "belongsToMany":
+                    ctor.belongsToMany(association.model, (association as BelongsToManyAssociation).options);
+                    break;
             }
         }
     }
 
-    return ctor as GetModelCtor<Structure>;
+    return ctor as GetModelCtor<Structure, AssociationDeclearation>;
 }
 
 export default defineModel;

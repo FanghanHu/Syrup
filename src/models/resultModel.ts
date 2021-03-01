@@ -10,6 +10,7 @@ import {
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
   Optional,
+  HasOneGetAssociationMixin,
 } from "sequelize";
 
 const sequelize = new Sequelize("mysql://root:asd123@localhost:3306/mydb");
@@ -42,6 +43,8 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public countProjects!: HasManyCountAssociationsMixin;
   public createProject!: HasManyCreateAssociationMixin<Project>;
 
+  public getProject!: HasOneGetAssociationMixin<Project>;
+
   // You can also pre-declare possible inclusions, these will only be populated if you
   // actively include a relation.
   public readonly projects?: Project[]; // Note this is optional since it's only populated when explicitly requested in code
@@ -50,6 +53,11 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     projects: Association<User, Project>;
   };
 }
+
+User.findByPk(1).then(u => {
+  u.projects
+})
+
 
 interface ProjectAttributes {
   id: number;
