@@ -11,6 +11,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
+console.log("test");
+
+
 // Define API routes here
 
 // Send every other request to the React app
@@ -22,3 +25,5 @@ app.get("*", (req, res) => {
 app.listen(PORT, () => {
   console.log(` API server now on port ${PORT}!`);
 });
+
+export {};
