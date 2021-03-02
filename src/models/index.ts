@@ -5,6 +5,8 @@ import { Sequelize } from 'sequelize';
 import ButtonFactory from './button';
 import MenuFactory from "./menu";
 import ScriptFactory from './script';
+import TableFactory from './table';
+import TableAreaFactory from './table-areas';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -21,7 +23,9 @@ const db = {
   Sequelize,
   Menu: MenuFactory(sequelize),
   Button: ButtonFactory(sequelize),
-  Script: ScriptFactory(sequelize)
+  Script: ScriptFactory(sequelize),
+  Table: TableFactory(sequelize),
+  TableArea: TableAreaFactory(sequelize)
 }
 
 db.Menu.hasMany(db.Button);
@@ -30,6 +34,7 @@ db.Button.belongsTo(db.Menu);
 db.Script.hasMany(db.Button);
 db.Button.belongsTo(db.Script);
 
-
+db.TableArea.hasMany(db.Table);
+db.Table.belongsTo(db.TableArea);
 
 export default db;
