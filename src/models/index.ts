@@ -4,6 +4,7 @@ require("dotenv").config();
 import { Sequelize } from 'sequelize';
 import ButtonFactory from './button';
 import MenuFactory from "./menu";
+import ScriptFactory from './script';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -19,10 +20,16 @@ const db = {
   sequelize,
   Sequelize,
   Menu: MenuFactory(sequelize),
-  Button: ButtonFactory(sequelize)
+  Button: ButtonFactory(sequelize),
+  Script: ScriptFactory(sequelize)
 }
 
 db.Menu.hasMany(db.Button);
 db.Button.belongsTo(db.Menu);
+
+db.Script.hasMany(db.Button);
+db.Button.belongsTo(db.Script);
+
+
 
 export default db;
