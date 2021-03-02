@@ -7,7 +7,7 @@ interface ButtonAttributes {
     translations?: object;
 }
 
-interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {};
+export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {};
 
 export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> implements ButtonAttributes {
     public id!: number;

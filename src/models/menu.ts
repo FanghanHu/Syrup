@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button, ButtonCreationAttributes } from "./button";
 import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types/lib/associations/has-many";
 
@@ -7,7 +7,9 @@ interface MenuAttributes {
     menuName: string;
 }
 
-interface MenuCreationAttributes extends Optional<MenuAttributes, "id"> {};
+export interface MenuCreationAttributes extends Optional<MenuAttributes, "id"> {
+    Buttons?: ButtonCreationAttributes[];
+};
 
 export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implements MenuAttributes {
     public id!: number;

@@ -1,4 +1,6 @@
 'use strict';
+require("dotenv").config();
+
 import { Sequelize } from 'sequelize';
 import ButtonFactory from './button';
 import MenuFactory from "./menu";
