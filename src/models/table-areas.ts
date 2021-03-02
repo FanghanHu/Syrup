@@ -1,5 +1,6 @@
-import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
+import { DatabaseType } from ".";
 import { Table, TableCreationAttributes } from "./table";
 
 interface TableAreaAttributes {
@@ -27,8 +28,11 @@ export class TableArea extends Model<TableAreaAttributes, TableAreaCreationAttri
 
     public readonly tables?: Table[];
 
-    public static associations: {
-        tables: Association<TableArea, Table>;
+    /**
+     * used to declare associations, called by the model index, do not use this anywhere else 
+     */
+    public static associate(db: DatabaseType) {
+        TableArea.hasMany(db.Table);
     }
 }
 

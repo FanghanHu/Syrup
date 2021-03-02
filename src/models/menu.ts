@@ -1,6 +1,7 @@
 import { Button, ButtonCreationAttributes } from "./button";
 import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
+import { DatabaseType } from ".";
 
 interface MenuAttributes {
     id: number;
@@ -24,11 +25,13 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
     public hasButton !: HasManyHasAssociationMixin<Button, number>;
     public countButtons !: HasManyCountAssociationsMixin;
     public createButton !: HasManyCreateAssociationMixin<Button>;
-
     public readonly buttons?: Button[];
 
-    public static associations: {
-        buttons: Association<Menu, Button>;
+    /**
+     * used to declare associations, called by the model index, do not use this anywhere else 
+     */
+    public static associate(db: DatabaseType) {
+        Menu.hasMany(db.Button);
     }
 }
 

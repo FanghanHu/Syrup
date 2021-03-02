@@ -1,9 +1,10 @@
 'use strict';
 require("dotenv").config();
 
-import { Sequelize } from 'sequelize';
+import { Model, Sequelize } from 'sequelize';
 import ButtonFactory from './button';
 import MenuFactory from "./menu";
+import OrderFactory from './order';
 import ScriptFactory from './script';
 import TableFactory from './table';
 import TableAreaFactory from './table-areas';
@@ -25,16 +26,21 @@ const db = {
   Button: ButtonFactory(sequelize),
   Script: ScriptFactory(sequelize),
   Table: TableFactory(sequelize),
-  TableArea: TableAreaFactory(sequelize)
+  TableArea: TableAreaFactory(sequelize),
+  Order: OrderFactory(sequelize)
 }
 
-db.Menu.hasMany(db.Button);
-db.Button.belongsTo(db.Menu);
+type DatabaseType = typeof db;
+type AssociatedModel = {
+  associate?: (db: DatabaseType) => void;
+}
 
-db.Script.hasMany(db.Button);
-db.Button.belongsTo(db.Script);
+for(const key in db) {
+  const model = (db[key] as AssociatedModel);
+  if(model.associate) {
+    model.associate(db);
+  }
+}
 
-db.TableArea.hasMany(db.Table);
-db.Table.belongsTo(db.TableArea);
-
+export { DatabaseType }
 export default db;

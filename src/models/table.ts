@@ -1,5 +1,7 @@
-import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Association, BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Order, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
+import { DatabaseType } from ".";
+import { OrderCreationAttributes } from "./order";
 import { TableArea, TableAreaCreationAttributes } from "./table-areas";
 
 interface TableAttributes {
@@ -12,6 +14,7 @@ interface TableAttributes {
 
 export interface TableCreationAttributes extends Optional<TableAttributes, "id"> {
     TableArea?: TableAreaCreationAttributes;
+    orders?: OrderCreationAttributes[];
 };
 
 export class Table extends Model<TableAttributes, TableCreationAttributes> implements TableAttributes {
@@ -24,19 +27,26 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    //TODO: has many Order
-    // public getButtons !: HasManyGetAssociationsMixin<Button>;
-    // public addButton !: HasManyAddAssociationsMixin<Button, number>;
-    // public hasButton !: HasManyHasAssociationMixin<Button, number>;
-    // public countButtons !: HasManyCountAssociationsMixin;
-    // public createButton !: HasManyCreateAssociationMixin<Button>;
+    //belongs to TableArea
+    public getTableArea !: BelongsToGetAssociationMixin<TableArea>;
+    public setTableArea !: BelongsToSetAssociationMixin<TableArea, number>;
+    public createTableArea !: BelongsToCreateAssociationMixin<TableArea>;
+    public readonly tableArea?: TableArea;
 
-    //public readonly buttons?: Button[];
-    public readonly table?: Table;
+    //has many Order
+    public getOrders !: HasManyGetAssociationsMixin<Order>;
+    public addOrder !: HasManyAddAssociationsMixin<Order, number>;
+    public hasOrder !: HasManyHasAssociationMixin<Order, number>;
+    public countOrders !: HasManyCountAssociationsMixin;
+    public createOrder !: HasManyCreateAssociationMixin<Order>;
+    public readonly orders?: Order[];
 
-    public static associations: {
-        //buttons: Association<Table, Button>;
-        tableArea: Association<Table, TableArea>
+    /**
+     * used to declare associations, called by the model index, do not use this anywhere else 
+     */
+    public static associate(db: DatabaseType) {
+        Table.belongsTo(db.TableArea);
+        Table.hasMany(db.Order);
     }
 }
 

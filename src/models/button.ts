@@ -1,4 +1,5 @@
 import { Sequelize, Model, Optional, DataTypes, Association, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin} from "sequelize";
+import { DatabaseType } from ".";
 import { Menu, MenuCreationAttributes } from "./menu";
 import { Script, ScriptCreationAttributes } from "./script";
 
@@ -25,12 +26,20 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
     public getMenu !: BelongsToGetAssociationMixin<Menu>;
     public setMenu !: BelongsToSetAssociationMixin<Menu, number>;
     public createMenu !: BelongsToCreateAssociationMixin<Menu>;
-
     public readonly menu?: Menu;
 
-    public static associations: {
-        menu: Association<Button, Menu>;
-        script: Association<Button, Script>;
+    //belongs to Script
+    public getScript !: BelongsToGetAssociationMixin<Script>;
+    public setScript !: BelongsToSetAssociationMixin<Script, number>;
+    public createScript !: BelongsToCreateAssociationMixin<Script>;
+    public readonly script?: Script;
+
+    /**
+     * used to declare associations, called by the model index, do not use this anywhere else 
+     */
+    public static associate(db: DatabaseType) {
+        Button.belongsTo(db.Menu);
+        Button.belongsTo(db.Script);
     }
 }
 

@@ -1,4 +1,5 @@
-import { Association, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model, Optional, Sequelize } from "sequelize/types";
+import { Association, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model, Optional, Sequelize } from "sequelize";
+import { DatabaseType } from ".";
 import { Button, ButtonCreationAttributes } from "./button";
 
 interface ScriptAttributes {
@@ -25,11 +26,13 @@ export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> im
     public hasButton !: HasManyHasAssociationMixin<Button, number>;
     public countButtons !: HasManyCountAssociationsMixin;
     public createButton !: HasManyCreateAssociationMixin<Button>;
-
     public readonly buttons?: Button[];
 
-    public static associations: {
-        buttons: Association<Script, Button>;
+    /**
+     * used to declare associations, called by the model index, do not use this anywhere else 
+     */
+    public static associate(db: DatabaseType) {
+        Script.hasMany(db.Button);
     }
 }
 
@@ -50,7 +53,7 @@ export default function ScriptFactory(sequelize: Sequelize): typeof Script {
                 allowNull: false
             }
         }, {
-            tableName: "menus",
+            tableName: "scripts",
             sequelize
         }
     );
