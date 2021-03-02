@@ -1,5 +1,5 @@
 import { Sequelize, Model, Optional, DataTypes, Association, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin} from "sequelize";
-import { Menu } from "./menu";
+import { Menu, MenuCreationAttributes } from "./menu";
 
 interface ButtonAttributes {
     id: number;
@@ -7,7 +7,9 @@ interface ButtonAttributes {
     translations?: object;
 }
 
-export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {};
+export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {
+    Menu?: MenuCreationAttributes;
+};
 
 export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> implements ButtonAttributes {
     public id!: number;
@@ -17,6 +19,7 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
+    //belongs to Menu
     public getMenu !: BelongsToGetAssociationMixin<Menu>;
     public setMenu !: BelongsToSetAssociationMixin<Menu, number>;
     public createMenu !: BelongsToCreateAssociationMixin<Menu>;

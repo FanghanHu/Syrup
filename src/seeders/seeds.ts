@@ -13,6 +13,18 @@ async function resetDB() {
     }, {
         include: ["Buttons"]
     });
+
+    const btn = await db.Button.create(
+        {
+            buttonName: "reverseCreate",
+            Menu: {
+                menuName: "test Menu"
+            }
+        },
+        {
+            include: ["Menu"]
+        }
+    )
 }
 
 resetDB();

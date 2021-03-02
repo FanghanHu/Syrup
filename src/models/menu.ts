@@ -18,6 +18,7 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
+    //has many Button
     public getButtons !: HasManyGetAssociationsMixin<Button>;
     public addButton !: HasManyAddAssociationsMixin<Button, number>;
     public hasButton !: HasManyHasAssociationMixin<Button, number>;
