@@ -39,6 +39,7 @@ build/Release
 
 #typescript built files
 build/**
+client/build/**
 
 # Dependency directories
 node_modules/

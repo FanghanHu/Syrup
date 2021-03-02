@@ -1,7 +1,11 @@
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+import db from "./models";
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
@@ -10,8 +14,6 @@ app.use(express.json());
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
-
-console.log("test");
 
 
 // Define API routes here
@@ -22,8 +24,11 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(` API server now on port ${PORT}!`);
+db.sequelize.sync({force: false}).then(() => {
+  //bind server.
+  app.listen(PORT, () => {
+      console.log("Server is now listening on port: " + PORT);
+  });
 });
 
 export {};
