@@ -1,19 +1,20 @@
+import { Association, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model, Optional, Sequelize } from "sequelize/types";
 import { Button, ButtonCreationAttributes } from "./button";
-import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
-import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 
-interface MenuAttributes {
+interface ScriptAttributes {
     id: number;
-    menuName: string;
+    scriptName: string;
+    data: JSON;
 }
 
-export interface MenuCreationAttributes extends Optional<MenuAttributes, "id"> {
+export interface ScriptCreationAttributes extends Optional<ScriptAttributes, "id"> {
     Buttons?: ButtonCreationAttributes[];
 };
 
-export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implements MenuAttributes {
+export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> implements ScriptAttributes {
     public id!: number;
-    public menuName!: string;
+    public scriptName!: string;
+    public data!: JSON;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -28,20 +29,24 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
     public readonly buttons?: Button[];
 
     public static associations: {
-        buttons: Association<Menu, Button>;
+        buttons: Association<Script, Button>;
     }
 }
 
-export default function MenuFactory(sequelize: Sequelize): typeof Menu {
-    Menu.init(
+export default function ScriptFactory(sequelize: Sequelize): typeof Script {
+    Script.init(
         {
             id: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            menuName: {
+            scriptName: {
                 type: DataTypes.STRING,
+                allowNull: false
+            },
+            data: {
+                type: DataTypes.JSON,
                 allowNull: false
             }
         }, {
@@ -49,5 +54,5 @@ export default function MenuFactory(sequelize: Sequelize): typeof Menu {
             sequelize
         }
     );
-    return Menu;
+    return Script;
 }

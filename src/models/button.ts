@@ -1,5 +1,6 @@
 import { Sequelize, Model, Optional, DataTypes, Association, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin} from "sequelize";
 import { Menu, MenuCreationAttributes } from "./menu";
+import { Script, ScriptCreationAttributes } from "./script";
 
 interface ButtonAttributes {
     id: number;
@@ -9,6 +10,7 @@ interface ButtonAttributes {
 
 export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {
     Menu?: MenuCreationAttributes;
+    Script?: ScriptCreationAttributes;
 };
 
 export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> implements ButtonAttributes {
@@ -28,6 +30,7 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
 
     public static associations: {
         menu: Association<Button, Menu>;
+        script: Association<Button, Script>;
     }
 }
 
