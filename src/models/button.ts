@@ -17,7 +17,7 @@ export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id
 export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> implements ButtonAttributes {
     public id!: number;
     public buttonName!: string;
-    translations?: object;
+    public translations?: object;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
