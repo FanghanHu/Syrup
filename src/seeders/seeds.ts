@@ -1,4 +1,5 @@
 import db from "../models";
+import '../utils';
 
 async function resetDB() {
     await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -14,17 +15,12 @@ async function resetDB() {
         include: ["Buttons"]
     });
 
-    const btn = await db.Button.create(
-        {
-            buttonName: "reverseCreate",
-            Menu: {
-                menuName: "test Menu"
-            }
-        },
-        {
-            include: ["Menu"]
-        }
-    );
+    const user = await db.User.create({
+        fullName: "testUser",
+        accessCode: "0",
+        username:"test",
+        password:"test".sha256()
+    });
 }
 
 resetDB();

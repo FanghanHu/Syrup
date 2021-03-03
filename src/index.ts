@@ -4,6 +4,8 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 import db from "./models";
+import "./utils";
+import routes from "./routes";
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
@@ -13,8 +15,10 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
+//TODO: implement https
 
 // Define API routes here
+app.use(routes);
 
 // Send every other request to the React app
 // Define any API routes before this runs

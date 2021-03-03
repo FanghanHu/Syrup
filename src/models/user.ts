@@ -14,10 +14,10 @@ import { Role, RoleCreationAttributes } from "./role";
 interface UserAttributes {
     id: number;
     fullName: string;
-    username: string;
-    password: string;
-    accessCode: string;
-    permissions: JSON;
+    username?: string;
+    password?: string;
+    accessCode?: string;
+    permissions?: JSON;
 }
 
 /**
@@ -41,10 +41,10 @@ export interface UserCreationAttributes extends Optional<UserAttributes, "id"> {
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     public id!: number;
     public fullName!: string;
-    public username!: string;
-    public password!: string;
-    public accessCode!: string;
-    public permissions!: JSON;
+    public username?: string;
+    public password?: string;
+    public accessCode?: string;
+    public permissions?: JSON;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -144,7 +144,8 @@ export default function UserFactory(sequelize: Sequelize): typeof User {
             },
             username: {
                 type: DataTypes.STRING,
-                allowNull: true
+                allowNull: true,
+                unique: true,
             },
             password: {
                 type: DataTypes.STRING,
@@ -152,7 +153,8 @@ export default function UserFactory(sequelize: Sequelize): typeof User {
             },
             accessCode: {
                 type: DataTypes.STRING,
-                allowNull: true
+                allowNull: true,
+                unique: true
             },
             permissions: {
                 type: DataTypes.JSON,
