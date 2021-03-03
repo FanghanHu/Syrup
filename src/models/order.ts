@@ -4,26 +4,28 @@ import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsT
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { Customer, CustomerCreationAttributes } from "./customer";
+import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 import { TableCreationAttributes } from "./table";
 
 interface OrderAttributes {
     id: number;
     orderNumber: string;
     status: string;
-    total: number;
+    total?: number;
     type: string;
 }
 
 export interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {
     Table ?: TableCreationAttributes;
     Customers ?: CustomerCreationAttributes[];
+    OrderItems ?: OrderItemCreationAttributes[];
 };
 
 export class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
     public id!: number;
     public orderNumber!: string;
     public status!: string;
-    public total!: number;
+    public total?: number;
     public type!: string;
 
     public readonly createdAt!: Date;
@@ -48,12 +50,21 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public createCustomer !: BelongsToManyCreateAssociationMixin<Customer>;
     public readonly Customers ?: Customer[];
 
+    //has many OrderItem
+    public getOrderItems !: HasManyGetAssociationsMixin<OrderItem>;
+    public addOrderItem !: HasManyAddAssociationsMixin<OrderItem, number>;
+    public hasOrderItem !: HasManyHasAssociationMixin<OrderItem, number>;
+    public countOrderItems !: HasManyCountAssociationsMixin;
+    public createOrderItem !: HasManyCreateAssociationMixin<OrderItem>;
+    public readonly OrderItems?: OrderItem[];
+
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
         Order.belongsTo(db.Table);
-        Order.belongsToMany(db.Customer, {through: "customerOrders"})
+        Order.belongsToMany(db.Customer, {through: "customerOrders"});
+        Order.hasMany(db.OrderItem);
     }
 }
 

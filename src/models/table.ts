@@ -2,7 +2,7 @@ import { Association, BelongsToCreateAssociationMixin, BelongsToGetAssociationMi
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { OrderCreationAttributes } from "./order";
-import { TableArea, TableAreaCreationAttributes } from "./table-areas";
+import { TableArea, TableAreaCreationAttributes } from "./table-area";
 
 interface TableAttributes {
     id: number;

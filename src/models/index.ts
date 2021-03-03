@@ -4,11 +4,13 @@ require("dotenv").config();
 import { Model, Sequelize } from 'sequelize';
 import ButtonFactory from './button';
 import CustomerFactory, { Customer } from './customer';
+import ItemFactory from './item';
 import MenuFactory from "./menu";
 import OrderFactory from './order';
+import OrderItemFactory from './order-item';
 import ScriptFactory from './script';
 import TableFactory from './table';
-import TableAreaFactory from './table-areas';
+import TableAreaFactory from './table-area';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -29,7 +31,9 @@ const db = {
   Table: TableFactory(sequelize),
   TableArea: TableAreaFactory(sequelize),
   Order: OrderFactory(sequelize),
-  Customer: CustomerFactory(sequelize)
+  Customer: CustomerFactory(sequelize),
+  Item: ItemFactory(sequelize),
+  OrderItem: OrderItemFactory(sequelize)
 }
 
 type DatabaseType = typeof db;
