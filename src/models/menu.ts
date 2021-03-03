@@ -3,15 +3,24 @@ import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface MenuAttributes {
     id: number;
     menuName: string;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface MenuCreationAttributes extends Optional<MenuAttributes, "id"> {
     Buttons?: ButtonCreationAttributes[];
 };
 
+/**
+ * A Menu can hold multiple Buttons, Buttons can lead towards different Menu.
+ */
 export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implements MenuAttributes {
     public id!: number;
     public menuName!: string;
@@ -35,6 +44,11 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function MenuFactory(sequelize: Sequelize): typeof Menu {
     Menu.init(
         {

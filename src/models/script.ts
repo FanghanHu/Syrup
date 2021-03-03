@@ -1,17 +1,27 @@
-import { Association, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model, Optional, Sequelize } from "sequelize";
+import { DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model, Optional, Sequelize } from "sequelize";
 import { DatabaseType } from ".";
 import { Button, ButtonCreationAttributes } from "./button";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface ScriptAttributes {
     id: number;
     scriptName: string;
     data: JSON;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface ScriptCreationAttributes extends Optional<ScriptAttributes, "id"> {
     Buttons?: ButtonCreationAttributes[];
 };
 
+/**
+ * A Script can be assigned to a Button, when pressed, the Script will be executed inside the current context
+ * Some script are pre-existing, some are user defined.
+ */
 export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> implements ScriptAttributes {
     public id!: number;
     public scriptName!: string;
@@ -20,7 +30,7 @@ export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> im
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    //has many Button
+    //has many Buttons
     public getButtons !: HasManyGetAssociationsMixin<Button>;
     public addButton !: HasManyAddAssociationsMixin<Button, number>;
     public hasButton !: HasManyHasAssociationMixin<Button, number>;
@@ -36,6 +46,11 @@ export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> im
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function ScriptFactory(sequelize: Sequelize): typeof Script {
     Script.init(
         {

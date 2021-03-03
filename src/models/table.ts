@@ -1,9 +1,12 @@
-import { Association, BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Order, Sequelize } from "sequelize";
+import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Order, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { OrderCreationAttributes } from "./order";
 import { TableArea, TableAreaCreationAttributes } from "./table-area";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface TableAttributes {
     id: number;
     tableName: string;
@@ -12,11 +15,17 @@ interface TableAttributes {
     icon: string;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface TableCreationAttributes extends Optional<TableAttributes, "id"> {
     TableArea?: TableAreaCreationAttributes;
     orders?: OrderCreationAttributes[];
 };
 
+/**
+ * A Table inside a TableArea, used in dine in orders.
+ */
 export class Table extends Model<TableAttributes, TableCreationAttributes> implements TableAttributes {
     public id!: number;
     public tableName!: string;
@@ -50,6 +59,11 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function TableFactory(sequelize: Sequelize): typeof Table {
     Table.init(
         {

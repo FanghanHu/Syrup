@@ -2,16 +2,25 @@ import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, Be
 import { DatabaseType } from ".";
 import { OrderCreationAttributes } from "./order";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface PaymentAttributes {
     id: number;
     type: string;
     status?: string;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface PaymentCreationAttributes extends Optional<PaymentAttributes, "id"> {
     order?: OrderCreationAttributes;
 };
 
+/**
+ * A Payment towards an Order, must be made by an User.
+ */
 export class Payment extends Model<PaymentAttributes, PaymentCreationAttributes> implements PaymentAttributes {
     public id!: number;
     public type!: string;
@@ -34,6 +43,11 @@ export class Payment extends Model<PaymentAttributes, PaymentCreationAttributes>
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function PaymentFactory(sequelize: Sequelize): typeof Payment {
     Payment.init(
         {

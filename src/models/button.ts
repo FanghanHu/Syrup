@@ -3,17 +3,28 @@ import { DatabaseType } from ".";
 import { Menu, MenuCreationAttributes } from "./menu";
 import { Script, ScriptCreationAttributes } from "./script";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface ButtonAttributes {
     id: number;
     buttonName: string;
     translations?: object;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {
     Menu?: MenuCreationAttributes;
     Script?: ScriptCreationAttributes;
 };
 
+/**
+ * A button exists inside a menu, which has a script.
+ * when pressed, the button will execute the script
+ * depends on what the script does, it will either order an item, open a new menu, or etc.
+ */
 export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> implements ButtonAttributes {
     public id!: number;
     public buttonName!: string;
@@ -43,6 +54,11 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function ButtonFactory(sequelize: Sequelize): typeof Button {
     Button.init(
         {

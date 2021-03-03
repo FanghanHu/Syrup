@@ -2,6 +2,9 @@ import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, Be
 import { DatabaseType } from ".";
 import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface ItemAttributes {
     id: number;
     itemName: string;
@@ -10,10 +13,18 @@ interface ItemAttributes {
     translation?: JSON;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface ItemCreationAttributes extends Optional<ItemAttributes, "id"> {
     OrderItems ?: OrderItemCreationAttributes[];
 };
 
+/**
+ * Represents an item that can be ordered
+ * Note that orders does not directly link to Item, but uses OrderItem instead,
+ * this is for keeping old order data unchanged while modifing item.
+ */
 export class Item extends Model<ItemAttributes, ItemCreationAttributes> implements ItemAttributes {
     public id!: number;
     public itemName!: string;
@@ -40,6 +51,11 @@ export class Item extends Model<ItemAttributes, ItemCreationAttributes> implemen
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function ItemFactory(sequelize: Sequelize): typeof Item {
     Item.init(
         {

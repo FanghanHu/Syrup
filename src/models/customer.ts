@@ -2,6 +2,9 @@ import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, Be
 import { DatabaseType } from ".";
 import { Order, OrderCreationAttributes } from "./order";
 
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface CustomerAttributes {
     id: number;
     firstName: string;
@@ -14,10 +17,17 @@ interface CustomerAttributes {
     note: string;
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface CustomerCreationAttributes extends Optional<CustomerAttributes, "id"> {
-    Orders ?: OrderCreationAttributes;
+    Orders ?: OrderCreationAttributes[];
 };
 
+/**
+ * customer records.
+ * Can be linked to multiple order.
+ */
 export class Customer extends Model<CustomerAttributes, CustomerCreationAttributes> implements CustomerAttributes {
     public id!: number;
     public firstName!: string;
@@ -53,6 +63,11 @@ export class Customer extends Model<CustomerAttributes, CustomerCreationAttribut
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function CustomerFactory(sequelize: Sequelize): typeof Customer {
     Customer.init(
         {
