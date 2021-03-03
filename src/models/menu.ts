@@ -29,11 +29,11 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
     public readonly updatedAt!: Date;
 
     //has many Button
-    public getButtons !: HasManyGetAssociationsMixin<Button>;
-    public addButton !: HasManyAddAssociationsMixin<Button, number>;
-    public hasButton !: HasManyHasAssociationMixin<Button, number>;
-    public countButtons !: HasManyCountAssociationsMixin;
-    public createButton !: HasManyCreateAssociationMixin<Button>;
+    public getButtons!: HasManyGetAssociationsMixin<Button>;
+    public addButton!: HasManyAddAssociationsMixin<Button, number>;
+    public hasButton!: HasManyHasAssociationMixin<Button, number>;
+    public countButtons!: HasManyCountAssociationsMixin;
+    public createButton!: HasManyCreateAssociationMixin<Button>;
     public readonly Buttons?: Button[];
 
     /**

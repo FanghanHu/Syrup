@@ -4,6 +4,7 @@ import { DatabaseType } from ".";
 import { Customer, CustomerCreationAttributes } from "./customer";
 import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 import { Table, TableCreationAttributes } from "./table";
+import { User, UserCreationAttributes } from "./user";
 
 /**
  * {@see OrderAttributes}
@@ -34,9 +35,10 @@ interface OrderAttributes {
  * CreationAttributes interface marks additional attributes that should be available for creating data with include option
  */
 export interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {
-    Table ?: TableCreationAttributes;
-    Customers ?: CustomerCreationAttributes[];
-    OrderItems ?: OrderItemCreationAttributes[];
+    Table?: TableCreationAttributes;
+    Customers?: CustomerCreationAttributes[];
+    OrderItems?: OrderItemCreationAttributes[];
+    Server?: UserCreationAttributes;
 };
 
 /**
@@ -53,31 +55,37 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public readonly updatedAt!: Date;
 
     //belongs to Table
-    public getTable !: BelongsToGetAssociationMixin<Table>;
-    public setTable !: BelongsToSetAssociationMixin<Table, number>;
-    public createTable !: BelongsToCreateAssociationMixin<Table>;
+    public getTable!: BelongsToGetAssociationMixin<Table>;
+    public setTable!: BelongsToSetAssociationMixin<Table, number>;
+    public createTable!: BelongsToCreateAssociationMixin<Table>;
     public readonly Table?: Table;
 
     //belongs to many Customers
-    public getCustomers !: BelongsToManyGetAssociationsMixin<Customer>;
-    public countCustomers !: BelongsToManyCountAssociationsMixin;
-    public hasCustomer !: BelongsToManyHasAssociationMixin<Customer, number>;
-    public hasCustomers !: BelongsToManyHasAssociationsMixin<Customer, number>;
-    public setCustomers !: BelongsToManySetAssociationsMixin<Customer, number>;
-    public addCustomer !: BelongsToManyAddAssociationMixin<Customer, number>;
-    public addCustomers !: BelongsToManyAddAssociationsMixin<Customer, number>;
-    public removeCustomer !: BelongsToManyRemoveAssociationMixin<Customer, number>;
-    public removeCustomers !: BelongsToManyRemoveAssociationsMixin<Customer, number>;
-    public createCustomer !: BelongsToManyCreateAssociationMixin<Customer>;
-    public readonly Customers ?: Customer[];
+    public getCustomers!: BelongsToManyGetAssociationsMixin<Customer>;
+    public countCustomers!: BelongsToManyCountAssociationsMixin;
+    public hasCustomer!: BelongsToManyHasAssociationMixin<Customer, number>;
+    public hasCustomers!: BelongsToManyHasAssociationsMixin<Customer, number>;
+    public setCustomers!: BelongsToManySetAssociationsMixin<Customer, number>;
+    public addCustomer!: BelongsToManyAddAssociationMixin<Customer, number>;
+    public addCustomers!: BelongsToManyAddAssociationsMixin<Customer, number>;
+    public removeCustomer!: BelongsToManyRemoveAssociationMixin<Customer, number>;
+    public removeCustomers!: BelongsToManyRemoveAssociationsMixin<Customer, number>;
+    public createCustomer!: BelongsToManyCreateAssociationMixin<Customer>;
+    public readonly Customers?: Customer[];
 
     //has many OrderItem
-    public getOrderItems !: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItem !: HasManyAddAssociationsMixin<OrderItem, number>;
-    public hasOrderItem !: HasManyHasAssociationMixin<OrderItem, number>;
-    public countOrderItems !: HasManyCountAssociationsMixin;
-    public createOrderItem !: HasManyCreateAssociationMixin<OrderItem>;
+    public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
+    public addOrderItem!: HasManyAddAssociationsMixin<OrderItem, number>;
+    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
+    public countOrderItems!: HasManyCountAssociationsMixin;
+    public createOrderItem!: HasManyCreateAssociationMixin<OrderItem>;
     public readonly OrderItems?: OrderItem[];
+
+    //belongs to Server (User)
+    public getServer!: BelongsToGetAssociationMixin<User>;
+    public setServer!: BelongsToSetAssociationMixin<User, number>;
+    public createServer!: BelongsToCreateAssociationMixin<User>;
+    public readonly Server?: User;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
@@ -86,6 +94,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
         Order.belongsTo(db.Table);
         Order.belongsToMany(db.Customer, {through: "customerOrders"});
         Order.hasMany(db.OrderItem);
+        Order.belongsTo(db.User, {as: "Server"})
     }
 }
 

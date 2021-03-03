@@ -30,11 +30,11 @@ export class TableArea extends Model<TableAreaAttributes, TableAreaCreationAttri
     public readonly updatedAt!: Date;
 
     //has many Table
-    public getTables !: HasManyGetAssociationsMixin<Table>;
-    public addTable !: HasManyAddAssociationsMixin<Table, number>;
-    public hasTable !: HasManyHasAssociationMixin<Table, number>;
-    public countTables !: HasManyCountAssociationsMixin;
-    public createTable !: HasManyCreateAssociationMixin<Table>;
+    public getTables!: HasManyGetAssociationsMixin<Table>;
+    public addTable!: HasManyAddAssociationsMixin<Table, number>;
+    public hasTable!: HasManyHasAssociationMixin<Table, number>;
+    public countTables!: HasManyCountAssociationsMixin;
+    public createTable!: HasManyCreateAssociationMixin<Table>;
     public readonly Tables?: Table[];
 
     /**

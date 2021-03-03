@@ -21,7 +21,7 @@ interface CustomerAttributes {
  * CreationAttributes interface marks additional attributes that should be available for creating data with include option
  */
 export interface CustomerCreationAttributes extends Optional<CustomerAttributes, "id"> {
-    Orders ?: OrderCreationAttributes[];
+    Orders?: OrderCreationAttributes[];
 };
 
 /**
@@ -43,17 +43,17 @@ export class Customer extends Model<CustomerAttributes, CustomerCreationAttribut
     public readonly updatedAt!: Date;
 
     //belongs to many orders
-    public getOrders !: BelongsToManyGetAssociationsMixin<Order>;
-    public countOrders !: BelongsToManyCountAssociationsMixin;
-    public hasOrder !: BelongsToManyHasAssociationMixin<Order, number>;
-    public hasOrders !: BelongsToManyHasAssociationsMixin<Order, number>;
-    public setOrders !: BelongsToManySetAssociationsMixin<Order, number>;
-    public addOrder !: BelongsToManyAddAssociationMixin<Order, number>;
-    public addOrders !: BelongsToManyAddAssociationsMixin<Order, number>;
-    public removeOrder !: BelongsToManyRemoveAssociationMixin<Order, number>;
-    public removeOrders !: BelongsToManyRemoveAssociationsMixin<Order, number>;
-    public createOrder !: BelongsToManyCreateAssociationMixin<Order>;
-    public readonly Orders ?: Order[];
+    public getOrders!: BelongsToManyGetAssociationsMixin<Order>;
+    public countOrders!: BelongsToManyCountAssociationsMixin;
+    public hasOrder!: BelongsToManyHasAssociationMixin<Order, number>;
+    public hasOrders!: BelongsToManyHasAssociationsMixin<Order, number>;
+    public setOrders!: BelongsToManySetAssociationsMixin<Order, number>;
+    public addOrder!: BelongsToManyAddAssociationMixin<Order, number>;
+    public addOrders!: BelongsToManyAddAssociationsMixin<Order, number>;
+    public removeOrder!: BelongsToManyRemoveAssociationMixin<Order, number>;
+    public removeOrders!: BelongsToManyRemoveAssociationsMixin<Order, number>;
+    public createOrder!: BelongsToManyCreateAssociationMixin<Order>;
+    public readonly Orders?: Order[];
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

@@ -17,7 +17,7 @@ interface ItemAttributes {
  * CreationAttributes interface marks additional attributes that should be available for creating data with include option
  */
 export interface ItemCreationAttributes extends Optional<ItemAttributes, "id"> {
-    OrderItems ?: OrderItemCreationAttributes[];
+    OrderItems?: OrderItemCreationAttributes[];
 };
 
 /**
@@ -36,11 +36,11 @@ export class Item extends Model<ItemAttributes, ItemCreationAttributes> implemen
     public readonly updatedAt!: Date;
 
     //has many OrderItem
-    public getOrderItems !: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItem !: HasManyAddAssociationsMixin<OrderItem, number>;
-    public hasOrderItem !: HasManyHasAssociationMixin<OrderItem, number>;
-    public countOrderItems !: HasManyCountAssociationsMixin;
-    public createOrderItem !: HasManyCreateAssociationMixin<OrderItem>;
+    public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
+    public addOrderItem!: HasManyAddAssociationsMixin<OrderItem, number>;
+    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
+    public countOrderItems!: HasManyCountAssociationsMixin;
+    public createOrderItem!: HasManyCreateAssociationMixin<OrderItem>;
     public readonly OrderItems?: OrderItem[];
     
     /**

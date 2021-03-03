@@ -1,23 +1,21 @@
 import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin} from "sequelize";
 import { DatabaseType } from ".";
-import { Menu, MenuCreationAttributes } from "./menu";
-import { Script, ScriptCreationAttributes } from "./script";
+import { User, UserCreationAttributes } from "./user";
 
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
  */
-interface ButtonAttributes {
+interface LogAttributes {
     id: number;
-    buttonName: string;
-    translations?: object;
+    type: string;
+    data: object;
 }
 
 /**
  * CreationAttributes interface marks additional attributes that should be available for creating data with include option
  */
-export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {
-    Menu?: MenuCreationAttributes;
-    Script?: ScriptCreationAttributes;
+export interface LogCreationAttributes extends Optional<LogAttributes, "id"> {
+    User?: UserCreationAttributes;
 };
 
 /**
@@ -25,32 +23,25 @@ export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id
  * when pressed, the button will execute the script
  * depends on what the script does, it will either order an item, open a new menu, or etc.
  */
-export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> implements ButtonAttributes {
+export class Log extends Model<LogAttributes, LogCreationAttributes> implements LogAttributes {
     public id!: number;
-    public buttonName!: string;
-    public translations?: object;
+    public type!: string;
+    public data!: object;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    //belongs to Menu
-    public getMenu!: BelongsToGetAssociationMixin<Menu>;
-    public setMenu!: BelongsToSetAssociationMixin<Menu, number>;
-    public createMenu!: BelongsToCreateAssociationMixin<Menu>;
-    public readonly Menu?: Menu;
-
-    //belongs to Script
-    public getScript!: BelongsToGetAssociationMixin<Script>;
-    public setScript!: BelongsToSetAssociationMixin<Script, number>;
-    public createScript!: BelongsToCreateAssociationMixin<Script>;
-    public readonly Script?: Script;
+    //belongs to User
+    public getUser!: BelongsToGetAssociationMixin<User>;
+    public setUser!: BelongsToSetAssociationMixin<User, number>;
+    public createUser!: BelongsToCreateAssociationMixin<User>;
+    public readonly User?: User;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
-        Button.belongsTo(db.Menu);
-        Button.belongsTo(db.Script);
+        Log.belongsTo(db.User);
     }
 }
 
@@ -59,26 +50,26 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
  * it describes the table, contents of this method decide the form of created table
  * it should return the Model so it can be put into the db object
  */
-export default function ButtonFactory(sequelize: Sequelize): typeof Button {
-    Button.init(
+export default function LogFactory(sequelize: Sequelize): typeof Log {
+    Log.init(
         {
             id: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            buttonName: {
+            type: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            translations: {
+            data: {
                 type: DataTypes.JSON,
-                allowNull: true
+                allowNull: false
             }
         }, {
-            tableName: "buttons",
+            tableName: "logs",
             sequelize
         }
     );
-    return Button;
+    return Log;
 }

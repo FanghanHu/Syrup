@@ -37,17 +37,17 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     public readonly updatedAt!: Date;
 
     //belongs to TableArea
-    public getTableArea !: BelongsToGetAssociationMixin<TableArea>;
-    public setTableArea !: BelongsToSetAssociationMixin<TableArea, number>;
-    public createTableArea !: BelongsToCreateAssociationMixin<TableArea>;
+    public getTableArea!: BelongsToGetAssociationMixin<TableArea>;
+    public setTableArea!: BelongsToSetAssociationMixin<TableArea, number>;
+    public createTableArea!: BelongsToCreateAssociationMixin<TableArea>;
     public readonly TableArea?: TableArea;
 
     //has many Order
-    public getOrders !: HasManyGetAssociationsMixin<Order>;
-    public addOrder !: HasManyAddAssociationsMixin<Order, number>;
-    public hasOrder !: HasManyHasAssociationMixin<Order, number>;
-    public countOrders !: HasManyCountAssociationsMixin;
-    public createOrder !: HasManyCreateAssociationMixin<Order>;
+    public getOrders!: HasManyGetAssociationsMixin<Order>;
+    public addOrder!: HasManyAddAssociationsMixin<Order, number>;
+    public hasOrder!: HasManyHasAssociationMixin<Order, number>;
+    public countOrders!: HasManyCountAssociationsMixin;
+    public createOrder!: HasManyCreateAssociationMixin<Order>;
     public readonly Orders?: Order[];
 
     /**

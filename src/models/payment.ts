@@ -1,6 +1,7 @@
 import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, Order} from "sequelize";
 import { DatabaseType } from ".";
 import { OrderCreationAttributes } from "./order";
+import { User } from "./user";
 
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
@@ -30,16 +31,23 @@ export class Payment extends Model<PaymentAttributes, PaymentCreationAttributes>
     public readonly updatedAt!: Date;
 
     //belongs to Order
-    public getOrder !: BelongsToGetAssociationMixin<Order>;
-    public setOrder !: BelongsToSetAssociationMixin<Order, number>;
-    public createOrder !: BelongsToCreateAssociationMixin<Order>;
+    public getOrder!: BelongsToGetAssociationMixin<Order>;
+    public setOrder!: BelongsToSetAssociationMixin<Order, number>;
+    public createOrder!: BelongsToCreateAssociationMixin<Order>;
     public readonly Order?: Order;
+
+    //belongs to Server (User)
+    public getServer!: BelongsToGetAssociationMixin<User>;
+    public setServer!: BelongsToSetAssociationMixin<User, number>;
+    public createServer!: BelongsToCreateAssociationMixin<User>;
+    public readonly Server?: User;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
         Payment.belongsTo(db.Order);
+        Payment.belongsTo(db.User, {as: "Server"});
     }
 }
 

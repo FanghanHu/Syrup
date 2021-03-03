@@ -31,11 +31,11 @@ export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> im
     public readonly updatedAt!: Date;
 
     //has many Buttons
-    public getButtons !: HasManyGetAssociationsMixin<Button>;
-    public addButton !: HasManyAddAssociationsMixin<Button, number>;
-    public hasButton !: HasManyHasAssociationMixin<Button, number>;
-    public countButtons !: HasManyCountAssociationsMixin;
-    public createButton !: HasManyCreateAssociationMixin<Button>;
+    public getButtons!: HasManyGetAssociationsMixin<Button>;
+    public addButton!: HasManyAddAssociationsMixin<Button, number>;
+    public hasButton!: HasManyHasAssociationMixin<Button, number>;
+    public countButtons!: HasManyCountAssociationsMixin;
+    public createButton!: HasManyCreateAssociationMixin<Button>;
     public readonly Buttons?: Button[];
 
     /**
