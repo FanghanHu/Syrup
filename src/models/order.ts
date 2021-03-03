@@ -1,32 +1,53 @@
-
-import Table from "react-bootstrap/esm/Table";
 import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { Customer, CustomerCreationAttributes } from "./customer";
 import { OrderItem, OrderItemCreationAttributes } from "./order-item";
-import { TableCreationAttributes } from "./table";
+import { Table, TableCreationAttributes } from "./table";
 
+/**
+ * {@see OrderAttributes}
+ */
+export type OrderCache = {
+    subtotal: number;
+    tax: number;
+    total: number;
+    [x: string]: any;
+} 
+
+/**
+ * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
+ */
 interface OrderAttributes {
     id: number;
     orderNumber: string;
     status: string;
-    total?: number;
-    type: string;
+    /**
+     * A cache data, may contain order subtotal, tax, total, or any additional data.
+     * should be updated every time the order is modified, used to avoid unnecessary calculation
+     */
+    cache?: OrderCache;
+    type: "Dine in" | "To Go" | "Pick up" | "Delivery";
 }
 
+/**
+ * CreationAttributes interface marks additional attributes that should be available for creating data with include option
+ */
 export interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {
     Table ?: TableCreationAttributes;
     Customers ?: CustomerCreationAttributes[];
     OrderItems ?: OrderItemCreationAttributes[];
 };
 
+/**
+ * An Order, which holds multiple OrderItems, depending on its type, it may link to a Table or a customer.
+ */
 export class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
     public id!: number;
     public orderNumber!: string;
     public status!: string;
     public total?: number;
-    public type!: string;
+    public type!: "Dine in" | "To Go" | "Pick up" | "Delivery";
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -68,6 +89,11 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     }
 }
 
+/**
+ * Factory function registers this model to sequelize, 
+ * it describes the table, contents of this method decide the form of created table
+ * it should return the Model so it can be put into the db object
+ */
 export default function OrderFactory(sequelize: Sequelize): typeof Order {
     Order.init(
         {
@@ -84,8 +110,8 @@ export default function OrderFactory(sequelize: Sequelize): typeof Order {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            total: {
-                type: DataTypes.FLOAT,
+            cache: {
+                type: DataTypes.JSON,
                 allowNull: true
             },
             type: {
