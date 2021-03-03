@@ -1,8 +1,10 @@
 
 import Table from "react-bootstrap/esm/Table";
-import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
+import { Customer, CustomerCreationAttributes } from "./customer";
+import { TableCreationAttributes } from "./table";
 
 interface OrderAttributes {
     id: number;
@@ -13,7 +15,8 @@ interface OrderAttributes {
 }
 
 export interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {
-    // Buttons?: ButtonCreationAttributes[];
+    Table ?: TableCreationAttributes;
+    Customers ?: CustomerCreationAttributes[];
 };
 
 export class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
@@ -30,13 +33,27 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public getTable !: BelongsToGetAssociationMixin<Table>;
     public setTable !: BelongsToSetAssociationMixin<Table, number>;
     public createTable !: BelongsToCreateAssociationMixin<Table>;
-    public readonly table?: Table;
+    public readonly Table?: Table;
+
+    //belongs to many Customers
+    public getCustomers !: BelongsToManyGetAssociationsMixin<Customer>;
+    public countCustomers !: BelongsToManyCountAssociationsMixin;
+    public hasCustomer !: BelongsToManyHasAssociationMixin<Customer, number>;
+    public hasCustomers !: BelongsToManyHasAssociationsMixin<Customer, number>;
+    public setCustomers !: BelongsToManySetAssociationsMixin<Customer, number>;
+    public addCustomer !: BelongsToManyAddAssociationMixin<Customer, number>;
+    public addCustomers !: BelongsToManyAddAssociationsMixin<Customer, number>;
+    public removeCustomer !: BelongsToManyRemoveAssociationMixin<Customer, number>;
+    public removeCustomers !: BelongsToManyRemoveAssociationsMixin<Customer, number>;
+    public createCustomer !: BelongsToManyCreateAssociationMixin<Customer>;
+    public readonly Customers ?: Customer[];
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
         Order.belongsTo(db.Table);
+        Order.belongsToMany(db.Customer, {through: "customerOrders"})
     }
 }
 

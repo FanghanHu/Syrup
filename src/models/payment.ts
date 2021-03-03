@@ -24,7 +24,7 @@ export class Payment extends Model<PaymentAttributes, PaymentCreationAttributes>
     public getOrder !: BelongsToGetAssociationMixin<Order>;
     public setOrder !: BelongsToSetAssociationMixin<Order, number>;
     public createOrder !: BelongsToCreateAssociationMixin<Order>;
-    public readonly order?: Order;
+    public readonly Order?: Order;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

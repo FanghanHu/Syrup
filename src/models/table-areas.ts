@@ -26,7 +26,7 @@ export class TableArea extends Model<TableAreaAttributes, TableAreaCreationAttri
     public countButtons !: HasManyCountAssociationsMixin;
     public createButton !: HasManyCreateAssociationMixin<Table>;
 
-    public readonly tables?: Table[];
+    public readonly Tables?: Table[];
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

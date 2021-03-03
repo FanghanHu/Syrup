@@ -3,6 +3,7 @@ require("dotenv").config();
 
 import { Model, Sequelize } from 'sequelize';
 import ButtonFactory from './button';
+import CustomerFactory, { Customer } from './customer';
 import MenuFactory from "./menu";
 import OrderFactory from './order';
 import ScriptFactory from './script';
@@ -27,7 +28,8 @@ const db = {
   Script: ScriptFactory(sequelize),
   Table: TableFactory(sequelize),
   TableArea: TableAreaFactory(sequelize),
-  Order: OrderFactory(sequelize)
+  Order: OrderFactory(sequelize),
+  Customer: CustomerFactory(sequelize)
 }
 
 type DatabaseType = typeof db;

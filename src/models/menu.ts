@@ -25,7 +25,7 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
     public hasButton !: HasManyHasAssociationMixin<Button, number>;
     public countButtons !: HasManyCountAssociationsMixin;
     public createButton !: HasManyCreateAssociationMixin<Button>;
-    public readonly buttons?: Button[];
+    public readonly Buttons?: Button[];
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

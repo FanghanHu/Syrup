@@ -31,7 +31,7 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     public getTableArea !: BelongsToGetAssociationMixin<TableArea>;
     public setTableArea !: BelongsToSetAssociationMixin<TableArea, number>;
     public createTableArea !: BelongsToCreateAssociationMixin<TableArea>;
-    public readonly tableArea?: TableArea;
+    public readonly TableArea?: TableArea;
 
     //has many Order
     public getOrders !: HasManyGetAssociationsMixin<Order>;
@@ -39,7 +39,7 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     public hasOrder !: HasManyHasAssociationMixin<Order, number>;
     public countOrders !: HasManyCountAssociationsMixin;
     public createOrder !: HasManyCreateAssociationMixin<Order>;
-    public readonly orders?: Order[];
+    public readonly Orders?: Order[];
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

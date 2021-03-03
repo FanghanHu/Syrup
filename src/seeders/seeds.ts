@@ -24,7 +24,10 @@ async function resetDB() {
         {
             include: ["Menu"]
         }
-    )
+    );
 }
 
 resetDB();
+
+
+
