@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../components/Button";
 import InputGroup from "../components/InputGroup";
+import KeyboardButton from "../components/KeyboardButton";
 import Label from "../components/Label";
 import LabelBar from "../components/LabelBar";
 import Panel from "../components/Panel";
@@ -22,6 +23,9 @@ export default function Test(): JSX.Element {
           <Button themeColor={Color.kiwi_green} style={{ fontSize: "2rem" }}>
             Button
           </Button>
+          <KeyboardButton>
+            Enter
+          </KeyboardButton>
         </PanelBody>
         <LabelBar>The Label Bar</LabelBar>
       </Panel>

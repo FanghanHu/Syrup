@@ -31,6 +31,7 @@ export default function Label({children, style, themeColor=Color.dark_gray, ...r
         `,
         textShadow: "0 0 4px black",
         padding: "3px",
+        margin: 0,
         backgroundBlendMode: "overlay",
         ...style
     }
