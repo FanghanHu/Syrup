@@ -1,19 +1,27 @@
 import React from 'react';
+import { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-import InputGroup from '../components/InputGroup';
-import KeyboardButton from '../components/KeyboardButton';
-import Label from '../components/Label';
-import Panel from '../components/Panel';
-import PanelBody from '../components/PanelBody';
-import PanelHeader from '../components/PanelHeader';
-import TextInput from '../components/TextInput';
+import InputGroup from '../components/input-group';
+import KeyboardButton from '../components/keybord-button';
+import Label from '../components/label';
+import NumberPad from '../components/number-pad';
+import Panel from '../components/panel';
+import PanelBody from '../components/panel-body';
+import PanelHeader from '../components/panel-header';
+import TextInput from '../components/text-input';
+import { useLogin, useSetLogin } from '../contexts/login-context';
 
 export default function Login(): JSX.Element {
+    const loginToken = useLogin();
+    const setLoginToken = useSetLogin();
+
+    const [accessCode, setAccessCode] = useState("");
+
     return (
         <Container fluid>
             <div className="d-flex flex-column justify-content-center vh-100">
-                <Panel className="w-100 mx-auto" style={{maxWidth:"500px"}}>
+                <Panel className="mx-auto" style={{maxWidth:"500px"}}>
                     <PanelHeader>
                         Login
                     </PanelHeader>
@@ -22,39 +30,7 @@ export default function Login(): JSX.Element {
                             <Label>Access Code:</Label>
                             <TextInput></TextInput>
                         </InputGroup>
-                        <Row className="justify-content-center my-2">
-                            <Col>
-                                <KeyboardButton className="w-100">7</KeyboardButton>
-                            </Col>
-                            <Col>
-                                <KeyboardButton className="w-100">8</KeyboardButton>
-                            </Col>
-                            <Col>
-                                <KeyboardButton className="w-100">9</KeyboardButton>
-                            </Col>
-                        </Row>
-                        <Row className="justify-content-center  my-2">
-                            <Col>
-                                <KeyboardButton className="w-100">4</KeyboardButton>
-                            </Col>
-                            <Col>
-                                <KeyboardButton className="w-100">5</KeyboardButton>
-                            </Col>
-                            <Col>
-                                <KeyboardButton className="w-100">6</KeyboardButton>
-                            </Col>
-                        </Row>
-                        <Row className="justify-content-center my-2">
-                            <Col>
-                                <KeyboardButton className="w-100">1</KeyboardButton>
-                            </Col>
-                            <Col>
-                                <KeyboardButton className="w-100">2</KeyboardButton>
-                            </Col>
-                            <Col>
-                                <KeyboardButton className="w-100">3</KeyboardButton>
-                            </Col>
-                        </Row>
+                        <NumberPad text={accessCode} setText={setAccessCode}/>
                     </PanelBody>
                 </Panel>
             </div>

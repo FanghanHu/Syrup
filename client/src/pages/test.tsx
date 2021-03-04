@@ -1,13 +1,13 @@
 import React from "react";
-import Button from "../components/Button";
-import InputGroup from "../components/InputGroup";
-import KeyboardButton from "../components/KeyboardButton";
-import Label from "../components/Label";
-import LabelBar from "../components/LabelBar";
-import Panel from "../components/Panel";
-import PanelBody from "../components/PanelBody";
-import PanelHeader from "../components/PanelHeader";
-import TextInput from "../components/TextInput";
+import Button from "../components/button";
+import InputGroup from "../components/input-group";
+import KeyboardButton from "../components/keybord-button";
+import Label from "../components/label";
+import LabelBar from "../components/label-bar";
+import Panel from "../components/panel";
+import PanelBody from "../components/panel-body";
+import PanelHeader from "../components/panel-header";
+import TextInput from "../components/text-input";
 import { Color } from "../util/Color";
 
 export default function Test(): JSX.Element {

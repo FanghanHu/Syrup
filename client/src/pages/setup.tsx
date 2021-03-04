@@ -1,9 +1,10 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import Button from "../components/Button";
-import ExpandableSideMenu from "../components/ExpandableSideMenu";
-import LabelBar from "../components/LabelBar";
+import Button from "../components/button";
+import ExpandableSideMenu from "../components/expandable-side-menu";
+import LabelBar from "../components/label-bar";
 import { Color } from "../util/Color";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Setup(): JSX.Element {
 
@@ -15,20 +16,20 @@ export default function Setup(): JSX.Element {
                 <div className="d-flex flex-column justfy-content-center p-2 h-100">
                     <div className="d-flex flex-column flex-grow-1">
                         <LabelBar themeColor={Color.sky_blue} className="m-2 h3 text-center text-nowrap p-3">
-                            <i className="fas fa-cog"></i> Back Office
+                            <FontAwesomeIcon icon="cog"></FontAwesomeIcon> Back Office
                         </LabelBar>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            <i className="fas fa-users"></i> User Setup
+                            <FontAwesomeIcon icon="users"></FontAwesomeIcon> User Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            <i className="fas fa-book"></i> Menu Setup
+                            <FontAwesomeIcon icon="book"></FontAwesomeIcon> Menu Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            <i className="fas fa-chair"></i> Table Setup
+                            <FontAwesomeIcon icon="chair"></FontAwesomeIcon> Table Setup
                         </Button>
                     </div>
                     <Button themeColor={Color.fire_red} className="m-1">
-                        <i className="fas fa-sign-out-alt"></i> Exit
+                    <FontAwesomeIcon icon="sign-out-alt"></FontAwesomeIcon> Exit
                     </Button>
                 </div>
             </ExpandableSideMenu>
