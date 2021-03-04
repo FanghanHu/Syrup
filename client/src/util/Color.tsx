@@ -1,9 +1,10 @@
 export const Color = {
-  black: [0, 0, 0],
+  white: [255, 255, 255],
+  almost_white: [240, 240, 240],
   light_gray: [222, 222, 222],
   gray: [150, 150, 150],
   dark_gray: [96, 96, 96],
-  white: [255, 255, 255],
+  black: [0, 0, 0],
   sky_blue: [50, 169, 237],
   fire_red: [222, 46, 10],
   light_green: [143, 196, 20],

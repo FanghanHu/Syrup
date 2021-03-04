@@ -1,0 +1,29 @@
+.syrup-keyboard-button {
+    vertical-align: bottom;
+    border: 1px solid gray;
+    border-radius: 4px;
+    text-shadow: 0 0 5px lightgray;
+    box-shadow: inset -0.2em -0.2em 0.2em rgba(0,0,0,0.8);
+    transition: box-shadow 0.1s;
+}
+
+.syrup-keyboard-button-inner {
+    margin: 0.5em 0.7em 0.7em 0.5em;
+    transition: margin 0.1s;
+}
+
+.syrup-keyboard-button:focus {
+    outline: none;
+}
+
+.syrup-keyboard-button:hover {
+    text-shadow: 0 0 5px white;
+}
+
+.syrup-keyboard-button:active {
+    box-shadow: inset 0 0 0.2em black;
+}
+
+.syrup-keyboard-button:active .syrup-keyboard-button-inner {
+    margin: 0.7em 0.5em 0.5em 0.7em;
+}
