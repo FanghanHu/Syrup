@@ -11,6 +11,9 @@ import db from "../models";
 //timeout: 10mins, when a user's last activity is 10mins ago, the user is considered logged out.
 const TIMEOUT = 600000;
 
+const env = process.env.NODE_ENV || 'development';
+const DEVELOPMENT_TOKEN = "DEVELOPMENT_TOKEN";
+
 /**
  * Key is the user Id, value is an array of active hash with a timestamp,
  * Every time an user login with credentials, a hash is generated and sent to the client.
@@ -26,6 +29,11 @@ const onlineUsers: {
  * @param renew default true, when true, token's timestamp is renewed once validated.
  */
 export function confirmToken(userId: number, hash: string, renew:boolean = true): boolean {
+    if(env === 'development' && hash === DEVELOPMENT_TOKEN) {
+        //allow authentication without a token during development.
+        return true;
+    }
+
     let match = false;
     if(onlineUsers[userId]) {
         //remove all timed out usertoken
