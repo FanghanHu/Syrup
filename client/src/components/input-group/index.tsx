@@ -1,8 +1,12 @@
 import React from "react";
 import "./style.css";
 
-export default function InputGroup({children, ...restOfProps} : {children?: React.ReactNode} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
-    return <div className="syrup-input-group" {...restOfProps}>
+interface InputGroupProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+    children?: React.ReactNode
+} 
+
+export default function InputGroup({children, className, ...restOfProps} : InputGroupProps) {
+    return <div className={className?"syrup-input-group " + className: "syrup-input-group "} {...restOfProps}>
         {children}
     </div>;
 }

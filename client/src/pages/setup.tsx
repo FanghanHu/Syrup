@@ -16,20 +16,20 @@ export default function Setup(): JSX.Element {
                 <div className="d-flex flex-column justfy-content-center p-2 h-100">
                     <div className="d-flex flex-column flex-grow-1">
                         <LabelBar themeColor={Color.sky_blue} className="m-2 h3 text-center text-nowrap p-3">
-                            <FontAwesomeIcon icon="cog"></FontAwesomeIcon> Back Office
+                            <FontAwesomeIcon icon="cog"/> Back Office
                         </LabelBar>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            <FontAwesomeIcon icon="users"></FontAwesomeIcon> User Setup
+                            <FontAwesomeIcon icon="users"/> User Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            <FontAwesomeIcon icon="book"></FontAwesomeIcon> Menu Setup
+                            <FontAwesomeIcon icon="book"/> Menu Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1">
-                            <FontAwesomeIcon icon="chair"></FontAwesomeIcon> Table Setup
+                            <FontAwesomeIcon icon="chair"/> Table Setup
                         </Button>
                     </div>
                     <Button themeColor={Color.fire_red} className="m-1">
-                    <FontAwesomeIcon icon="sign-out-alt"></FontAwesomeIcon> Exit
+                    <FontAwesomeIcon icon="sign-out-alt"/> Exit
                     </Button>
                 </div>
             </ExpandableSideMenu>
