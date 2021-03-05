@@ -9,6 +9,7 @@ import ContextProviders from "./contexts";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
+import MainMenu from "./pages/main-menu";
 
 library.add(fas);
 library.add(fab);
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" exact component={Test}/>
           <Route path="/setup" exact component={Setup}/>
           <Route path="/login" exact component={Login}/>
+          <Route path="/main-menu" exact component={MainMenu}/>
         </Router>
       </ContextProviders>
     </div>

@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  min-width: 100vh;
+  min-width: 100vw;
   min-height: 100vh;
 }
 
@@ -13,7 +13,5 @@ html, body {
 
 body {
   background: #237779;
-  background: -webkit-linear-gradient(top left, #237779, #E2EC78);
-  background: -moz-linear-gradient(top left, #237779, #E2EC78);
   background: linear-gradient(to bottom right, #237779, #E2EC78);
 }
