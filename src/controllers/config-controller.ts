@@ -19,15 +19,10 @@ export async function getNextOrderNumber() {
             transaction: t,
             lock: true
         });
-
         orderNumber = globalConfig.data?.orderNumber;
-        console.log(`orderNumber ${orderNumber}`);
-        
-
         if(orderNumber) {
             //update order number
             let nextOrderNumber = parseInt(orderNumber) + 1;
-            console.log(nextOrderNumber);
             await db.sequelize.query('UPDATE configs SET data = JSON_SET(data, "$.orderNumber", ?) WHERE UserId is NULL', 
             {
                 replacements: [nextOrderNumber],

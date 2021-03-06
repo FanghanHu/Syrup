@@ -19,7 +19,7 @@ export type OrderCache = {
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
  */
-interface OrderAttributes {
+export interface OrderAttributes {
     id: number;
     orderNumber: string;
     status: string;
