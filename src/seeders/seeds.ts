@@ -19,7 +19,7 @@ async function resetDB() {
         fullName: "testUser",
         accessCode: "0",
         username:"test",
-        password:"test".sha256()
+        password:"test"
     });
 
     const globalConfig = await db.Config.create({

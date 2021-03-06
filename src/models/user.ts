@@ -7,6 +7,7 @@ import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 import { OrderModifier, OrderModifierCreationAttributes } from "./order-modifier";
 import { Payment, PaymentCreationAttributes } from "./payment";
 import { Role, RoleCreationAttributes } from "./role";
+import '../utils';
 
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
@@ -149,7 +150,11 @@ export default function UserFactory(sequelize: Sequelize): typeof User {
             },
             password: {
                 type: DataTypes.STRING,
-                allowNull: true
+                allowNull: true,
+                set(value:string) {
+                    //hash the password
+                    this.setDataValue('password', value.sha256());
+                }
             },
             accessCode: {
                 type: DataTypes.STRING,
