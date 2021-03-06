@@ -11,6 +11,7 @@ import { User, UserCreationAttributes } from "./user";
 interface OrderModifierAttributes {
     id: number;
     modifierData: object;
+    status : string;
 }
 
 /**
@@ -30,6 +31,7 @@ export interface OrderModifierCreationAttributes extends Optional<OrderModifierA
 export class OrderModifier extends Model<OrderModifierAttributes, OrderModifierCreationAttributes> implements OrderModifierAttributes {
     public id!: number;
     public modifierData!: object;
+    public status!: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -77,6 +79,10 @@ export default function OrderModifierFactory(sequelize: Sequelize): typeof Order
             },
             modifierData: {
                 type: DataTypes.JSON,
+                allowNull: false
+            },
+            status: {
+                type: DataTypes.STRING,
                 allowNull: false
             }
         }, {
