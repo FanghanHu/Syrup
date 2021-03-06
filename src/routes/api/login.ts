@@ -1,4 +1,4 @@
-import loginController from "../../controllers/loginController";
+import loginController from "../../controllers/login-controller";
 
 const router = require("express").Router();
 

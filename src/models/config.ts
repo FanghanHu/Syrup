@@ -7,7 +7,10 @@ import { User, UserCreationAttributes } from "./user";
  */
 interface ConfigAttributes {
     id: number;
-    data?: object;
+    data: {
+        [key: string]: any
+    };
+    UserId?: number;
 }
 
 /**
@@ -26,7 +29,9 @@ export interface ConfigCreationAttributes extends Optional<ConfigAttributes, "id
  */
 export class Config extends Model<ConfigAttributes, ConfigCreationAttributes> implements ConfigAttributes {
     public id!: number;
-    public data?: object;
+    public data!: {
+        [key: string]: any
+    };
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;

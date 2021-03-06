@@ -21,6 +21,12 @@ async function resetDB() {
         username:"test",
         password:"test".sha256()
     });
+
+    const globalConfig = await db.Config.create({
+        data: {
+            orderNumber: 1
+        }
+    });
 }
 
 resetDB();
