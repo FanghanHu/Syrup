@@ -1,8 +1,7 @@
 import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin} from "sequelize";
 import { DatabaseType } from ".";
 import { Modifier, ModifierCreationAttributes } from "./modifier";
-import { OrderCreationAttributes } from "./order";
-import { OrderItem } from "./order-item";
+import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 import { User, UserCreationAttributes } from "./user";
 
 /**
@@ -19,8 +18,11 @@ interface OrderModifierAttributes {
  */
 export interface OrderModifierCreationAttributes extends Optional<OrderModifierAttributes, "id"> {
     Modifier?: ModifierCreationAttributes;
-    Order?: OrderCreationAttributes;
+    ModifierId?: number;
+    OrderItem?: OrderItemCreationAttributes;
+    OrderItemId?: number;
     Server?: UserCreationAttributes;
+    ServerId?: number;
 };
 
 /**
@@ -41,18 +43,21 @@ export class OrderModifier extends Model<OrderModifierAttributes, OrderModifierC
     public setModifier!: BelongsToSetAssociationMixin<Modifier, number>;
     public createModifier!: BelongsToCreateAssociationMixin<Modifier>;
     public readonly Modifier?: Modifier;
+    public ModifierId?: number;
 
     //belongs to OrderItem
     public getOrderItem!: BelongsToGetAssociationMixin<OrderItem>;
     public setOrderItem!: BelongsToSetAssociationMixin<OrderItem, number>;
     public createOrderItem!: BelongsToCreateAssociationMixin<OrderItem>;
     public readonly OrderItem?: OrderItem;
+    public OrderItemId?: number;
 
     //belongs to Server (User)
     public getServer!: BelongsToGetAssociationMixin<User>;
     public setServer!: BelongsToSetAssociationMixin<User, number>;
     public createServer!: BelongsToCreateAssociationMixin<User>;
     public readonly Server?: User;
+    public ServerId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

@@ -20,6 +20,7 @@ interface TableAttributes {
  */
 export interface TableCreationAttributes extends Optional<TableAttributes, "id"> {
     TableArea?: TableAreaCreationAttributes;
+    TableAreaId?: number;
     orders?: OrderCreationAttributes[];
 };
 
@@ -41,6 +42,7 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     public setTableArea!: BelongsToSetAssociationMixin<TableArea, number>;
     public createTableArea!: BelongsToCreateAssociationMixin<TableArea>;
     public readonly TableArea?: TableArea;
+    public TableAreaId?: number;
 
     //has many Order
     public getOrders!: HasManyGetAssociationsMixin<Order>;

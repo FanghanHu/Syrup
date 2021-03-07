@@ -18,6 +18,7 @@ interface ConfigAttributes {
  */
 export interface ConfigCreationAttributes extends Optional<ConfigAttributes, "id"> {
     User?: UserCreationAttributes;
+    UserId?: number;
 };
 
 /**
@@ -41,6 +42,7 @@ export class Config extends Model<ConfigAttributes, ConfigCreationAttributes> im
     public setUser!: BelongsToSetAssociationMixin<User, number>;
     public createUser!: BelongsToCreateAssociationMixin<User>;
     public readonly User?: User;
+    public UserId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

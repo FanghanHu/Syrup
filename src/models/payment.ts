@@ -1,7 +1,7 @@
 import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, Order} from "sequelize";
 import { DatabaseType } from ".";
 import { OrderCreationAttributes } from "./order";
-import { User } from "./user";
+import { User, UserCreationAttributes } from "./user";
 
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
@@ -16,7 +16,10 @@ interface PaymentAttributes {
  * CreationAttributes interface marks additional attributes that should be available for creating data with include option
  */
 export interface PaymentCreationAttributes extends Optional<PaymentAttributes, "id"> {
-    order?: OrderCreationAttributes;
+    Order?: OrderCreationAttributes;
+    OrderId?: number;
+    Server?: UserCreationAttributes;
+    ServerId?: number;
 };
 
 /**
@@ -35,12 +38,14 @@ export class Payment extends Model<PaymentAttributes, PaymentCreationAttributes>
     public setOrder!: BelongsToSetAssociationMixin<Order, number>;
     public createOrder!: BelongsToCreateAssociationMixin<Order>;
     public readonly Order?: Order;
+    public OrderId?: number;
 
     //belongs to Server (User)
     public getServer!: BelongsToGetAssociationMixin<User>;
     public setServer!: BelongsToSetAssociationMixin<User, number>;
     public createServer!: BelongsToCreateAssociationMixin<User>;
     public readonly Server?: User;
+    public ServerId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

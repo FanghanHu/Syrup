@@ -17,7 +17,9 @@ interface ButtonAttributes {
  */
 export interface ButtonCreationAttributes extends Optional<ButtonAttributes, "id"> {
     Menu?: MenuCreationAttributes;
+    MenuId?: number;
     Script?: ScriptCreationAttributes;
+    ScriptId?: number;
 };
 
 /**
@@ -38,12 +40,14 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
     public setMenu!: BelongsToSetAssociationMixin<Menu, number>;
     public createMenu!: BelongsToCreateAssociationMixin<Menu>;
     public readonly Menu?: Menu;
+    public MenuId?: number;
 
     //belongs to Script
     public getScript!: BelongsToGetAssociationMixin<Script>;
     public setScript!: BelongsToSetAssociationMixin<Script, number>;
     public createScript!: BelongsToCreateAssociationMixin<Script>;
     public readonly Script?: Script;
+    public ScriptId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

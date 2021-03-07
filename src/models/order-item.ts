@@ -1,8 +1,9 @@
 import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin} from "sequelize";
 import { DatabaseType } from ".";
+import { Item, ItemCreationAttributes } from "./item";
 import { Order, OrderCreationAttributes } from "./order";
 import { OrderModifier, OrderModifierCreationAttributes } from "./order-modifier";
-import { User } from "./user";
+import { User, UserCreationAttributes } from "./user";
 
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
@@ -18,7 +19,12 @@ interface OrderItemAttributes {
  */
 export interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {
     Order?: OrderCreationAttributes;
+    OrderId?: number;
     OrderModifiers?: OrderModifierCreationAttributes[];
+    Server?: UserCreationAttributes;
+    ServerId?: number;
+    Item?: ItemCreationAttributes;
+    ItemId?: number;
 };
 
 /**
@@ -38,12 +44,14 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
     public setOrder!: BelongsToSetAssociationMixin<Order, number>;
     public createOrder!: BelongsToCreateAssociationMixin<Order>;
     public readonly Order?: Order;
+    public OrderId?: number;
 
     //belongs to Server (User)
     public getServer!: BelongsToGetAssociationMixin<User>;
     public setServer!: BelongsToSetAssociationMixin<User, number>;
     public createServer!: BelongsToCreateAssociationMixin<User>;
     public readonly Server?: User;
+    public ServerId?: number;
 
     //has many OrderModifier
     public getOrderModifiers!: HasManyGetAssociationsMixin<OrderModifier>;
@@ -53,10 +61,18 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
     public createOrderModifier!: HasManyCreateAssociationMixin<OrderModifier>;
     public readonly OrderModifiers?: OrderModifier[];
 
+    //belongs to Item
+    public getItem!: BelongsToGetAssociationMixin<Item>;
+    public setItem!: BelongsToSetAssociationMixin<Item, number>;
+    public createItem!: BelongsToCreateAssociationMixin<Item>;
+    public readonly Item?: Item;
+    public ItemId?: number;
+
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
+        OrderItem.belongsTo(db.Item);
         OrderItem.belongsTo(db.Order);
         OrderItem.belongsTo(db.User, {as: "Server"})
         OrderItem.hasMany(db.OrderModifier);

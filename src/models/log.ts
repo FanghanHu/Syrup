@@ -16,6 +16,7 @@ interface LogAttributes {
  */
 export interface LogCreationAttributes extends Optional<LogAttributes, "id"> {
     User?: UserCreationAttributes;
+    UserId?: number;
 };
 
 /**
@@ -36,6 +37,7 @@ export class Log extends Model<LogAttributes, LogCreationAttributes> implements 
     public setUser!: BelongsToSetAssociationMixin<User, number>;
     public createUser!: BelongsToCreateAssociationMixin<User>;
     public readonly User?: User;
+    public UserId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 

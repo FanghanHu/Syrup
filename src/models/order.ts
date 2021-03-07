@@ -29,7 +29,6 @@ export interface OrderAttributes {
      */
     cache?: OrderCache;
     type: "Dine in" | "To Go" | "Pick up" | "Delivery";
-    ServerId?: number;
 }
 
 /**
@@ -37,9 +36,12 @@ export interface OrderAttributes {
  */
 export interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {
     Table?: TableCreationAttributes;
+    TableId?: number;
     Customers?: CustomerCreationAttributes[];
     OrderItems?: OrderItemCreationAttributes[];
     Server?: UserCreationAttributes;
+    ServerId?: number;
+
 };
 
 /**
@@ -60,6 +62,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public setTable!: BelongsToSetAssociationMixin<Table, number>;
     public createTable!: BelongsToCreateAssociationMixin<Table>;
     public readonly Table?: Table;
+    public TableId?: number;
 
     //belongs to many Customers
     public getCustomers!: BelongsToManyGetAssociationsMixin<Customer>;
@@ -87,6 +90,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public setServer!: BelongsToSetAssociationMixin<User, number>;
     public createServer!: BelongsToCreateAssociationMixin<User>;
     public readonly Server?: User;
+    public ServerId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
