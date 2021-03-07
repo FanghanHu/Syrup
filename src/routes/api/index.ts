@@ -4,6 +4,7 @@ const env = process.env.NODE_ENV || 'development';
 router.use("/login", require("./login"));
 router.use("/order", require("./order"));
 router.use("/item", require("./item"));
+router.use("/modifier", require("./modifier"));
 
 //Handles all uncaught error by sending them to client
 router.use((error: Error, req, res, next) => {
