@@ -1,4 +1,3 @@
-import { Sequelize } from "sequelize/types";
 import db from "../models";
 
 
