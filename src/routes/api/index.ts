@@ -1,10 +1,14 @@
+import generateSimpleCrudRouter from "../../controllers/simple-crud-controller";
+import db from "../../models";
+
 const router = require("express").Router();
 const env = process.env.NODE_ENV || 'development';
 
 router.use("/login", require("./login"));
 router.use("/order", require("./order"));
-router.use("/item", require("./item"));
-router.use("/modifier", require("./modifier"));
+router.use("/item", generateSimpleCrudRouter(db.Item));
+router.use("/modifier", generateSimpleCrudRouter(db.Modifier));
+router.use("/menu", generateSimpleCrudRouter(db.Menu));
 
 //Handles all uncaught error by sending them to client
 router.use((error: Error, req, res, next) => {
