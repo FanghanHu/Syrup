@@ -31,6 +31,7 @@ async function getOrderFromOrderId(req: Request, res: Response, options:Omit<Fin
  */
 export const createOrder = catchError(async (req:Request, res:Response) => {
     if(isTokeninvalid(req, res)) return;
+    const userId = req.body.userId;
 
     //client provided order type
     const type = req.body.type;
@@ -45,7 +46,8 @@ export const createOrder = catchError(async (req:Request, res:Response) => {
     const order = await db.Order.create({
         orderNumber,
         status: "NEW",
-        type
+        type,
+        ServerId: userId
     });
     return res.status(200).json(order);
 });
@@ -59,13 +61,14 @@ export const createOrder = catchError(async (req:Request, res:Response) => {
  * Upon success, an updated order is returned.
  * 
  * TODO: update order cache
- * 
+ * TODO: add logs
  * TODO: add server side validation:
  * 1. client may send wrong orderItem Id, or wrong orderModifier Id, and it will modify wrong order.
  */
 export const editItems = catchError(async (req: Request, res: Response) => {
     //check client token
     if(isTokeninvalid(req, res)) return;
+    const ServerId = req.body.userId;
 
     //find and lock the order before edit is done.
     const t = await db.sequelize.transaction();
@@ -91,13 +94,13 @@ export const editItems = catchError(async (req: Request, res: Response) => {
                         if(orderModifer.id) {
                             await db.OrderModifier.update({...orderModifer, id: undefined}, {where: {id: orderModifer.id}, transaction: t});
                         } else {
-                            await db.OrderModifier.create({OrderItemId: orderItem.id, ...orderModifer}, {transaction: t});
+                            await db.OrderModifier.create({...orderModifer, OrderItemId: orderItem.id, ServerId}, {transaction: t});
                         }
                     }
                 }
             } else {
                 //create a new orderItem
-                await order.createOrderItem(orderItem, {include: ["OrderModifiers"], transaction: t});
+                await order.createOrderItem({...orderItem, ServerId}, {include: ["OrderModifiers"], transaction: t});
             }
         }
 

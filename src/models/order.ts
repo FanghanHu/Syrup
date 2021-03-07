@@ -29,6 +29,7 @@ export interface OrderAttributes {
      */
     cache?: OrderCache;
     type: "Dine in" | "To Go" | "Pick up" | "Delivery";
+    ServerId?: number;
 }
 
 /**
