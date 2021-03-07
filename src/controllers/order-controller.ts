@@ -89,12 +89,12 @@ export const editItems = catchError(async (req: Request, res: Response) => {
                 //update existing orderItem
                 const updatedOrderItems = await db.OrderItem.update({...orderItem, id: undefined}, {where: {id: orderItem.id}, transaction: t});
                 if(orderItem.OrderModifiers){
-                    for(const orderModifer of orderItem.OrderModifiers) {
+                    for(const orderModifier of orderItem.OrderModifiers) {
                         //update modifiers
-                        if(orderModifer.id) {
-                            await db.OrderModifier.update({...orderModifer, id: undefined}, {where: {id: orderModifer.id}, transaction: t});
+                        if(orderModifier.id) {
+                            await db.OrderModifier.update({...orderModifier, id: undefined}, {where: {id: orderModifier.id}, transaction: t});
                         } else {
-                            await db.OrderModifier.create({...orderModifer, OrderItemId: orderItem.id, ServerId}, {transaction: t});
+                            await db.OrderModifier.create({...orderModifier, OrderItemId: orderItem.id, ServerId}, {transaction: t});
                         }
                     }
                 }

@@ -63,7 +63,7 @@ export class OrderModifier extends Model<OrderModifierAttributes, OrderModifierC
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
-        OrderModifier.belongsTo(db.Modifer);
+        OrderModifier.belongsTo(db.Modifier);
         OrderModifier.belongsTo(db.OrderItem);
         OrderModifier.belongsTo(db.User, {as: "Server"})
     }
