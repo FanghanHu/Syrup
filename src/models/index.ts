@@ -41,7 +41,7 @@ const db = {
   Customer: CustomerFactory(sequelize),
   Item: ItemFactory(sequelize),
   OrderItem: OrderItemFactory(sequelize),
-  Modifer: ModifierFactory(sequelize),
+  Modifier: ModifierFactory(sequelize),
   OrderModifier: OrderModifierFactory(sequelize),
   Log: LogFactory(sequelize),
   User: UserFactory(sequelize),
