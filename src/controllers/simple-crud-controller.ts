@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { ModelCtor } from "sequelize/types";
 import { catchError, isIdValid } from "../utils/helpers";
 import { isTokeninvalid } from "../utils/login-token";
 

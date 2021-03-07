@@ -9,6 +9,8 @@ router.use("/order", require("./order"));
 router.use("/item", generateSimpleCrudRouter(db.Item));
 router.use("/modifier", generateSimpleCrudRouter(db.Modifier));
 router.use("/menu", generateSimpleCrudRouter(db.Menu));
+router.use("/button", generateSimpleCrudRouter(db.Button));
+router.use("/script", generateSimpleCrudRouter(db.Script));
 
 //Handles all uncaught error by sending them to client
 router.use((error: Error, req, res, next) => {
