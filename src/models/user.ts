@@ -7,7 +7,7 @@ import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 import { OrderModifier, OrderModifierCreationAttributes } from "./order-modifier";
 import { Payment, PaymentCreationAttributes } from "./payment";
 import { Role, RoleCreationAttributes } from "./role";
-import '../utils';
+import '../utils/hashing';
 
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)

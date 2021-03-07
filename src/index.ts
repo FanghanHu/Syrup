@@ -4,7 +4,6 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 import db from "./models";
-import "./utils";
 import routes from "./routes";
 
 // Define middleware here

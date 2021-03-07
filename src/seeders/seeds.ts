@@ -1,5 +1,4 @@
 import db from "../models";
-import '../utils';
 
 async function resetDB() {
     await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');

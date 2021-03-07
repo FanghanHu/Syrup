@@ -1,4 +1,5 @@
 import db from "../models";
+import { catchError } from "../utils/helpers";
 
 /**
  * The login process:
@@ -68,73 +69,60 @@ function createToken(userId: number): string {
     return token.hash;
 }
 
-const loginController = {
-    loginWithAccessCode: async function(req, res) {
-        const accessCode = req.body.accessCode;
-        try {
-            //find all user with the given accesscode
-            const users = await db.User.findAll({
-                where: {
-                    accessCode
-                }
-            });
+export const loginWithAccessCode = catchError(async (req, res) => {
+    const accessCode = req.body.accessCode;
 
-            //check if only 1 user is returned, in case unqiue check failed in the db
-            if(users.length === 1) {
-                const user = users[0];
-                //create a new hash token
-                const hash = createToken(user.id);
-
-                //respond with necessary information
-                return res.status(200).json({
-                    fullName: user.fullName,
-                    userId: user.id,
-                    hash
-                });
-            } else {
-                //either a user is not found, or more than 1 is found (which should never happen)
-                return res.status(404).send("Access Denied!");
-            }
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
+    //find all user with the given accesscode
+    const users = await db.User.findAll({
+        where: {
+            accessCode
         }
-    },
-    loginWithPassword: async function(req, res) {
-        const username = req.body.username;
-        const password:string = req.body.password;
+    });
 
-        try {
-            //find all user with the given username and password
-            //passwords are stored in sha256 hash
-            const users = await db.User.findAll({
-                where: {
-                    username,
-                    password: password.sha256()
-                }
-            });
+    //check if only 1 user is returned, in case unqiue check failed in the db
+    if(users.length === 1) {
+        const user = users[0];
+        //create a new hash token
+        const hash = createToken(user.id);
 
-            //check if only 1 user is returned, in case unqiue check failed in the db
-            if(users.length === 1) {
-                const user = users[0];
-                //create a new hash token
-                const hash = createToken(user.id);
-
-                //respond with necessary information
-                return res.status(200).json({
-                    fullName: user.fullName,
-                    id: user.id,
-                    hash
-                });
-            } else {
-                //either a user is not found, or more than 1 is found (which should never happen)
-                return res.status(404).send("Access Denied!");
-            }
-        } catch (err) {
-            console.log(err);
-            res.status(500).json(err);
-        }
+        //respond with necessary information
+        return res.status(200).json({
+            fullName: user.fullName,
+            userId: user.id,
+            hash
+        });
+    } else {
+        //either a user is not found, or more than 1 is found (which should never happen)
+        return res.status(404).send("Access Denied!");
     }
-}
+});
+    
+export const loginWithPassword = catchError(async (req, res) => {
+    const username = req.body.username;
+    const password:string = req.body.password;
+    //find all user with the given username and password
+    //passwords are stored in sha256 hash
+    const users = await db.User.findAll({
+        where: {
+            username,
+            password: password.sha256()
+        }
+    });
 
-export default loginController;
+    //check if only 1 user is returned, in case unqiue check failed in the db
+    if(users.length === 1) {
+        const user = users[0];
+        //create a new hash token
+        const hash = createToken(user.id);
+
+        //respond with necessary information
+        return res.status(200).json({
+            fullName: user.fullName,
+            id: user.id,
+            hash
+        });
+    } else {
+        //either a user is not found, or more than 1 is found (which should never happen)
+        return res.status(404).send("Access Denied!");
+    }
+});
