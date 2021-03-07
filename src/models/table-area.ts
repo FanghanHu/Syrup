@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { DataTypes, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { Table, TableCreationAttributes } from "./table";
@@ -31,9 +31,14 @@ export class TableArea extends Model<TableAreaAttributes, TableAreaCreationAttri
 
     //has many Table
     public getTables!: HasManyGetAssociationsMixin<Table>;
-    public addTable!: HasManyAddAssociationsMixin<Table, number>;
-    public hasTable!: HasManyHasAssociationMixin<Table, number>;
     public countTables!: HasManyCountAssociationsMixin;
+    public hasTable!: HasManyHasAssociationMixin<Table, number>;
+    public hasTables!: HasManyHasAssociationsMixin<Table, number>;
+    public setTables!: HasManySetAssociationsMixin<Table, number>;
+    public addTable!: HasManyAddAssociationMixin<Table, number>;
+    public addTables!: HasManyAddAssociationsMixin<Table, number>;
+    public removeTable!: HasManyRemoveAssociationMixin<Table, number>;
+    public removeTables!: HasManyRemoveAssociationsMixin<Table, number>;
     public createTable!: HasManyCreateAssociationMixin<Table>;
     public readonly Tables?: Table[];
 

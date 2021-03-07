@@ -1,5 +1,5 @@
 import { Button, ButtonCreationAttributes } from "./button";
-import { Association, DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Association, DataTypes, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 
@@ -30,9 +30,14 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
 
     //has many Button
     public getButtons!: HasManyGetAssociationsMixin<Button>;
-    public addButton!: HasManyAddAssociationsMixin<Button, number>;
-    public hasButton!: HasManyHasAssociationMixin<Button, number>;
     public countButtons!: HasManyCountAssociationsMixin;
+    public hasButton!: HasManyHasAssociationMixin<Button, number>;
+    public hasButtons!: HasManyHasAssociationsMixin<Button, number>;
+    public setButtons!: HasManySetAssociationsMixin<Button, number>;
+    public addButton!: HasManyAddAssociationMixin<Button, number>;
+    public addButtons!: HasManyAddAssociationsMixin<Button, number>;
+    public removeButton!: HasManyRemoveAssociationMixin<Button, number>;
+    public removeButtons!: HasManyRemoveAssociationsMixin<Button, number>;
     public createButton!: HasManyCreateAssociationMixin<Button>;
     public readonly Buttons?: Button[];
 

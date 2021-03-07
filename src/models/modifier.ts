@@ -1,4 +1,4 @@
-import { Sequelize, Model, Optional, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin} from "sequelize";
+import { Sequelize, Model, Optional, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin} from "sequelize";
 import { DatabaseType } from ".";
 import { OrderModifier, OrderModifierCreationAttributes } from "./order-modifier";
 
@@ -37,9 +37,14 @@ export class Modifier extends Model<ModifierAttributes, ModifierCreationAttribut
 
     //has many OrderModifier
     public getOrderModifiers!: HasManyGetAssociationsMixin<OrderModifier>;
-    public addOrderModifier!: HasManyAddAssociationsMixin<OrderModifier, number>;
-    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
     public countOrderModifiers!: HasManyCountAssociationsMixin;
+    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
+    public hasOrderModifiers!: HasManyHasAssociationsMixin<OrderModifier, number>;
+    public setOrderModifiers!: HasManySetAssociationsMixin<OrderModifier, number>;
+    public addOrderModifier!: HasManyAddAssociationMixin<OrderModifier, number>;
+    public addOrderModifiers!: HasManyAddAssociationsMixin<OrderModifier, number>;
+    public removeOrderModifier!: HasManyRemoveAssociationMixin<OrderModifier, number>;
+    public removeOrderModifiers!: HasManyRemoveAssociationsMixin<OrderModifier, number>;
     public createOrderModifier!: HasManyCreateAssociationMixin<OrderModifier>;
     public readonly OrderModifiers?: OrderModifier[];
 

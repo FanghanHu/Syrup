@@ -7,14 +7,14 @@ import { Order, OrderCreationAttributes } from "./order";
  */
 interface CustomerAttributes {
     id: number;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    note: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    note?: string;
 }
 
 /**
@@ -30,14 +30,14 @@ export interface CustomerCreationAttributes extends Optional<CustomerAttributes,
  */
 export class Customer extends Model<CustomerAttributes, CustomerCreationAttributes> implements CustomerAttributes {
     public id!: number;
-    public firstName!: string;
-    public lastName!: string;
-    public phone!: string;
-    public address!: string;
-    public city!: string;
-    public state!: string;
-    public zip!: string;
-    public note!: string;
+    public firstName?: string;
+    public lastName?: string;
+    public phone?: string;
+    public address?: string;
+    public city?: string;
+    public state?: string;
+    public zip?: string;
+    public note?: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;

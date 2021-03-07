@@ -8,8 +8,9 @@ import { User, UserCreationAttributes } from "./user";
  */
 interface PaymentAttributes {
     id: number;
+    amount: number;
     type: string;
-    status?: string;
+    status: string;
 }
 
 /**
@@ -27,8 +28,9 @@ export interface PaymentCreationAttributes extends Optional<PaymentAttributes, "
  */
 export class Payment extends Model<PaymentAttributes, PaymentCreationAttributes> implements PaymentAttributes {
     public id!: number;
+    public amount!: number;
     public type!: string;
-    public status?: string;
+    public status!: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -68,6 +70,10 @@ export default function PaymentFactory(sequelize: Sequelize): typeof Payment {
                 type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 primaryKey: true,
+            },
+            amount: {
+                type: DataTypes.FLOAT,
+                allowNull: false
             },
             type: {
                 type: DataTypes.STRING,

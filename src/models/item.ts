@@ -1,4 +1,4 @@
-import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyAddAssociationsMixin, HasManyHasAssociationMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin} from "sequelize";
+import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyAddAssociationsMixin, HasManyHasAssociationMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManySetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin} from "sequelize";
 import { DatabaseType } from ".";
 import { OrderItem, OrderItemCreationAttributes } from "./order-item";
 
@@ -10,7 +10,7 @@ interface ItemAttributes {
     itemName: string;
     price: string;
     tax: number;
-    translation?: JSON;
+    translation?: Object;
 }
 
 /**
@@ -30,16 +30,21 @@ export class Item extends Model<ItemAttributes, ItemCreationAttributes> implemen
     public itemName!: string;
     public price!: string;
     public tax!: number;
-    public translation?: JSON;
+    public translation?: Object;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
     //has many OrderItem
     public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItem!: HasManyAddAssociationsMixin<OrderItem, number>;
-    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
     public countOrderItems!: HasManyCountAssociationsMixin;
+    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
+    public hasOrderItems!: HasManyHasAssociationsMixin<OrderItem, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public addOrderItem!: HasManyAddAssociationMixin<OrderItem, number>;
+    public addOrderItems!: HasManyAddAssociationsMixin<OrderItem, number>;
+    public removeOrderItem!: HasManyRemoveAssociationMixin<OrderItem, number>;
+    public removeOrderItems!: HasManyRemoveAssociationsMixin<OrderItem, number>;
     public createOrderItem!: HasManyCreateAssociationMixin<OrderItem>;
     public readonly OrderItems?: OrderItem[];
     

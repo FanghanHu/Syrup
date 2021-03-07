@@ -1,4 +1,4 @@
-import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Order, Sequelize } from "sequelize";
+import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional, Order, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { OrderCreationAttributes } from "./order";
@@ -12,7 +12,7 @@ interface TableAttributes {
     tableName: string;
     x: number;
     y: number;
-    icon: string;
+    icon?: string;
 }
 
 /**
@@ -32,7 +32,7 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
     public tableName!: string;
     public x!: number;
     public y!: number;
-    public icon!: string;
+    public icon?: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -46,9 +46,14 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
 
     //has many Order
     public getOrders!: HasManyGetAssociationsMixin<Order>;
-    public addOrder!: HasManyAddAssociationsMixin<Order, number>;
-    public hasOrder!: HasManyHasAssociationMixin<Order, number>;
     public countOrders!: HasManyCountAssociationsMixin;
+    public hasOrder!: HasManyHasAssociationMixin<Order, number>;
+    public hasOrders!: HasManyHasAssociationsMixin<Order, number>;
+    public setOrders!: HasManySetAssociationsMixin<Order, number>;
+    public addOrder!: HasManyAddAssociationMixin<Order, number>;
+    public addOrders!: HasManyAddAssociationsMixin<Order, number>;
+    public removeOrder!: HasManyRemoveAssociationMixin<Order, number>;
+    public removeOrders!: HasManyRemoveAssociationsMixin<Order, number>;
     public createOrder!: HasManyCreateAssociationMixin<Order>;
     public readonly Orders?: Order[];
 

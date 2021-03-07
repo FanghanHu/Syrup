@@ -1,4 +1,4 @@
-import { Sequelize, Model, Optional, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, HasOneCreateAssociationMixin} from "sequelize";
+import { Sequelize, Model, Optional, DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, HasOneCreateAssociationMixin, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin} from "sequelize";
 import { DatabaseType } from ".";
 import { Config, ConfigCreationAttributes } from "./config";
 import { Log, LogCreationAttributes } from "./log";
@@ -52,41 +52,66 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
     
     //has many Log
     public getLogs!: HasManyGetAssociationsMixin<Log>;
-    public addLog!: HasManyAddAssociationsMixin<Log, number>;
-    public hasLog!: HasManyHasAssociationMixin<Log, number>;
     public countLogs!: HasManyCountAssociationsMixin;
+    public hasLog!: HasManyHasAssociationMixin<Log, number>;
+    public hasLogs!: HasManyHasAssociationsMixin<Log, number>;
+    public setLogs!: HasManySetAssociationsMixin<Log, number>;
+    public addLog!: HasManyAddAssociationMixin<Log, number>;
+    public addLogs!: HasManyAddAssociationsMixin<Log, number>;
+    public removeLog!: HasManyRemoveAssociationMixin<Log, number>;
+    public removeLogs!: HasManyRemoveAssociationsMixin<Log, number>;
     public createLog!: HasManyCreateAssociationMixin<Log>;
     public readonly Logs?: Log[];
 
     //has many Order
     public getOrders!: HasManyGetAssociationsMixin<Order>;
-    public addOrder!: HasManyAddAssociationsMixin<Order, number>;
-    public hasOrder!: HasManyHasAssociationMixin<Order, number>;
     public countOrders!: HasManyCountAssociationsMixin;
+    public hasOrder!: HasManyHasAssociationMixin<Order, number>;
+    public hasOrders!: HasManyHasAssociationsMixin<Order, number>;
+    public setOrders!: HasManySetAssociationsMixin<Order, number>;
+    public addOrder!: HasManyAddAssociationMixin<Order, number>;
+    public addOrders!: HasManyAddAssociationsMixin<Order, number>;
+    public removeOrder!: HasManyRemoveAssociationMixin<Order, number>;
+    public removeOrders!: HasManyRemoveAssociationsMixin<Order, number>;
     public createOrder!: HasManyCreateAssociationMixin<Order>;
     public readonly Orders?: Order[];
 
     //has many OrderItem
     public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItem!: HasManyAddAssociationsMixin<OrderItem, number>;
-    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
     public countOrderItems!: HasManyCountAssociationsMixin;
+    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
+    public hasOrderItems!: HasManyHasAssociationsMixin<OrderItem, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public addOrderItem!: HasManyAddAssociationMixin<OrderItem, number>;
+    public addOrderItems!: HasManyAddAssociationsMixin<OrderItem, number>;
+    public removeOrderItem!: HasManyRemoveAssociationMixin<OrderItem, number>;
+    public removeOrderItems!: HasManyRemoveAssociationsMixin<OrderItem, number>;
     public createOrderItem!: HasManyCreateAssociationMixin<OrderItem>;
     public readonly OrderItems?: OrderItem[];
 
     //has many OrderModifier
     public getOrderModifiers!: HasManyGetAssociationsMixin<OrderModifier>;
-    public addOrderModifier!: HasManyAddAssociationsMixin<OrderModifier, number>;
-    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
     public countOrderModifiers!: HasManyCountAssociationsMixin;
+    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
+    public hasOrderModifiers!: HasManyHasAssociationsMixin<OrderModifier, number>;
+    public setOrderModifiers!: HasManySetAssociationsMixin<OrderModifier, number>;
+    public addOrderModifier!: HasManyAddAssociationMixin<OrderModifier, number>;
+    public addOrderModifiers!: HasManyAddAssociationsMixin<OrderModifier, number>;
+    public removeOrderModifier!: HasManyRemoveAssociationMixin<OrderModifier, number>;
+    public removeOrderModifiers!: HasManyRemoveAssociationsMixin<OrderModifier, number>;
     public createOrderModifier!: HasManyCreateAssociationMixin<OrderModifier>;
     public readonly OrderModifiers?: OrderModifier[];
 
     //has many Payment
     public getPayments!: HasManyGetAssociationsMixin<Payment>;
-    public addPayment!: HasManyAddAssociationsMixin<Payment, number>;
-    public hasPayment!: HasManyHasAssociationMixin<Payment, number>;
     public countPayments!: HasManyCountAssociationsMixin;
+    public hasPayment!: HasManyHasAssociationMixin<Payment, number>;
+    public hasPayments!: HasManyHasAssociationsMixin<Payment, number>;
+    public setPayments!: HasManySetAssociationsMixin<Payment, number>;
+    public addPayment!: HasManyAddAssociationMixin<Payment, number>;
+    public addPayments!: HasManyAddAssociationsMixin<Payment, number>;
+    public removePayment!: HasManyRemoveAssociationMixin<Payment, number>;
+    public removePayments!: HasManyRemoveAssociationsMixin<Payment, number>;
     public createPayment!: HasManyCreateAssociationMixin<Payment>;
     public readonly Payments?: Payment[];
 

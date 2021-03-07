@@ -1,4 +1,4 @@
-import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin} from "sequelize";
+import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, BelongsToSetAssociationMixin, BelongsToCreateAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin} from "sequelize";
 import { DatabaseType } from ".";
 import { Item, ItemCreationAttributes } from "./item";
 import { Order, OrderCreationAttributes } from "./order";
@@ -10,7 +10,7 @@ import { User, UserCreationAttributes } from "./user";
  */
 interface OrderItemAttributes {
     id : number;
-    itemData : JSON;
+    itemData : object;
     status : string;
 }
 
@@ -33,7 +33,7 @@ export interface OrderItemCreationAttributes extends Optional<OrderItemAttribute
  */
 export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
     public id!: number;
-    public itemData!: JSON;
+    public itemData!: object;
     public status!: string;
 
     public readonly createdAt!: Date;
@@ -55,9 +55,14 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
 
     //has many OrderModifier
     public getOrderModifiers!: HasManyGetAssociationsMixin<OrderModifier>;
-    public addOrderModifier!: HasManyAddAssociationsMixin<OrderModifier, number>;
-    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
     public countOrderModifiers!: HasManyCountAssociationsMixin;
+    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
+    public hasOrderModifiers!: HasManyHasAssociationsMixin<OrderModifier, number>;
+    public setOrderModifiers!: HasManySetAssociationsMixin<OrderModifier, number>;
+    public addOrderModifier!: HasManyAddAssociationMixin<OrderModifier, number>;
+    public addOrderModifiers!: HasManyAddAssociationsMixin<OrderModifier, number>;
+    public removeOrderModifier!: HasManyRemoveAssociationMixin<OrderModifier, number>;
+    public removeOrderModifiers!: HasManyRemoveAssociationsMixin<OrderModifier, number>;
     public createOrderModifier!: HasManyCreateAssociationMixin<OrderModifier>;
     public readonly OrderModifiers?: OrderModifier[];
 

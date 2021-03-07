@@ -1,8 +1,9 @@
-import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, BelongsToSetAssociationMixin, DataTypes, HasManyAddAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional, Sequelize } from "sequelize";
 import { HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin } from "sequelize/types";
 import { DatabaseType } from ".";
 import { Customer, CustomerCreationAttributes } from "./customer";
 import { OrderItem, OrderItemCreationAttributes } from "./order-item";
+import { Payment, PaymentCreationAttributes } from "./payment";
 import { Table, TableCreationAttributes } from "./table";
 import { User, UserCreationAttributes } from "./user";
 
@@ -41,7 +42,7 @@ export interface OrderCreationAttributes extends Optional<OrderAttributes, "id">
     OrderItems?: OrderItemCreationAttributes[];
     Server?: UserCreationAttributes;
     ServerId?: number;
-
+    Payments?: PaymentCreationAttributes[];
 };
 
 /**
@@ -79,9 +80,14 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
 
     //has many OrderItem
     public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItem!: HasManyAddAssociationsMixin<OrderItem, number>;
-    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
     public countOrderItems!: HasManyCountAssociationsMixin;
+    public hasOrderItem!: HasManyHasAssociationMixin<OrderItem, number>;
+    public hasOrderItems!: HasManyHasAssociationsMixin<OrderItem, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public addOrderItem!: HasManyAddAssociationMixin<OrderItem, number>;
+    public addOrderItems!: HasManyAddAssociationsMixin<OrderItem, number>;
+    public removeOrderItem!: HasManyRemoveAssociationMixin<OrderItem, number>;
+    public removeOrderItems!: HasManyRemoveAssociationsMixin<OrderItem, number>;
     public createOrderItem!: HasManyCreateAssociationMixin<OrderItem>;
     public readonly OrderItems?: OrderItem[];
 
@@ -92,6 +98,19 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public readonly Server?: User;
     public ServerId?: number;
 
+    //has many Payment
+    public getPayments!: HasManyGetAssociationsMixin<Payment>;
+    public countPayments!: HasManyCountAssociationsMixin;
+    public hasPayment!: HasManyHasAssociationMixin<Payment, number>;
+    public hasPayments!: HasManyHasAssociationsMixin<Payment, number>;
+    public setPayments!: HasManySetAssociationsMixin<Payment, number>;
+    public addPayment!: HasManyAddAssociationMixin<Payment, number>;
+    public addPayments!: HasManyAddAssociationsMixin<Payment, number>;
+    public removePayment!: HasManyRemoveAssociationMixin<Payment, number>;
+    public removePayments!: HasManyRemoveAssociationsMixin<Payment, number>;
+    public createPayment!: HasManyCreateAssociationMixin<Payment>;
+    public readonly Payments?: Payment[];
+
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
@@ -100,6 +119,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
         Order.belongsToMany(db.Customer, {through: "customerOrders"});
         Order.hasMany(db.OrderItem);
         Order.belongsTo(db.User, {as: "Server"})
+        Order.hasMany(db.Payment);
     }
 }
 

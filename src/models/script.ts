@@ -1,4 +1,4 @@
-import { DataTypes, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, Model, Optional, Sequelize } from "sequelize";
+import { DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, Model, Optional, Sequelize } from "sequelize";
 import { DatabaseType } from ".";
 import { Button, ButtonCreationAttributes } from "./button";
 
@@ -8,7 +8,7 @@ import { Button, ButtonCreationAttributes } from "./button";
 interface ScriptAttributes {
     id: number;
     scriptName: string;
-    data: JSON;
+    data: object;
 }
 
 /**
@@ -25,16 +25,21 @@ export interface ScriptCreationAttributes extends Optional<ScriptAttributes, "id
 export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> implements ScriptAttributes {
     public id!: number;
     public scriptName!: string;
-    public data!: JSON;
+    public data!: object;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    //has many Buttons
+    //has many Button
     public getButtons!: HasManyGetAssociationsMixin<Button>;
-    public addButton!: HasManyAddAssociationsMixin<Button, number>;
-    public hasButton!: HasManyHasAssociationMixin<Button, number>;
     public countButtons!: HasManyCountAssociationsMixin;
+    public hasButton!: HasManyHasAssociationMixin<Button, number>;
+    public hasButtons!: HasManyHasAssociationsMixin<Button, number>;
+    public setButtons!: HasManySetAssociationsMixin<Button, number>;
+    public addButton!: HasManyAddAssociationMixin<Button, number>;
+    public addButtons!: HasManyAddAssociationsMixin<Button, number>;
+    public removeButton!: HasManyRemoveAssociationMixin<Button, number>;
+    public removeButtons!: HasManyRemoveAssociationsMixin<Button, number>;
     public createButton!: HasManyCreateAssociationMixin<Button>;
     public readonly Buttons?: Button[];
 
