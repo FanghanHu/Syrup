@@ -6,5 +6,4 @@ router.get('/get', getItem);
 router.post('/create', createItem);
 router.post('/delete', deleteItem);
 router.post('/update', updateItem);
-
 module.exports = router;
