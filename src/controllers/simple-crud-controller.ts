@@ -14,15 +14,16 @@ export default function generateSimpleCrudRouter(model: any) {
 
     const controller = {
         list: catchError(async (req:Request, res:Response) => {
-            const items = await model.findAll();
+            const options = req.body.options;
+            const items = await model.findAll({...options});
             return res.status(200).json(items);
         }),
         
         get: catchError(async (req:Request, res:Response) => {
             if(!isIdValid(req, res)) return;
             const id = req.body.id;
-        
-            const item = await model.findByPk(id);
+            const options = req.body.options;
+            const item = await model.findByPk(id, {...options});
             if(item) {
                 return res.status(200).json(item);
             } else {
@@ -33,10 +34,9 @@ export default function generateSimpleCrudRouter(model: any) {
         create: catchError(async (req:Request, res:Response) => {
             //check client token
             if(isTokeninvalid(req, res)) return;
-            const ServerId = req.body.userId;
-            
-            const itemData = req.body;
-            const item = await model.create(itemData);
+            const options = req.body.options;
+            const itemData = req.body.data;
+            const item = await model.create(itemData, {...options});
             return res.status(200).json(item);
         }),
         
@@ -46,8 +46,9 @@ export default function generateSimpleCrudRouter(model: any) {
         
             if(!isIdValid(req, res)) return;
             const id = req.body.id;
-        
-            await model.destroy({where: {id}});
+            const options = req.body.options;
+
+            await model.destroy({where: {id}, ...options});
             return res.status(200).send("Done.");
         }),
         
@@ -56,8 +57,10 @@ export default function generateSimpleCrudRouter(model: any) {
             if(isTokeninvalid(req, res)) return;
         
             if(!isIdValid(req, res)) return;
-            const item = req.body;
-            await model.update({...item, id: undefined},{where: {id: item.id}});
+            const item = req.body.data;
+            const options = req.body.options;
+
+            await model.update({...item, id: undefined},{where: {id: item.id}, ...options});
             return res.status(200).send("Done.");
         })
     }
