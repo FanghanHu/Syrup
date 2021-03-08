@@ -65,8 +65,8 @@ export default function generateSimpleCrudRouter(model: any) {
         })
     }
 
-    router.get('/list', controller.list);
-    router.get('/get', controller.get);
+    router.post('/list', controller.list);
+    router.post('/get', controller.get);
     router.post('/create', controller.create);
     router.post('/delete', controller.delete);
     router.post('/update', controller.update);
