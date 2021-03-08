@@ -14,29 +14,23 @@ async function resetDB() {
 
     //create a main menu with a test button
     const mainMenu = await db.Menu.create({
+        id: 1,
         menuName: "Main Menu"
+    });
+    await db.Menu.create({
+        id: 2,
+        menuName: "Side Menu"
     });
 
     const button = await db.Button.create({
         buttonName: "Test"
     });
+    await button.setMenu(mainMenu);
 
     const script = await db.Script.create({
         scriptName: "order item",
         data: {
-            parameters: {
-                item: {
-                    itemName: "Edamame",
-                    price: "4.25",
-                    tax: 0.0825,
-                    translation: {
-                        cn: "毛豆"
-                    }
-                }
-            },
-            script: `
-                orderItem(item);
-            `
+            script: "test();"
         }
     })
 
