@@ -1,0 +1,23 @@
+@media only screen and (max-width: 768px) { 
+    #order-page-container {
+        height: 100VH;
+        grid-template-columns: 1fr;
+        grid-template-rows: 8em 7em auto;
+    }
+
+    #order-page-side-menu {
+        grid-row: 2;
+    }
+
+    #order-page-main-menu {
+        grid-row: 3;
+    }
+
+    #order-page-receipt-preview {
+        grid-row: 1;
+    }
+
+    .order-page-panel-header {
+        font-size: 0.5em !important;
+    }
+}

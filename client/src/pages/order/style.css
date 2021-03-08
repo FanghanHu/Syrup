@@ -1,0 +1,11 @@
+#order-page-container {
+    display: grid;
+    grid-template-columns: min(20%, 200px) auto min(30%, 300px);
+    grid-template-rows: calc(100VH - 16px);
+    gap: 6px;
+    padding: 8px !important;
+}
+
+#order-page-main-menu button, #order-page-side-menu button {
+    margin: 3px;
+}
