@@ -124,7 +124,7 @@ async function resetDB() {
     const OrderModifier = await db.OrderModifier.create({
         modifierData: {
             modifierName: "30% Off",
-            price: "*0.7",
+            price: "-30%",
             tax: 0,
         },
         status: "OPEN",

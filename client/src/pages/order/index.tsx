@@ -11,17 +11,69 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Color } from "../../util/Color";
 import OrderItemDisplay from "../../components/order-item-display";
-import { useOrder } from "../../contexts/order-context";
+import { useOrder, useSetOrder } from "../../contexts/order-context";
+import { OrderItem } from "../../util/models";
+import { deepEqual } from "../../util/helpers";
 
 export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
     const [sideButtons, setSideButtons] = useState([]);
 
     const order = useOrder();
+    const setOrder = useSetOrder();
+
+    //TODO: function to orderItem, voidItem, decreaseAmount, increaseAmount, SendOrder.
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const test = () => {
-        console.log("test!");
+    const orderItem = (itemData) => {
+        let orderItems: OrderItem[] = [];
+        if(order.OrderItems) {
+            orderItems = [...order.OrderItems];
+        }
+        orderItems.push({itemData, status: "NEW"});
+        setOrder({
+            ...order,
+            //new orderItems have a status of NEW, it must be changed to OPEN before sending to the server
+            OrderItems: orderItems
+        })
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const voidItem = (orderItem: OrderItem) => {
+        let orderItems: OrderItem[] = [];
+        if(order.OrderItems) {
+            orderItems = [...order.OrderItems];
+        }
+
+        if(orderItem.id) {
+            for(let i=0; i< orderItems.length; i++) {
+                const existing = orderItems[i];
+                if(deepEqual(existing, orderItem)) {
+                    //existing item, mark void
+                    const mutated = {...existing, status: "VOIDED"};
+                    orderItems[i] = mutated;
+                    setOrder({
+                        ...order,
+                        OrderItems: orderItems
+                    })
+                    return true;
+                }
+            }
+        } else if(orderItem.status === "NEW"){
+            //new item, remove
+            for(let i=0; i<orderItems.length; i++) {
+                const existing = orderItems[i];
+                if(deepEqual(existing, orderItem)) {
+                    orderItems.splice(i, 1);
+                    setOrder({
+                        ...order,
+                        OrderItems: orderItems
+                    })
+                    return true;
+                } 
+            }
+        }
+        return false;
     }
 
     const createButton = (buttonData, key) => {
@@ -52,7 +104,22 @@ export default function Order() {
     
         queryButtons(1, setMainButtons);
         queryButtons(2, setSideButtons);
-    }, [setMainButtons, setSideButtons])
+
+        //TODO: rewrite this query to include acutal token
+        axios.post("/api/order/get", {
+            "userId": 1,
+            "hash": "DEVELOPMENT_TOKEN",
+            "orderId": 1,
+            "options": {
+                "include": [{
+                    association: "OrderItems",
+                    include: ["OrderModifiers"]
+                }]
+            }
+        }).then(result => {
+            setOrder(result.data);
+        });
+    }, [setMainButtons, setSideButtons, setOrder])
 
     return (
         <Container fluid id="order-page-container">

@@ -85,6 +85,28 @@ export default function OrderItemDisplay({order}: OrderItemDisplayProps) {
         }
     }
 
+    const displayData: string[] = [];
+
+    for(const displayItem of displayItems) {
+        const orderItem = displayItem.orderItems[0];
+        if(orderItem.itemData && orderItem?.itemData.itemName) {    
+            displayData.push(displayItem.amount.toString());
+            displayData.push(orderItem.itemData.itemName);
+            displayData.push(displayItem.displayPrice?displayItem.displayPrice:"");
+            if(orderItem.OrderModifiers) {
+                for(const orderModifier of orderItem.OrderModifiers)
+                {
+                    if(orderModifier.modifierData) {
+                        //empty amount
+                        displayData.push("");
+                        displayData.push("" + orderModifier.modifierData.modifierName);
+                        displayData.push("" + orderModifier.modifierData.price);
+                    }
+                }
+            }
+        }
+    }
+
     return (
         <div>
             <div style={{
@@ -98,18 +120,12 @@ export default function OrderItemDisplay({order}: OrderItemDisplayProps) {
                 justifyItems: "center"
                 
             }}>
-                {displayItems.map((displayItem, index) => {
-                    return (<>
-                        <div key={index + "-1"}>
-                            {displayItem.amount}
+                {displayData.map((data, index) => {
+                    return (
+                        <div key={index}>
+                            {data}
                         </div>
-                        <div key={index + "-2"}>
-                            {displayItem.orderItems[0].itemData?.itemName}
-                        </div>
-                        <div key={index + "-3"}>
-                            {displayItem.displayPrice}
-                        </div>
-                    </>);
+                    );
                 })}
             </div>
             <hr/>
