@@ -52,6 +52,16 @@ export const createOrder = catchError(async (req:Request, res:Response) => {
     return res.status(200).json(order);
 });
 
+export const getOrder = catchError(async (req: Request, res: Response) => {
+    if(isTokeninvalid(req, res)) return;
+    
+    const options = req.body.options;
+    const order = await getOrderFromOrderId(req, res, options);
+    if(order) {
+        return res.status(200).json(order);
+    }
+});
+
 /**
  * This function handles creating and editing of orderItems and orderModifiers
  * 
