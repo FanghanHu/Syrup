@@ -85,7 +85,7 @@ async function resetDB() {
     //mock modifier
     const modifier = await db.Modifier.create({
         modifierName: "30% Off",
-        price: "*0.7",
+        price: "-30%",
         tax: 0,
     });
 

@@ -9,10 +9,15 @@ import PanelHeader from "../../components/panel-header";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import { Color } from "../../util/Color";
+import OrderItemDisplay from "../../components/order-item-display";
+import { useOrder } from "../../contexts/order-context";
 
 export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
     const [sideButtons, setSideButtons] = useState([]);
+
+    const order = useOrder();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const test = () => {
@@ -70,8 +75,20 @@ export default function Order() {
             <Panel id="order-page-receipt-preview" className="d-flex flex-column">
                 <PanelHeader className="order-page-panel-header">Items</PanelHeader>
                 <PanelBody className="flex-grow-1 overflow-auto">
-                    
+                    <OrderItemDisplay order={order}/>
                 </PanelBody>
+                <div style={{
+                    marginTop: "5px",
+                    marginBottom: "5px",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                    gap:"3px"
+                }}>
+                    <Button themeColor={Color.fire_red}>Exit</Button>
+                    <Button>+</Button>
+                    <Button>-</Button>
+                    <Button themeColor={Color.kiwi_green}>Send</Button>
+                </div>
             </Panel>
         </Container>
     );

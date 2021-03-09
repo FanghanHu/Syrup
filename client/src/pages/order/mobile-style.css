@@ -2,7 +2,7 @@
     #order-page-container {
         height: 100VH;
         grid-template-columns: 1fr;
-        grid-template-rows: 8em 7em auto;
+        grid-template-rows: max(10em, 40vh) 7em auto;
     }
 
     #order-page-side-menu {

@@ -4,11 +4,14 @@
 
 import React from "react";
 import { LoginProvider } from "./login-context";
+import { OrderProvider } from "./order-context";
 
 export default function ContextProviders({children}): JSX.Element {
     return (
         <LoginProvider>
-            {children}
+            <OrderProvider>
+                {children}
+            </OrderProvider>
         </LoginProvider>
     )
 }
