@@ -9,8 +9,9 @@ import { User, UserCreationAttributes } from "./user";
  */
 interface OrderModifierAttributes {
     id: number;
+    amount: number;
     modifierData: object;
-    status : string;
+    status :  "VOIDED" | "ORDERED" | "NEW";
 }
 
 /**
@@ -32,8 +33,9 @@ export interface OrderModifierCreationAttributes extends Optional<OrderModifierA
  */
 export class OrderModifier extends Model<OrderModifierAttributes, OrderModifierCreationAttributes> implements OrderModifierAttributes {
     public id!: number;
+    public amount!: number;
     public modifierData!: object;
-    public status!: string;
+    public status!:  "VOIDED" | "ORDERED" | "NEW";
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -81,6 +83,11 @@ export default function OrderModifierFactory(sequelize: Sequelize): typeof Order
                 type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 primaryKey: true,
+            },
+            amount: {
+                type: DataTypes.FLOAT,
+                defaultValue: 1,
+                allowNull: false
             },
             modifierData: {
                 type: DataTypes.JSON,

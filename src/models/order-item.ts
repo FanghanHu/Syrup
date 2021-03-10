@@ -10,8 +10,9 @@ import { User, UserCreationAttributes } from "./user";
  */
 interface OrderItemAttributes {
     id : number;
+    amount: number;
     itemData : object;
-    status : string;
+    status :  "VOIDED" | "ORDERED" | "NEW";
 }
 
 /**
@@ -33,8 +34,9 @@ export interface OrderItemCreationAttributes extends Optional<OrderItemAttribute
  */
 export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
     public id!: number;
+    public amount!: number;
     public itemData!: object;
-    public status!: string;
+    public status!: "VOIDED" | "ORDERED" | "NEW";
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -96,6 +98,11 @@ export default function OrderItemFactory(sequelize: Sequelize): typeof OrderItem
                 type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 primaryKey: true,
+            },
+            amount: {
+                type: DataTypes.FLOAT,
+                defaultValue: 1,
+                allowNull: false
             },
             itemData: {
                 type: DataTypes.JSON,

@@ -109,6 +109,7 @@ async function resetDB() {
     await order.setCustomers([johnDoe]);
 
     const orderItem = await db.OrderItem.create({
+        amount: 1,
         itemData: {
             itemName: "Edamame",
             price: "4.25",
@@ -117,17 +118,18 @@ async function resetDB() {
                 cn: "毛豆"
             }
         },
-        status: "OPEN",
+        status: "ORDERED",
         ItemId: item.id
     });
 
     const OrderModifier = await db.OrderModifier.create({
+        amount: 1,
         modifierData: {
             modifierName: "30% Off",
             price: "-30%",
             tax: 0,
         },
-        status: "OPEN",
+        status: "ORDERED",
         ModifierId: modifier.id
     });
     await orderItem.addOrderModifier(OrderModifier);
