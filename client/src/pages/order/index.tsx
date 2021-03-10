@@ -13,7 +13,6 @@ import { Color } from "../../util/Color";
 import OrderItemDisplay from "../../components/order-item-display";
 import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { OrderItem } from "../../util/models";
-import { deepEqual } from "../../util/helpers";
 
 export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
@@ -25,7 +24,7 @@ export default function Order() {
     //TODO: function to orderItem, voidItem, decreaseAmount, increaseAmount, SendOrder.
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const orderItem = (itemData) => {
+    const orderItem = (itemData: any) => {
         let orderItems: OrderItem[] = [];
         if(order.OrderItems) {
             orderItems = [...order.OrderItems];
@@ -38,7 +37,7 @@ export default function Order() {
         })
     }
 
-    const createButton = (buttonData, key) => {
+    const createButton = (buttonData: any, key: any) => {
         return (
             <Button key={key} onClick={() => {
                 // eslint-disable-next-line no-eval
