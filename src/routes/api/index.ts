@@ -7,7 +7,6 @@ const env = process.env.NODE_ENV || 'development';
 router.use("/login", require("./login"));
 router.use("/order", require("./order"));
 router.use("/item", generateSimpleCrudRouter(db.Item));
-router.use("/modifier", generateSimpleCrudRouter(db.Modifier));
 router.use("/menu", generateSimpleCrudRouter(db.Menu));
 router.use("/button", generateSimpleCrudRouter(db.Button));
 router.use("/script", generateSimpleCrudRouter(db.Script));

@@ -8,10 +8,8 @@ import CustomerFactory, { Customer } from './customer';
 import ItemFactory from './item';
 import LogFactory from './log';
 import MenuFactory from "./menu";
-import ModifierFactory from './modifier';
 import OrderFactory from './order';
 import OrderItemFactory from './order-item';
-import OrderModifierFactory from './order-modifier';
 import PaymentFactory, { Payment } from './payment';
 import RoleFactory from './role';
 import ScriptFactory from './script';
@@ -41,8 +39,6 @@ const db = {
   Customer: CustomerFactory(sequelize),
   Item: ItemFactory(sequelize),
   OrderItem: OrderItemFactory(sequelize),
-  Modifier: ModifierFactory(sequelize),
-  OrderModifier: OrderModifierFactory(sequelize),
   Log: LogFactory(sequelize),
   User: UserFactory(sequelize),
   Payment: PaymentFactory(sequelize),

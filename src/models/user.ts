@@ -4,7 +4,6 @@ import { Config, ConfigCreationAttributes } from "./config";
 import { Log, LogCreationAttributes } from "./log";
 import { Order, OrderCreationAttributes } from "./order";
 import { OrderItem, OrderItemCreationAttributes } from "./order-item";
-import { OrderModifier, OrderModifierCreationAttributes } from "./order-modifier";
 import { Payment, PaymentCreationAttributes } from "./payment";
 import { Role, RoleCreationAttributes } from "./role";
 import '../utils/hashing';
@@ -28,7 +27,6 @@ export interface UserCreationAttributes extends Optional<UserAttributes, "id"> {
     Order?: OrderCreationAttributes;
     Logs?: LogCreationAttributes[];
     OrderItems?: OrderItemCreationAttributes[];
-    OrderModifiers?: OrderModifierCreationAttributes[];
     Payments?: PaymentCreationAttributes[];
     Roles?: RoleCreationAttributes[];
     Config?: ConfigCreationAttributes;
@@ -89,19 +87,6 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
     public createOrderItem!: HasManyCreateAssociationMixin<OrderItem>;
     public readonly OrderItems?: OrderItem[];
 
-    //has many OrderModifier
-    public getOrderModifiers!: HasManyGetAssociationsMixin<OrderModifier>;
-    public countOrderModifiers!: HasManyCountAssociationsMixin;
-    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
-    public hasOrderModifiers!: HasManyHasAssociationsMixin<OrderModifier, number>;
-    public setOrderModifiers!: HasManySetAssociationsMixin<OrderModifier, number>;
-    public addOrderModifier!: HasManyAddAssociationMixin<OrderModifier, number>;
-    public addOrderModifiers!: HasManyAddAssociationsMixin<OrderModifier, number>;
-    public removeOrderModifier!: HasManyRemoveAssociationMixin<OrderModifier, number>;
-    public removeOrderModifiers!: HasManyRemoveAssociationsMixin<OrderModifier, number>;
-    public createOrderModifier!: HasManyCreateAssociationMixin<OrderModifier>;
-    public readonly OrderModifiers?: OrderModifier[];
-
     //has many Payment
     public getPayments!: HasManyGetAssociationsMixin<Payment>;
     public countPayments!: HasManyCountAssociationsMixin;
@@ -143,7 +128,6 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
         //using alias "Server"
         User.hasMany(db.Order, {foreignKey: "ServerId"});
         User.hasMany(db.OrderItem, {foreignKey: "ServerId"});
-        User.hasMany(db.OrderModifier, {foreignKey: "ServerId"});
         User.hasMany(db.Payment, {foreignKey: "ServerId"});
 
         User.belongsToMany(db.Role, {through: "userRoles"});

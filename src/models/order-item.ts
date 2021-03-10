@@ -2,7 +2,6 @@ import { Sequelize, Model, Optional, DataTypes, BelongsToGetAssociationMixin, Be
 import { DatabaseType } from ".";
 import { Item, ItemCreationAttributes } from "./item";
 import { Order, OrderCreationAttributes } from "./order";
-import { OrderModifier, OrderModifierCreationAttributes } from "./order-modifier";
 import { User, UserCreationAttributes } from "./user";
 
 /**
@@ -21,7 +20,9 @@ interface OrderItemAttributes {
 export interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {
     Order?: OrderCreationAttributes;
     OrderId?: number;
-    OrderModifiers?: OrderModifierCreationAttributes[];
+    Parent?: OrderItemCreationAttributes;
+    ParentId?: number;
+    Modifiers?: OrderItemCreationAttributes[];
     Server?: UserCreationAttributes;
     ServerId?: number;
     Item?: ItemCreationAttributes;
@@ -30,7 +31,7 @@ export interface OrderItemCreationAttributes extends Optional<OrderItemAttribute
 
 /**
  * OrderItems captures the current state of an Item, allow the user to modify it while keeping Item unchanged
- * OrderItems can link to multiple OrderModifier, allow them to modify this item
+ * OrderItems can link to multiple Modifier, allow them to modify this item
  */
 export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
     public id!: number;
@@ -55,25 +56,25 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
     public readonly Server?: User;
     public ServerId?: number;
 
-    //has many OrderModifier
-    public getOrderModifiers!: HasManyGetAssociationsMixin<OrderModifier>;
-    public countOrderModifiers!: HasManyCountAssociationsMixin;
-    public hasOrderModifier!: HasManyHasAssociationMixin<OrderModifier, number>;
-    public hasOrderModifiers!: HasManyHasAssociationsMixin<OrderModifier, number>;
-    public setOrderModifiers!: HasManySetAssociationsMixin<OrderModifier, number>;
-    public addOrderModifier!: HasManyAddAssociationMixin<OrderModifier, number>;
-    public addOrderModifiers!: HasManyAddAssociationsMixin<OrderModifier, number>;
-    public removeOrderModifier!: HasManyRemoveAssociationMixin<OrderModifier, number>;
-    public removeOrderModifiers!: HasManyRemoveAssociationsMixin<OrderModifier, number>;
-    public createOrderModifier!: HasManyCreateAssociationMixin<OrderModifier>;
-    public readonly OrderModifiers?: OrderModifier[];
+    //has many Modifier
+    public getModifiers!: HasManyGetAssociationsMixin<OrderItem>;
+    public countModifiers!: HasManyCountAssociationsMixin;
+    public hasModifier!: HasManyHasAssociationMixin<OrderItem, number>;
+    public hasModifiers!: HasManyHasAssociationsMixin<OrderItem, number>;
+    public setModifiers!: HasManySetAssociationsMixin<OrderItem, number>;
+    public addModifier!: HasManyAddAssociationMixin<OrderItem, number>;
+    public addModifiers!: HasManyAddAssociationsMixin<OrderItem, number>;
+    public removeModifier!: HasManyRemoveAssociationMixin<OrderItem, number>;
+    public removeModifiers!: HasManyRemoveAssociationsMixin<OrderItem, number>;
+    public createModifier!: HasManyCreateAssociationMixin<OrderItem>;
+    public readonly Modifiers?: OrderItem[];
 
-    //belongs to Item
-    public getItem!: BelongsToGetAssociationMixin<Item>;
-    public setItem!: BelongsToSetAssociationMixin<Item, number>;
-    public createItem!: BelongsToCreateAssociationMixin<Item>;
-    public readonly Item?: Item;
-    public ItemId?: number;
+    //belongs to OrderItem (Parent)
+    public getParent!: BelongsToGetAssociationMixin<OrderItem>;
+    public setParent!: BelongsToSetAssociationMixin<OrderItem, number>;
+    public createParent!: BelongsToCreateAssociationMixin<OrderItem>;
+    public readonly Parent?: OrderItem;
+    public ParentId?: number;
 
     /**
      * used to declare associations, called by the model index, do not use this anywhere else 
@@ -82,7 +83,8 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
         OrderItem.belongsTo(db.Item);
         OrderItem.belongsTo(db.Order);
         OrderItem.belongsTo(db.User, {as: "Server"})
-        OrderItem.hasMany(db.OrderModifier);
+        OrderItem.hasMany(db.OrderItem, {as: "Modifiers"});
+        OrderItem.belongsTo(db.OrderItem, {as: "Parent"});
     }
 }
 

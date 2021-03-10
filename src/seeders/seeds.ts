@@ -82,13 +82,6 @@ async function resetDB() {
         tax: 0.0825,
     });
 
-    //mock modifier
-    const modifier = await db.Modifier.create({
-        modifierName: "30% Off",
-        price: "-30%",
-        tax: 0,
-    });
-
     //mock Log
     await db.Log.create({
         type: "LOGIN",
@@ -121,18 +114,6 @@ async function resetDB() {
         status: "ORDERED",
         ItemId: item.id
     });
-
-    const OrderModifier = await db.OrderModifier.create({
-        amount: 1,
-        modifierData: {
-            modifierName: "30% Off",
-            price: "-30%",
-            tax: 0,
-        },
-        status: "ORDERED",
-        ModifierId: modifier.id
-    });
-    await orderItem.addOrderModifier(OrderModifier);
     await order.addOrderItem(orderItem);
 
     const payment = await db.Payment.create({
