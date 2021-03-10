@@ -1,4 +1,5 @@
 import db from "../models";
+import { Menu } from "../models/menu";
 
 async function resetDB() {
     await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -17,30 +18,37 @@ async function resetDB() {
         id: 1,
         menuName: "Main Menu"
     });
-    await db.Menu.create({
+    const sideMenu = await db.Menu.create({
         id: 2,
         menuName: "Side Menu"
     });
 
     const script = await db.Script.create({
-        scriptName: "Tonkatsu Ramen",
+        scriptName: "orderItem",
         data: {
+            parameters: {
+                itemData: "an item to be ordered."
+            },
             script: `
-                orderItem({
-                    itemName:"Tonkatsu Ramen",
-                    price: "10",
-                    tax: 0.0825,
-                });
+                orderItem(%itemData%);
             `
         }
     });
 
     const button = await db.Button.create({
         buttonName: "Tonkatsu Ramen",
+        parameters: {
+            itemData: `{
+                "itemName": "Ramen",
+                "price": "9.75",
+                "tax": 0.0825,
+            }`
+        },
         ScriptId: script.id
     });
     await button.setMenu(mainMenu);
     await button.setScript(script);
+
 
     const admin = await db.Role.create({
         roleName: "Admin",

@@ -14,5 +14,6 @@
 }
 
 .order-item-display-grid .selected {
-    text-shadow: 0 0 3px orange;
+    text-shadow: 0 0 3px skyblue;
+    text-decoration: underline;
 }

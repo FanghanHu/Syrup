@@ -31,7 +31,9 @@ export default function Order() {
         if(order.OrderItems) {
             orderItems = [...order.OrderItems];
         }
-        orderItems.push({itemData, status: "NEW"});
+        let orderItem = {itemData, status: "NEW"};
+        orderItems.push(orderItem);
+        setSelectedItems([orderItem]);
         setOrder({
             ...order,
             //new orderItems have a status of NEW, it must be changed to OPEN before sending to the server
@@ -39,11 +41,47 @@ export default function Order() {
         })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const orderModifier = (itemData: any) => {
+        //copy all OrderItems into a temp array
+        let orderItems: OrderItem[] = [];
+        if(order.OrderItems) {
+            orderItems = [...order.OrderItems];
+        }
+        
+        //
+        for(const selectedItem of selectedItems) {
+            for(let i=0; i<orderItems.length; i++) {
+                const orderItem = orderItems[i];
+                if(orderItem === selectedItem) {
+                    const newModifier = {itemData, status: "NEW"};
+                    const newItem = {
+                        ...orderItem,
+                        Modifiers: [...(orderItem.Modifiers || []), newModifier]
+                    };
+                    orderItems[i] = newItem;
+                    break;
+                }
+            }
+        }
+    }
+
     const createButton = (buttonData: any, key: any) => {
         return (
             <Button key={key} onClick={() => {
+                let script:string = buttonData.Script.data.script;
+                let parameters = buttonData.parameters;
+                
+                if(parameters) {
+                    //put the parameters in
+                    for(const key in parameters) {
+                        script = script.replace(`%${key}%`, parameters[key].toString());
+                    }
+                }
+
+                //execute the script
                 // eslint-disable-next-line no-eval
-                eval(buttonData.Script.data.script)
+                eval(script);
             }}>{buttonData.buttonName}</Button>
         );
     }

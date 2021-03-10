@@ -2,13 +2,20 @@ import { DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, Has
 import { DatabaseType } from ".";
 import { Button, ButtonCreationAttributes } from "./button";
 
+interface scriptData {
+    parameters: {
+        [key: string]: string;
+    },
+    script: string;
+}
+
 /**
  * Attributes interface marks what attributes is available in an instance of this model(or an row in a table)
  */
 interface ScriptAttributes {
     id: number;
     scriptName: string;
-    data: object;
+    data: scriptData;
 }
 
 /**
@@ -25,7 +32,7 @@ export interface ScriptCreationAttributes extends Optional<ScriptAttributes, "id
 export class Script extends Model<ScriptAttributes, ScriptCreationAttributes> implements ScriptAttributes {
     public id!: number;
     public scriptName!: string;
-    public data!: object;
+    public data!: scriptData;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;

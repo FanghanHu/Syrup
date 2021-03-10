@@ -10,6 +10,7 @@ interface ButtonAttributes {
     id: number;
     buttonName: string;
     translations?: object;
+    parameters?: any;
 }
 
 /**
@@ -31,6 +32,7 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
     public id!: number;
     public buttonName!: string;
     public translations?: object;
+    public parameters?: any;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -76,6 +78,10 @@ export default function ButtonFactory(sequelize: Sequelize): typeof Button {
                 allowNull: false
             },
             translations: {
+                type: DataTypes.JSON,
+                allowNull: true
+            },
+            parameters: {
                 type: DataTypes.JSON,
                 allowNull: true
             }
