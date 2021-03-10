@@ -31,6 +31,7 @@ export interface Item {
 
 export interface OrderItem {
     id?: number;
+    amount?: number;
     itemData?: Item;
     status?: string; 
     Order?: Order;
@@ -38,23 +39,5 @@ export interface OrderItem {
     ServerId?: number;
     Item?: Item;
     ItemId?: number;
-    OrderModifiers?: OrderModifier[];
-}
-
-export interface OrderModifier {
-    id?: number;
-    modifierData?: Modifier;
-    Modifier?: Modifier;
-    ModifierId?: number;
-    OrderItem?: OrderItem;
-    OrderItemId?: number;
-    ServerId?: number;
-}
-
-export interface Modifier {
-    id?: number;
-    modifierName?: string;
-    price?: string;
-    tax?: number;
-    translations?: object;
+    Modifiers?: OrderItem[];
 }

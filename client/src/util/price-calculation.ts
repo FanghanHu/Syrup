@@ -1,37 +1,3 @@
-/**
- * Order Price Model: an object with a hierarchy view of the order regarding to it's pricing
- * An example:
- * ```
- *  {
- *      items: [{
- *          amount: 1,
- *          name: "Ramen",
- *          modifiers: [
- *              {
- *                  amount: 1,
- *                  name: "30% Off",
- *                  price: {
- *                      subtotal: 0,
-*                       tax: 0,
-*                       total: 0
- *                  }
- *              }
- *          ]
- *          price: {
-*               subtotal: 0,
-*               tax: 0,
-*               total: 0
- *          }
- *      }],
- *      price: {
- *          subtotal: 0,
- *          tax: 0,
- *          total: 0
- *      }
- *  }
- * ```
- */
-
 import { Order, OrderItem } from "./models";
 
 export interface PriceModel {
@@ -40,33 +6,109 @@ export interface PriceModel {
     total: number;
 }
 
-export interface SinglePriceModel {
-    amount: number;
-    name: string;
-    price: PriceModel;
+function round(num:number): number {
+    return parseFloat(num.toFixed(2));
 }
 
-export interface ComplexPriceModel{
-    modifiers: ComplexPriceModel[];
-}
+/**
+ * A complex price model may modify its parent's total by addition or multiplication,
+ */
+class ComplexModel {
+    items: ComplexModel[] = [];
+    amount: number = 1;
+    priceModifier: number = 0;
 
-export interface OrderPriceModel {
-    items: ComplexPriceModel[];
-    price: PriceModel;
-}
-
-class ItemModel implements ComplexPriceModel {
-    modifiers: ComplexPriceModel[] = [];
-    amount: number;
-    name: string;
-    price: PriceModel = {
+    /**
+     * the price for each of this item and this item only, not accounting it's children items.
+     */
+    eachPrice: PriceModel = {
         subtotal: 0,
         tax: 0,
         total: 0
     };
-    priceModifier: number = 0;
 
+    /**
+     * the total cost for this item, accounting the amount, and children items.
+     */
+    total: PriceModel = {
+        subtotal: 0,
+        tax: 0,
+        total: 0
+    }
+
+    addChild(child: ComplexModel) {
+        this.items.push(child);
+    }
+
+    /**
+     * This methods is used to update price on total modifying items after all other items are accounted for
+     * @param parentAdditiveTotal an unmodified price model
+     */
+    updateSelf(parentAdditiveTotal: PriceModel) {
+        if(this.priceModifier) {
+            //self is a multiplicative item, ignore children, update owm total.
+            this.total.subtotal = round(parentAdditiveTotal.subtotal * this.priceModifier * this.amount);
+            this.total.tax = round(parentAdditiveTotal.tax * this.priceModifier * this.amount);
+            this.total.total = round(parentAdditiveTotal.total * this.priceModifier * this.amount);
+        } else {
+            //self is additive, update children items
+            let additiveTotal:PriceModel = {
+                ...this.eachPrice
+            }
+
+            //add all additive items together
+            for(const item of this.items){
+                if(item.priceModifier === 0) {
+                    //update item's childrens first
+                    item.updateSelf(additiveTotal);
+                    item.updateTotal(additiveTotal);
+                }
+            }
+
+            //update all multiplicative items to have an additive price
+            for(const item of this.items){
+                if(item.priceModifier !== 0) {
+                    item.updateSelf(additiveTotal);
+                }
+            }
+
+            //now every child item have a total price
+            const modifiedEachPrice: PriceModel = {
+                ...this.eachPrice
+            }
+            //add everything together
+            for(const item of this.items){ 
+                item.updateTotal(modifiedEachPrice);
+            }
+
+            //account for amount
+            this.total = {
+                subtotal: round(modifiedEachPrice.subtotal * this.amount),
+                tax: round(modifiedEachPrice.tax * this.amount),
+                total: round(modifiedEachPrice.total * this.amount)
+            }
+        }
+    }
+
+    /**
+     * change the given total using it's own price, 
+     * A multiplicative model must make sure parent accounted all additive child and update self first.
+     * @param total 
+     */
+    updateTotal(total: PriceModel) {
+        total.subtotal += this.total.subtotal;
+        total.tax += this.total.tax;
+        total.total += this.total.total;
+    }
+}
+
+export class ItemModel extends ComplexModel {
+    name: string;
+    items: ItemModel[] = [];
+    orderItem: OrderItem;
     constructor(orderItem: OrderItem) {
+        super();
+        this.orderItem = orderItem;
         const itemAmount: number = orderItem.amount || 0;
         const itemPrice: string = orderItem.itemData?.price || "";
         const itemTax: number = orderItem.itemData?.tax || 0;
@@ -74,6 +116,7 @@ class ItemModel implements ComplexPriceModel {
 
         this.amount = itemAmount;
         this.name = itemName;
+
         if(itemPrice.endsWith("%")) {
             //total modifying item
             this.priceModifier = parseFloat(itemPrice.substring(0, itemPrice.length-1))/100;
@@ -81,48 +124,35 @@ class ItemModel implements ComplexPriceModel {
         } else {
             //normal item
             const priceNum = parseFloat(itemPrice);
-            this.price.subtotal += priceNum
-            this.price.tax += priceNum * itemTax;
-            this.price.total = this.price.subtotal + this.price.tax;
-            //TODO: process modifiers
+            this.eachPrice.subtotal += priceNum
+            this.eachPrice.tax += priceNum * itemTax;
+            this.eachPrice.total = this.eachPrice.subtotal + this.eachPrice.tax;
         }
-    }
 
-    /**
-     * This methods is used to update price on total modifying items after all other items are accounted for
-     * @param total an unmodified price model
-     */
-    update(total: PriceModel) {
-        this.price.subtotal = total.subtotal * this.priceModifier;
-        this.price.tax = total.tax * this.priceModifier;
-        this.price.total = total.total * this.priceModifier;
+        //add modifiers, but not update yet.
+        if(orderItem.Modifiers) {
+            for(const modifier of orderItem.Modifiers) {
+                this.addChild(new ItemModel(modifier));
+            }
+        }
     }
 }
 
-class OrderModel implements OrderPriceModel {
-    //this array contains all items, including everything in orderModifyingItem
-    items: ComplexPriceModel[] = [];
+export class OrderModel extends ComplexModel {
+    order: Order;
+    items: ItemModel[] = [];
+    constructor(order: Order) {
+        super();
+        this.order = order;
 
-    //these items modify the price on the whole order level, 
-    //each item will impact the price in a multiplicative manner
-    orderModifyingItem: ComplexPriceModel[] = []; 
+        //add items
+        if(order.OrderItems) {
+            for(const orderItem of order.OrderItems) {
+                this.addChild(new ItemModel(orderItem));
+            }
+        }
 
-    //price will have all current order modifying item applied
-    price: PriceModel = {
-        subtotal: 0,
-        tax: 0,
-        total: 0
-    };
-
-    //a price model before any order modifying item is applied
-    unmodifiedPrice: PriceModel = {
-        subtotal: 0,
-        tax: 0,
-        total: 0
-    };
-
-    addOrderItem(orderItem: OrderItem) {
-        const item = new ItemModel(orderItem);
-        this.items.push(item);
+        //update after all orderitems are added
+        this.updateSelf(this.total);
     }
 }

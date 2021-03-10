@@ -83,7 +83,7 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
         OrderItem.belongsTo(db.Item);
         OrderItem.belongsTo(db.Order);
         OrderItem.belongsTo(db.User, {as: "Server"})
-        OrderItem.hasMany(db.OrderItem, {as: "Modifiers"});
+        OrderItem.hasMany(db.OrderItem, {as: "Modifiers", foreignKey:"ParentId"});
         OrderItem.belongsTo(db.OrderItem, {as: "Parent"});
     }
 }

@@ -1,5 +1,5 @@
-import { deepEqual } from "../../util/helpers";
 import { Order, OrderItem } from "../../util/models";
+import { OrderModel } from "../../util/price-calculation";
 
 export interface OrderItemDisplayProps {
     order: Order;
@@ -11,99 +11,19 @@ export interface DisplayItems {
     displayPrice?: string;
 }
 
-//TODO: 
 export default function OrderItemDisplay({order}: OrderItemDisplayProps) {
     //sort orderitems
-    const orderItems = order.OrderItems;
-    let subTotal = 0;
-    let tax = 0;
-    let total = 0;
-
-    let priceModifier = 1;
-
-    /**
-     * display items in groups, each group will hold identical orderItems, 
-     */
-    const displayItems:DisplayItems[] = [];
-
-    if(orderItems) {
-        let added = false;
-        for(const orderItem of orderItems) {
-            //loop through already processed items, see if there is a same item.
-            for(const displayItem of displayItems) {
-                if(deepEqual(displayItem.orderItems[0], orderItem)) {
-                    //found the same item, amount + 1
-                    displayItem.amount += 1;
-                    displayItem.orderItems.push(orderItem);
-                    added = true;
-                    break;
-                }
-            }
-
-            if(!added) {
-                //didn't find same item, creating a new display item
-                displayItems.push({
-                    amount: 1,
-                    orderItems: [orderItem]
-                });
-            }
-
-            const itemPrice = orderItem.itemData?.price;
-            //calculate subtotal and tax
-            if(itemPrice) {
-                if(itemPrice.endsWith("%")) {
-                    let modifier = parseFloat(itemPrice.substring(0, itemPrice.length-1)) / 100;
-                    priceModifier += modifier;
-                } else {
-                    const itemPriceNumber = parseFloat(itemPrice);
-                    subTotal += itemPriceNumber;
-                    const itemTax = orderItem.itemData?.tax
-                    if(itemTax) {
-                        tax += itemPriceNumber * itemTax;
-                    }
-                }
-            }
-        }
-
-        subTotal = parseFloat((subTotal * priceModifier).toFixed(2));
-        tax = parseFloat((tax * priceModifier).toFixed(2));
-        total = subTotal + tax;
-    }
-
-    //setup display prices
-    for(const displayItem of displayItems) {
-        const itemPrice = displayItem.orderItems[0].itemData?.price;
-        if(itemPrice) {
-            if(itemPrice.endsWith("%")) {
-                const modifier = parseFloat(itemPrice.substring(0, itemPrice.length-1)) / 100;
-                const priceChange = modifier * subTotal * displayItem.amount;
-                displayItem.displayPrice = `${priceChange < 0? "-$":"$"}${Math.abs(priceChange).toFixed(2)}`
-            } else {
-                let price = parseFloat(itemPrice) * displayItem.amount;
-                displayItem.displayPrice = `${price<0?"-$":"$"}${Math.abs(price).toFixed(2)}`
-            }
-        }
-    }
-
-    const displayData: string[] = [];
-
-    for(const displayItem of displayItems) {
-        const orderItem = displayItem.orderItems[0];
-        if(orderItem.itemData && orderItem?.itemData.itemName) {    
-            displayData.push(displayItem.amount.toString());
-            displayData.push(orderItem.itemData.itemName);
-            displayData.push(displayItem.displayPrice?displayItem.displayPrice:"");
-            if(orderItem.OrderModifiers) {
-                for(const orderModifier of orderItem.OrderModifiers)
-                {
-                    if(orderModifier.modifierData) {
-                        //empty amount
-                        displayData.push("");
-                        displayData.push("" + orderModifier.modifierData.modifierName);
-                        displayData.push("" + orderModifier.modifierData.price);
-                    }
-                }
-            }
+    const orderModel = new OrderModel(order);
+    console.log(orderModel);
+    const displayData: any[] = [];
+    for(const itemModel of orderModel.items) {
+        displayData.push(itemModel.amount);
+        displayData.push(itemModel.name);
+        displayData.push(itemModel.eachPrice.subtotal);
+        for(const modifierModel of itemModel.items) {
+            displayData.push("");
+            displayData.push((modifierModel.amount!==1?modifierModel.amount + "× ":"") + modifierModel.name);
+            displayData.push(modifierModel.total.subtotal);
         }
     }
 
@@ -132,9 +52,9 @@ export default function OrderItemDisplay({order}: OrderItemDisplayProps) {
             <div style={{
                 textAlign: "right"
             }}>
-                <div style={{fontSize: "0.5em"}}>SubTotal: ${subTotal}</div>
-                <div style={{fontSize: "0.5em"}}>Tax: ${tax}</div>
-                <div style={{fontWeight: 600}}>Total: ${total}</div>
+                <div style={{fontSize: "0.5em"}}>SubTotal: {orderModel.total.subtotal}</div>
+                <div style={{fontSize: "0.5em"}}>Tax: {orderModel.total.tax}</div>
+                <div style={{fontWeight: 600}}>Total: {orderModel.total.total}</div>
             </div>
         </div>
     );
