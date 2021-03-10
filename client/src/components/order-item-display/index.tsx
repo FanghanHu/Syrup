@@ -14,7 +14,6 @@ export interface DisplayItems {
 export default function OrderItemDisplay({order}: OrderItemDisplayProps) {
     //sort orderitems
     const orderModel = new OrderModel(order);
-    console.log(orderModel);
     const displayData: any[] = [];
     for(const itemModel of orderModel.items) {
         displayData.push(itemModel.amount);

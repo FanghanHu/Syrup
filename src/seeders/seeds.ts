@@ -22,18 +22,24 @@ async function resetDB() {
         menuName: "Side Menu"
     });
 
+    const script = await db.Script.create({
+        scriptName: "Tonkatsu Ramen",
+        data: {
+            script: `
+                orderItem({
+                    itemName:"Tonkatsu Ramen",
+                    price: "10",
+                    tax: 0.0825,
+                });
+            `
+        }
+    });
+
     const button = await db.Button.create({
-        buttonName: "Test"
+        buttonName: "Tonkatsu Ramen",
+        ScriptId: script.id
     });
     await button.setMenu(mainMenu);
-
-    const script = await db.Script.create({
-        scriptName: "order item",
-        data: {
-            script: "test();"
-        }
-    })
-
     await button.setScript(script);
 
     const admin = await db.Role.create({

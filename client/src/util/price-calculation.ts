@@ -85,7 +85,7 @@ class ComplexModel {
             this.total = {
                 subtotal: round(modifiedEachPrice.subtotal * this.amount),
                 tax: round(modifiedEachPrice.tax * this.amount),
-                total: round(modifiedEachPrice.total * this.amount)
+                total: round((modifiedEachPrice.subtotal + modifiedEachPrice.tax) * this.amount)
             }
         }
     }
@@ -109,7 +109,7 @@ export class ItemModel extends ComplexModel {
     constructor(orderItem: OrderItem) {
         super();
         this.orderItem = orderItem;
-        const itemAmount: number = orderItem.amount || 0;
+        const itemAmount: number = orderItem.amount || 1;
         const itemPrice: string = orderItem.itemData?.price || "";
         const itemTax: number = orderItem.itemData?.tax || 0;
         const itemName: string = orderItem.itemData?.itemName || "";

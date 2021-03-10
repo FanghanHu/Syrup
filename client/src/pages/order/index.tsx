@@ -38,44 +38,6 @@ export default function Order() {
         })
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const voidItem = (orderItem: OrderItem) => {
-        let orderItems: OrderItem[] = [];
-        if(order.OrderItems) {
-            orderItems = [...order.OrderItems];
-        }
-
-        if(orderItem.id) {
-            for(let i=0; i< orderItems.length; i++) {
-                const existing = orderItems[i];
-                if(deepEqual(existing, orderItem)) {
-                    //existing item, mark void
-                    const mutated = {...existing, status: "VOIDED"};
-                    orderItems[i] = mutated;
-                    setOrder({
-                        ...order,
-                        OrderItems: orderItems
-                    })
-                    return true;
-                }
-            }
-        } else if(orderItem.status === "NEW"){
-            //new item, remove
-            for(let i=0; i<orderItems.length; i++) {
-                const existing = orderItems[i];
-                if(deepEqual(existing, orderItem)) {
-                    orderItems.splice(i, 1);
-                    setOrder({
-                        ...order,
-                        OrderItems: orderItems
-                    })
-                    return true;
-                } 
-            }
-        }
-        return false;
-    }
-
     const createButton = (buttonData, key) => {
         return (
             <Button key={key} onClick={() => {
@@ -87,7 +49,7 @@ export default function Order() {
 
     const handleError = (err: Error) => {
         console.error(err);
-        //TODO: handle it!
+        //TODO: properly handle errors
     }
 
     useEffect(() => {
@@ -121,6 +83,7 @@ export default function Order() {
         }).then(result => {
             setOrder(result.data);
         });
+        
     }, [setMainButtons, setSideButtons, setOrder])
 
     return (
