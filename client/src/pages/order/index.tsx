@@ -113,7 +113,9 @@ export default function Order() {
             "options": {
                 "include": [{
                     association: "OrderItems",
-                    include: ["OrderModifiers"]
+                    include: [{
+                        association: "Modifiers"
+                    }]
                 }]
             }
         }).then(result => {

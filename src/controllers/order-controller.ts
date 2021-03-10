@@ -84,7 +84,9 @@ export const editItems = catchError(async (req: Request, res: Response) => {
     const t = await db.sequelize.transaction();
     let order = await getOrderFromOrderId(req, res, {include: [{
         model: db.OrderItem as typeof Model,
-        include: [{model:db.OrderModifier as typeof Model}]
+        include: [{
+            association: "Modifiers"
+        }]
     }], transaction: t, lock: true});
     if(!order) return;
 
@@ -98,19 +100,19 @@ export const editItems = catchError(async (req: Request, res: Response) => {
             if(orderItem.id) {
                 //update existing orderItem
                 const updatedOrderItems = await db.OrderItem.update({...orderItem, id: undefined}, {where: {id: orderItem.id}, transaction: t});
-                if(orderItem.OrderModifiers){
-                    for(const orderModifier of orderItem.OrderModifiers) {
+                if(orderItem.Modifiers){
+                    for(const orderModifier of orderItem.Modifiers) {
                         //update modifiers
                         if(orderModifier.id) {
-                            await db.OrderModifier.update({...orderModifier, id: undefined}, {where: {id: orderModifier.id}, transaction: t});
+                            await db.OrderItem.update({...orderModifier, id: undefined}, {where: {id: orderModifier.id}, transaction: t});
                         } else {
-                            await db.OrderModifier.create({...orderModifier, OrderItemId: orderItem.id, ServerId}, {transaction: t});
+                            await db.OrderItem.create({...orderModifier, ParentId: orderItem.id, ServerId}, {transaction: t});
                         }
                     }
                 }
             } else {
                 //create a new orderItem
-                await order.createOrderItem({...orderItem, ServerId}, {include: ["OrderModifiers"], transaction: t});
+                await order.createOrderItem({...orderItem, ServerId}, {include: ["Modifiers"], transaction: t});
             }
         }
 
@@ -118,7 +120,9 @@ export const editItems = catchError(async (req: Request, res: Response) => {
         //get the updated order with eagar loading of orderItems and orderModifiers
         order = await getOrderFromOrderId(req, res, {include: [{
             model: db.OrderItem as typeof Model,
-            include: [{model:db.OrderModifier as typeof Model}]
+            include: [{
+                association: "Modifiers"
+            }]
         }]});
         return res.status(200).json(order);
     } catch (err) {

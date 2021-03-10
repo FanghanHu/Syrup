@@ -116,6 +116,17 @@ async function resetDB() {
     });
     await order.addOrderItem(orderItem);
 
+    const modifier = await db.OrderItem.create({
+        amount: 1,
+        itemData: {
+            itemName: "30% off",
+            price: "-30%",
+            tax: 0
+        },
+        status: "ORDERED"
+    });
+    await orderItem.addModifier(modifier);
+
     const payment = await db.Payment.create({
         type: "CASH",
         amount: 10,
