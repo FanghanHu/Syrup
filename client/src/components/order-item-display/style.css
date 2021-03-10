@@ -1,0 +1,18 @@
+.order-item-display-grid {
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+    grid-auto-rows: min-content;
+    gap: 3px;
+    height: 100%;
+    overflow-y: auto;
+    align-items: center;
+    justify-items: center;
+}
+
+.order-item-display-grid div:hover {
+    cursor: pointer;
+}
+
+.order-item-display-grid .selected {
+    text-shadow: 0 0 3px orange;
+}

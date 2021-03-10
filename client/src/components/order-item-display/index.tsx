@@ -1,8 +1,11 @@
 import { Order, OrderItem } from "../../util/models";
 import { OrderModel } from "../../util/price-calculation";
+import "./style.css";
 
 export interface OrderItemDisplayProps {
     order: Order;
+    selectedItems: OrderItem[];
+    setSelectedItems: React.Dispatch<React.SetStateAction<OrderItem[]>>;
 }
 
 export interface DisplayItems {
@@ -11,38 +14,32 @@ export interface DisplayItems {
     displayPrice?: string;
 }
 
-export default function OrderItemDisplay({order}: OrderItemDisplayProps) {
+export default function OrderItemDisplay({order, setSelectedItems, selectedItems}: OrderItemDisplayProps) {
     //sort orderitems
     const orderModel = new OrderModel(order);
-    const displayData: any[] = [];
+    const displayData: {text: any, reference: OrderItem}[] = [];
     for(const itemModel of orderModel.items) {
-        displayData.push(itemModel.amount);
-        displayData.push(itemModel.name);
-        displayData.push(itemModel.eachPrice.subtotal);
+        displayData.push({text: itemModel.amount, reference: itemModel.orderItem});
+        displayData.push({text: itemModel.name, reference: itemModel.orderItem});
+        displayData.push({text: itemModel.eachPrice.subtotal, reference: itemModel.orderItem});
         for(const modifierModel of itemModel.items) {
-            displayData.push("");
-            displayData.push((modifierModel.amount!==1?modifierModel.amount + "× ":"") + modifierModel.name);
-            displayData.push(modifierModel.total.subtotal);
+            displayData.push({text: "", reference: modifierModel.orderItem});
+            displayData.push({text: (modifierModel.amount!==1?modifierModel.amount + "× ":"") + modifierModel.name, reference: modifierModel.orderItem});
+            displayData.push({text: modifierModel.total.subtotal, reference: modifierModel.orderItem});
         }
     }
 
     return (
         <div>
-            <div style={{
-                display: "grid",
-                gridTemplateColumns: "min-content auto min-content",
-                gridAutoRows: "min-content",
-                gap: "3px",
-                height: "100%",
-                overflowY: "auto",
-                alignItems: "center",
-                justifyItems: "center"
-                
-            }}>
+            <div className="order-item-display-grid">
                 {displayData.map((data, index) => {
                     return (
-                        <div key={index}>
-                            {data}
+                        <div className={selectedItems.includes(data.reference)?"selected":""} key={index} onClick={()=> {
+                            const clickedItem = data.reference;
+                            //TODO: allow selecting more than one item.
+                            setSelectedItems([clickedItem]);
+                        }}>
+                            {data.text}
                         </div>
                     );
                 })}

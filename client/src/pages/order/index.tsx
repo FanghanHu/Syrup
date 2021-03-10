@@ -18,6 +18,8 @@ export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
     const [sideButtons, setSideButtons] = useState([]);
 
+    const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);
+
     const order = useOrder();
     const setOrder = useSetOrder();
 
@@ -106,7 +108,7 @@ export default function Order() {
             <Panel id="order-page-receipt-preview" className="d-flex flex-column">
                 <PanelHeader className="order-page-panel-header">Items</PanelHeader>
                 <PanelBody className="flex-grow-1 overflow-auto">
-                    <OrderItemDisplay order={order}/>
+                    <OrderItemDisplay order={order} selectedItems={selectedItems} setSelectedItems={setSelectedItems}/>
                 </PanelBody>
                 <div style={{
                     marginTop: "5px",
