@@ -24,7 +24,7 @@ async function resetDB() {
     });
 
     const script = await db.Script.create({
-        scriptName: "orderItem",
+        scriptName: "Order Item",
         data: {
             parameters: {
                 itemData: "an item to be ordered."
@@ -49,6 +49,27 @@ async function resetDB() {
     await button.setMenu(mainMenu);
     await button.setScript(script);
 
+    await sideMenu.createButton({
+        buttonName: "Add onion",
+        parameters: {
+            itemData: `{
+                "itemName": "Add onion",
+                "price": "1",
+                "tax": 0.0825,
+            }`
+        },
+        Script: {
+            scriptName: "Order modifier",
+            data: {
+                parameters: {
+                    itemData: "an item to be ordered as a modifier."
+                },
+                script: `
+                    orderModifier(%itemData%);
+                `
+            }
+        }
+    }, {include: "Script"})
 
     const admin = await db.Role.create({
         roleName: "Admin",

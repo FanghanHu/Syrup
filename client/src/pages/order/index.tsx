@@ -13,17 +13,55 @@ import { Color } from "../../util/Color";
 import OrderItemDisplay from "../../components/order-item-display";
 import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { OrderItem } from "../../util/models";
+import { constants } from "node:zlib";
 
 export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
     const [sideButtons, setSideButtons] = useState([]);
-
     const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);
 
     const order = useOrder();
     const setOrder = useSetOrder();
 
     //TODO: function to orderItem, voidItem, decreaseAmount, increaseAmount, SendOrder.
+
+    /**
+     * Try to find the item inside the given array.
+     * 
+     * If the item is found, a copy of the original array is made, 
+     * and the item will be replaced in the copy.
+     * then the copy is returned
+     * 
+     * If item isn't found, return false.
+     * @param orderItems the original array
+     * @param orderItem the item to be replaced
+     * @param newItem the replacement
+     */
+    const replaceItem = (originalList: OrderItem[], originalItem: OrderItem, newItem: OrderItem) => {
+        //try to find in the outmost level
+        for(let i=0; i< originalList.length; i++) {
+            const orderItem = originalList[i];
+            if(orderItem === originalItem) {
+                //found, make a copy of the list, replace the item and return
+                const newList = [...originalList];
+                newList[i] = newItem;
+                return newList;
+            } else {
+                //not found, check its modifiers
+                if(orderItem.Modifiers) {
+                    const newModifers = replaceItem(orderItem.Modifiers, originalItem, newItem);
+                    if(newModifers) {
+                        //found the item down the line, replace this item and it's children
+                        const newList = [...originalList];
+                        newList[i] = {...orderItem, Modifiers: newModifers};
+                        return newList;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const orderItem = (itemData: any) => {
@@ -43,26 +81,30 @@ export default function Order() {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const orderModifier = (itemData: any) => {
-        //copy all OrderItems into a temp array
-        let orderItems: OrderItem[] = [];
-        if(order.OrderItems) {
-            orderItems = [...order.OrderItems];
-        }
-        
-        //
+        let orderItems: false | OrderItem[] | undefined = order.OrderItems;
+        const newSelectedItem: OrderItem[] = [];
         for(const selectedItem of selectedItems) {
-            for(let i=0; i<orderItems.length; i++) {
-                const orderItem = orderItems[i];
-                if(orderItem === selectedItem) {
-                    const newModifier = {itemData, status: "NEW"};
-                    const newItem = {
-                        ...orderItem,
-                        Modifiers: [...(orderItem.Modifiers || []), newModifier]
-                    };
-                    orderItems[i] = newItem;
-                    break;
+            //check if last replacement was successful
+            if(orderItems) {
+                const newModifier = {itemData, status: "NEW"};
+                //copy selectedItem and place newModifer in it's Modifiers list
+                const newItem = {...selectedItem, Modifiers: [...(selectedItem.Modifiers || []), newModifier]}
+                orderItems = replaceItem(orderItems, selectedItem, newItem);
+                if(orderItems) {
+                    newSelectedItem.push(newItem);
                 }
+            } else {
+                break;
             }
+        }
+
+        if(orderItems) {
+            //if replacement was successful, update order
+            setOrder({
+                ...order,
+                OrderItems: orderItems
+            });
+            setSelectedItems(newSelectedItem);
         }
     }
 
