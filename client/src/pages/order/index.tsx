@@ -74,9 +74,11 @@ export default function Order() {
     /**
      * merge all the same item inside the list together
      * also merges same modifier
-     * @returns 
+     * @param originalList the list to merge
+     * @param toBeSelectedItems the list of items that should be selected after the merge
+     * @returns false if nothing is merged, or new list of merged items.
      */
-    const mergeSameItem = (originalList: OrderItem[]) => {
+    const mergeSameItem = (originalList: OrderItem[], toBeSelectedItems: OrderItem[]) => {
         //a new list to hold changed items
         const newList = [...originalList];
         let found = false;
@@ -84,7 +86,7 @@ export default function Order() {
         for(let i=0; i < newList.length; i++) {
             const item = newList[i];
             if(item.Modifiers && item.Modifiers.length) {
-                const newModifiers = mergeSameItem(item.Modifiers)
+                const newModifiers = mergeSameItem(item.Modifiers, toBeSelectedItems)
                 if(newModifiers) {
                     //something merged in the modifiers
                     found = true;
@@ -99,6 +101,9 @@ export default function Order() {
         for(let i=0; i < newList.length; i++) {
             const item1 = newList[i];
             let newItem: OrderItem | null = null;
+            //should the newItem be selected
+            let isSelected = false;
+            let newSelectedItems = [...toBeSelectedItems];
             //start looking from next item on, items before i should all be merged
             for(let j=i+1; j < newList.length; j++) {
                 const item2 = newList[j];
@@ -119,7 +124,28 @@ export default function Order() {
                     //remove item2 from newList
                     newList.splice(j, 1);
                     j--;
+
+                    //if item1 or item2 is selected, new item needs to be selected
+                    for(let x=0; x<newSelectedItems.length; x++) {
+                        const selectedItem = newSelectedItems[x];
+                        if(selectedItem === item1) {
+                            //remove and replace
+                            newSelectedItems.splice(x, 1);
+                            isSelected= true;
+                        } else if (selectedItem === item2) {
+                            //remove
+                            newSelectedItems.splice(x, 1);
+                            isSelected = true;
+                        }
+                    }
                 }
+            }
+
+            
+            if(newItem && isSelected) {
+                //one of merged item is selected, make the newItem selected
+                newSelectedItems.push(newItem);
+                setSelectedItems(newSelectedItems);
             }
         }
 
@@ -132,18 +158,24 @@ export default function Order() {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const orderItem = (itemData: any) => {
+        //copy old items into a new list
         let newOrderItemsList: OrderItem[] = [];
         if(order.OrderItems) {
             newOrderItemsList = [...order.OrderItems];
         }
+
+        //create the new item and push it into new list
         let orderItem = {itemData, status: "NEW", amount: 1};
         newOrderItemsList.push(orderItem);
 
+        //select the new item
+        setSelectedItems([orderItem]);
+
         //try merge all items
-        const mergedList = mergeSameItem(newOrderItemsList);
+        const mergedList = mergeSameItem(newOrderItemsList, [orderItem]);
         if(mergedList) newOrderItemsList = mergedList;
 
-        setSelectedItems([orderItem]);
+        //update the order
         setOrder({
             ...order,
             //new orderItems have a status of NEW, it must be changed to OPEN before sending to the server
@@ -154,7 +186,7 @@ export default function Order() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const orderModifier = (itemData: any) => {
         let orderItems: false | OrderItem[] | undefined = order.OrderItems;
-        const newSelectedItem: OrderItem[] = [];
+        const newSelectedItems: OrderItem[] = [];
         for(const selectedItem of selectedItems) {
             //check if last replacement was successful
             if(orderItems) {
@@ -163,7 +195,7 @@ export default function Order() {
                 const newItem = {...selectedItem, Modifiers: [...(selectedItem.Modifiers || []), newModifier]}
                 orderItems = replaceItem(orderItems, selectedItem, newItem);
                 if(orderItems) {
-                    newSelectedItem.push(newItem);
+                    newSelectedItems.push(newItem);
                 }
             } else {
                 break;
@@ -171,12 +203,17 @@ export default function Order() {
         }
 
         if(orderItems) {
+            setSelectedItems(newSelectedItems);
+
+            //try merge all items
+            const mergedList = mergeSameItem(orderItems, newSelectedItems);
+            if(mergedList) orderItems = mergedList;
+
             //if replacement was successful, update order
             setOrder({
                 ...order,
                 OrderItems: orderItems
             });
-            setSelectedItems(newSelectedItem);
         }
     }
 
