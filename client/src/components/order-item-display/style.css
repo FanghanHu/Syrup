@@ -1,19 +1,16 @@
 .order-item-display-grid {
     display: grid;
     grid-template-columns: min-content auto min-content;
-    grid-auto-rows: min-content;
     gap: 3px;
-    height: 100%;
+    height: fit-content;
     overflow-y: auto;
     align-items: center;
-    justify-items: center;
+    justify-items: left;
+    border: 2px solid transparent;
+    box-sizing:border-box;
 }
 
-.order-item-display-grid div:hover {
-    cursor: pointer;
-}
-
-.order-item-display-grid .selected {
-    text-shadow: 0 0 3px skyblue;
-    text-decoration: underline;
+.order-item-display-grid.selected {
+    background: rgba(135, 206, 235, 0.5);
+    border: 2px dashed skyblue;
 }

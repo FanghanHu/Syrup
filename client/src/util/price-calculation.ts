@@ -50,6 +50,7 @@ class ComplexModel {
             this.total.subtotal = round(parentAdditiveTotal.subtotal * this.priceModifier * this.amount);
             this.total.tax = round(parentAdditiveTotal.tax * this.priceModifier * this.amount);
             this.total.total = round(parentAdditiveTotal.total * this.priceModifier * this.amount);
+            this.eachPrice = {...this.total};
         } else {
             //self is additive, update children items
             let additiveTotal:PriceModel = {
