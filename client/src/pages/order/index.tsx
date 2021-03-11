@@ -14,6 +14,7 @@ import OrderItemDisplay from "../../components/order-item-display";
 import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { OrderItem } from "../../util/models";
 import { constants } from "node:zlib";
+import { deepEqual } from "../../util/helpers";
 
 export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
@@ -59,23 +60,94 @@ export default function Order() {
                 }
             }
         }
-
         return false;
+    }
+
+    /**
+     * compare everything except amount, timestamp
+     */
+    const compareItem = (item1: OrderItem, item2: OrderItem) => {
+        return deepEqual({...item1, amount: 1, createdAt: "0", updatedAt: "0"},
+            {...item2, amount: 1, createdAt: "0", updatedAt: "0"});
+    }
+
+    /**
+     * merge all the same item inside the list together
+     * also merges same modifier
+     * @returns 
+     */
+    const mergeSameItem = (originalList: OrderItem[]) => {
+        //a new list to hold changed items
+        const newList = [...originalList];
+        let found = false;
+        //recursively merge children first
+        for(let i=0; i < newList.length; i++) {
+            const item = newList[i];
+            if(item.Modifiers && item.Modifiers.length) {
+                const newModifiers = mergeSameItem(item.Modifiers)
+                if(newModifiers) {
+                    //something merged in the modifiers
+                    found = true;
+                    item.Modifiers = newModifiers;
+                }
+            }
+        }
+
+        //merge current list
+        //loop though the list, look for similar item
+        //both item needs to be removed, a new item needs to be added
+        for(let i=0; i < newList.length; i++) {
+            const item1 = newList[i];
+            let newItem: OrderItem | null = null;
+            //start looking from next item on, items before i should all be merged
+            for(let j=i+1; j < newList.length; j++) {
+                const item2 = newList[j];
+                if(compareItem(item1, item2)) {
+                    found = true;
+                    //update new item amount
+                    const newAmount = (item1.amount?item1.amount:0) + (item2.amount?item2.amount:0);
+                    if(!newItem) {
+                        newItem = {
+                            ...item1,
+                            amount: newAmount
+                        }
+                        //replace item1 with new item
+                        newList[i] = newItem;
+                    } else {
+                        newItem.amount = newAmount;
+                    }
+                    //remove item2 from newList
+                    newList.splice(j, 1);
+                    j--;
+                }
+            }
+        }
+
+        if(found) {
+            return newList;
+        } else {
+            return false;
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const orderItem = (itemData: any) => {
-        let orderItems: OrderItem[] = [];
+        let newOrderItemsList: OrderItem[] = [];
         if(order.OrderItems) {
-            orderItems = [...order.OrderItems];
+            newOrderItemsList = [...order.OrderItems];
         }
-        let orderItem = {itemData, status: "NEW"};
-        orderItems.push(orderItem);
+        let orderItem = {itemData, status: "NEW", amount: 1};
+        newOrderItemsList.push(orderItem);
+
+        //try merge all items
+        const mergedList = mergeSameItem(newOrderItemsList);
+        if(mergedList) newOrderItemsList = mergedList;
+
         setSelectedItems([orderItem]);
         setOrder({
             ...order,
             //new orderItems have a status of NEW, it must be changed to OPEN before sending to the server
-            OrderItems: orderItems
+            OrderItems: newOrderItemsList
         })
     }
 
@@ -86,7 +158,7 @@ export default function Order() {
         for(const selectedItem of selectedItems) {
             //check if last replacement was successful
             if(orderItems) {
-                const newModifier = {itemData, status: "NEW"};
+                const newModifier = {itemData, status: "NEW", amount: 1};
                 //copy selectedItem and place newModifer in it's Modifiers list
                 const newItem = {...selectedItem, Modifiers: [...(selectedItem.Modifiers || []), newModifier]}
                 orderItems = replaceItem(orderItems, selectedItem, newItem);
