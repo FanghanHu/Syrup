@@ -26,6 +26,7 @@ export default function OrderItemDisplay({order, setSelectedItems, selectedItems
             let selfClassName = "order-item-display-grid";
             if(selectedItems.includes(item.orderItem)) selfClassName += " selected";
             if(modifierLevel === 0) selfClassName += " font-weight-bold";
+            if(item.orderItem.status === "NEW") selfClassName += " new-item";
             key++;
             renderedItems.push(
                 <div key={key} className={selfClassName} style={{

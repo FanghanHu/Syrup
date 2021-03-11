@@ -14,3 +14,7 @@
     background: rgba(135, 206, 235, 0.5);
     border: 2px dashed skyblue;
 }
+
+.order-item-display-grid.new-item {
+    color: seagreen;
+}
