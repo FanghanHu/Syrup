@@ -1,7 +1,9 @@
 import e, { Request, Response } from "express";
-import { FindOptions, Includeable, Model } from "sequelize/types";
+import { Server } from "node:http";
+import { FindOptions, Includeable, Model, Transaction } from "sequelize/types";
 import db from "../models";
 import { OrderAttributes } from "../models/order";
+import { OrderItem } from "../models/order-item";
 import { catchError } from "../utils/helpers";
 import { isTokeninvalid } from "../utils/login-token";
 import { getNextOrderNumber } from "./config-controller";
@@ -24,6 +26,59 @@ async function getOrderFromOrderId(req: Request, res: Response, options:Omit<Fin
         return order;
     }
 } 
+
+/**
+ * recursively find all modifiers
+ * 
+ * Return a simple array of objects without sequelize functions,
+ * objects are generated with toJSON from sequelize
+ * @param orderItems 
+ */
+async function getParsedOrderItems(orderItems: OrderItem[]) {
+    let parsedOrderItems:any[] = [];
+
+    for(let i=0; i<orderItems.length; i++) {
+        const orderItem = orderItems[i];
+        //parse current item as a simple object and add it to the array
+        let parsedOrderItem:any = orderItem.toJSON();
+        parsedOrderItems.push(parsedOrderItem);
+
+        let modifiers = await orderItem.getModifiers();
+        if(modifiers && modifiers.length) {
+            //found modifiers
+            if(modifiers) {
+                let parsedModfieirs = await getParsedOrderItems(modifiers);
+                parsedOrderItem.Modifiers = parsedModfieirs;
+            }
+        }
+    }
+
+    return parsedOrderItems;
+}
+
+/**
+ * return a parsed order object with all the orderitems and modifers
+ * 
+ * the returned order is parsed to a simple object, does not contain sequelize functions
+ */
+async function getParsedOrder(req:Request, res:Response, options:Omit<FindOptions<OrderAttributes>, "where"> = {}) {
+    const order = await getOrderFromOrderId(req, res, {include: [{
+        model: db.OrderItem as typeof Model
+    }], ...options});
+
+    let parsedOrder:any = {};
+    if(order) {
+        //parse the order so we can change the fields
+        parsedOrder = order.toJSON();
+        if(order.OrderItems) {
+            //recursively get all modifier information filled in for the orderItems.
+            const parsedOrderItems = await getParsedOrderItems(order.OrderItems);
+            parsedOrder.OrderItems = parsedOrderItems;
+        }
+    }
+
+    return parsedOrder;
+}
 
 /**
  * create a new order
@@ -56,11 +111,32 @@ export const getOrder = catchError(async (req: Request, res: Response) => {
     if(isTokeninvalid(req, res)) return;
     
     const options = req.body.options;
-    const order = await getOrderFromOrderId(req, res, options);
+    const order = await getParsedOrder(req, res, options);
     if(order) {
         return res.status(200).json(order);
     }
 });
+
+const updateItems = async (orderItems: any[], t: Transaction, serverId: number,  ParentId?: number) => {
+    for(let orderItem of orderItems) {
+        //loop through every item
+        let id;
+        if(orderItem.id) {
+            //existing item
+            await db.OrderItem.update({...orderItem, id: undefined, status: orderItem.status==="NEW"?"ORDERED":orderItem.status}, {where: {id: orderItem.id}, transaction: t});
+            id = orderItem.id;
+        } else {
+            //new item
+            const newItem = await db.OrderItem.create({...orderItem, ParentId: ParentId, ServerId: serverId, status: orderItem.status==="NEW"?"ORDERED":orderItem.status}, {transaction: t});
+            id = newItem.id;
+        }
+
+        if(orderItem.Modifiers) {
+            //if the new item have Modifiers
+            await updateItems(orderItem.Modifiers, t, serverId, id);
+        }
+    }
+} 
 
 /**
  * This function handles creating and editing of orderItems and orderModifiers
@@ -96,35 +172,11 @@ export const editItems = catchError(async (req: Request, res: Response) => {
         return res.status(400).send("You need to provide an array of orderItems");
     }
     try{
-        for(const orderItem of orderItems) {
-            if(orderItem.id) {
-                //update existing orderItem
-                const updatedOrderItems = await db.OrderItem.update({...orderItem, id: undefined}, {where: {id: orderItem.id}, transaction: t});
-                if(orderItem.Modifiers){
-                    for(const orderModifier of orderItem.Modifiers) {
-                        //update modifiers
-                        if(orderModifier.id) {
-                            await db.OrderItem.update({...orderModifier, id: undefined}, {where: {id: orderModifier.id}, transaction: t});
-                        } else {
-                            await db.OrderItem.create({...orderModifier, ParentId: orderItem.id, ServerId}, {transaction: t});
-                        }
-                    }
-                }
-            } else {
-                //create a new orderItem
-                await order.createOrderItem({...orderItem, ServerId}, {include: ["Modifiers"], transaction: t});
-            }
-        }
-
+        await updateItems(orderItems, t, ServerId);
         await t.commit();
-        //get the updated order with eagar loading of orderItems and orderModifiers
-        order = await getOrderFromOrderId(req, res, {include: [{
-            model: db.OrderItem as typeof Model,
-            include: [{
-                association: "Modifiers"
-            }]
-        }]});
-        return res.status(200).json(order);
+
+        let parsedOrder = await getParsedOrder(req, res);
+        return res.status(200).json(parsedOrder);
     } catch (err) {
         t.rollback();
         throw err;

@@ -15,6 +15,7 @@ import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { OrderItem } from "../../util/models";
 import { constants } from "node:zlib";
 import { deepEqual } from "../../util/helpers";
+import { useLoginToken } from "../../contexts/login-context";
 
 export default function Order() {
     const [mainButtons, setMainButtons] = useState([]);
@@ -23,8 +24,7 @@ export default function Order() {
 
     const order = useOrder();
     const setOrder = useSetOrder();
-
-    //TODO: function to orderItem, voidItem, decreaseAmount, increaseAmount, SendOrder.
+    const loginToken = useLoginToken();
 
     /**
      * Try to find the item inside the given array.
@@ -94,7 +94,9 @@ export default function Order() {
                     const newOrderItem = {
                         ...orderItem,
                         Modifiers: newModifiers,
-                        amount:  Math.min(orderItem.amount, 1)
+                        amount:  Math.min(orderItem.amount, 1),
+                        id: orderItem.amount>1?undefined:orderItem.id,
+                        status: "NEW"
                     }
                     newOrderItems.splice(i, 1, newOrderItem);
                     //set new targets
@@ -106,7 +108,8 @@ export default function Order() {
                         //and insert it before newOrderItem
                         const replacement = {
                             ...orderItem,
-                            amount: orderItem.amount - 1
+                            amount: orderItem.amount - 1,
+                            status: "NEW"
                         }
                         newOrderItems.splice(i, 0, replacement);
                         i++;
@@ -126,7 +129,9 @@ export default function Order() {
                     const newOrderItem = {
                         ...orderItem,
                         Modifiers: [...(orderItem.Modifiers?orderItem.Modifiers:[]), modifier],
-                        amount: Math.min(orderItem.amount, 1)
+                        amount: Math.min(orderItem.amount, 1),
+                        id: orderItem.amount>1?undefined:orderItem.id,
+                        status: "NEW"
                     }
                     newOrderItems.splice(i, 1, newOrderItem);
                     //mark the new item to be selected
@@ -136,7 +141,8 @@ export default function Order() {
                         //and insert it before newOrderItem
                         const replacement = {
                             ...orderItem,
-                            amount: orderItem.amount - 1
+                            amount: orderItem.amount - 1,
+                            status: "NEW"
                         }
                         newOrderItems.splice(i, 0, replacement);
                         i++;
@@ -158,8 +164,10 @@ export default function Order() {
 
 
     /**
-     * merge all the same item inside the list together
-     * also merges same modifier
+     * Merge all the same item inside the list together
+     * Also merges same modifier
+     * 
+     * Already ordered items will not be merged because they have a different id
      * @param originalList the list to merge
      * @param toBeSelectedItems the list of items that should be selected after the merge
      * @returns false if nothing is merged, or new list of merged items.
@@ -294,7 +302,47 @@ export default function Order() {
                 OrderItems: newModifiers
             });
         }
+    }
 
+    let sendingOrder = false;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const sendOrder = async () => {
+        //to prevent user from sending the same order multiple times
+        if(!sendingOrder) {
+            sendingOrder = true;
+
+            //get all NEW orderItems
+            let orderItems = order.OrderItems?.filter(orderItem => orderItem.status === "NEW");
+            let orderId = order.id;
+
+            if(!order.id) {
+                //if order is new, create order first.
+                //TODO: use login token
+                const result = await axios.post('/api/order/create/', {
+                    userId: 1,
+                    hash: "DEVELOPMENT_TOKEN"
+                });
+
+                orderId = result.data.id;
+            }
+
+            //set orderId for all new OrderItems.
+            if(orderItems) {
+                for(const orderItem of orderItems) {
+                    orderItem.OrderId = orderId;
+                }
+            }
+
+            //TODO: send the order with the user's token
+            const result = await axios.post("/api/order/edit-items", {
+                userId: 1,
+                hash: "DEVELOPMENT_TOKEN",
+                orderId: orderId,
+                OrderItems: orderItems
+            });
+        
+            setOrder(result.data);
+        }
     }
 
     const createButton = (buttonData: any, key: any) => {
@@ -389,7 +437,7 @@ export default function Order() {
                     <Button themeColor={Color.fire_red}>Exit</Button>
                     <Button>+</Button>
                     <Button>-</Button>
-                    <Button themeColor={Color.kiwi_green}>Send</Button>
+                    <Button themeColor={Color.kiwi_green} onClick={() => {sendOrder()}}>Send</Button>
                 </div>
             </Panel>
         </Container>
