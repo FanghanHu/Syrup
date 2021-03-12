@@ -71,6 +71,92 @@ export default function Order() {
             {...item2, amount: 1, createdAt: "0", updatedAt: "0"});
     }
 
+
+    const insertModifier = (modifier: OrderItem, orderItems: OrderItem[], targetItems:OrderItem[]) => {
+        //make a copy of orderItems
+        const newOrderItems: OrderItem[] = [...orderItems];
+        //stores newly created items, which needs to be selected at the end
+        let itemsToSelect: OrderItem[] = [];
+        //stores whatever target is left, will be modified during the process
+        let targets = [...targetItems];
+        //if a target is found within these orderItems and their modifers
+        let found = false;
+        //loop through all orderItems
+        for(let i = 0; i < newOrderItems.length; i++) {
+            const orderItem = newOrderItems[i];
+            if(orderItem.Modifiers && orderItem.amount) {
+                const result = insertModifier(modifier, orderItem.Modifiers, targets);
+                if(result) {
+                    //at least one of the children is a target, 
+                    found = true;
+                    const {newModifiers, newItemsToSelect, newTargets} = result;
+                    //replace the orderItem
+                    const newOrderItem = {
+                        ...orderItem,
+                        Modifiers: newModifiers,
+                        amount:  Math.min(orderItem.amount, 1)
+                    }
+                    newOrderItems.splice(i, 1, newOrderItem);
+                    //set new targets
+                    targets = newTargets;
+                    //add new items to selection
+                    itemsToSelect = itemsToSelect.concat(newItemsToSelect);
+                    if(orderItem.amount > 1) {
+                        //if orderitem amount is bigger than one, make a new item that holds the rest of the amount, 
+                        //and insert it before newOrderItem
+                        const replacement = {
+                            ...orderItem,
+                            amount: orderItem.amount - 1
+                        }
+                        newOrderItems.splice(i, 0, replacement);
+                        i++;
+                    }
+                }
+            }
+
+            //check if each orderItem is a target
+            for(let j=0; j<targets.length; j++) {
+                const target = targets[j];
+                if(orderItem === target && orderItem.amount) {
+                    //mark this round of search as found
+                    found = true;
+                    //found a target, remove it from list
+                    targets.splice(j, 1);
+                    //make a replacement item, replace the original item
+                    const newOrderItem = {
+                        ...orderItem,
+                        Modifiers: [...(orderItem.Modifiers?orderItem.Modifiers:[]), modifier],
+                        amount: Math.min(orderItem.amount, 1)
+                    }
+                    newOrderItems.splice(i, 1, newOrderItem);
+                    //mark the new item to be selected
+                    itemsToSelect.push(newOrderItem);
+                    if(orderItem.amount > 1) {
+                        //if orderitem amount is bigger than one, make a new item that holds the rest of the amount, 
+                        //and insert it before newOrderItem
+                        const replacement = {
+                            ...orderItem,
+                            amount: orderItem.amount - 1
+                        }
+                        newOrderItems.splice(i, 0, replacement);
+                        i++;
+                    }
+                }
+            }
+        }
+
+        if(found) {
+            return {
+                newModifiers: newOrderItems,
+                newItemsToSelect: itemsToSelect,
+                newTargets: targets
+            }
+        } else {
+            return false;
+        }
+    }
+
+
     /**
      * merge all the same item inside the list together
      * also merges same modifier
@@ -183,38 +269,32 @@ export default function Order() {
         })
     }
 
+    /**
+     * Order an item as modifier for the selected items,
+     * If any selected item have an amount of more than 1, it is split into 2 items, 
+     * one part will have 1 amount, 
+     * and the other part will have the rest.
+     * The part with 1 amount will be selected.
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const orderModifier = (itemData: any) => {
-        let orderItems: false | OrderItem[] | undefined = order.OrderItems;
-        const newSelectedItems: OrderItem[] = [];
-        for(const selectedItem of selectedItems) {
-            //check if last replacement was successful
-            if(orderItems) {
-                const newModifier = {itemData, status: "NEW", amount: 1};
-                //copy selectedItem and place newModifer in it's Modifiers list
-                const newItem = {...selectedItem, Modifiers: [...(selectedItem.Modifiers || []), newModifier]}
-                orderItems = replaceItem(orderItems, selectedItem, newItem);
-                if(orderItems) {
-                    newSelectedItems.push(newItem);
-                }
-            } else {
-                break;
-            }
-        }
-
-        if(orderItems) {
-            setSelectedItems(newSelectedItems);
+        const result = insertModifier({itemData, amount: 1, status:"NEW"}, order.OrderItems || [], selectedItems);
+        if(result) {
+            const newItemsToSelect = result.newItemsToSelect;
+            let newModifiers = result.newModifiers;
+            
+            setSelectedItems(newItemsToSelect);
 
             //try merge all items
-            const mergedList = mergeSameItem(orderItems, newSelectedItems);
-            if(mergedList) orderItems = mergedList;
+            const mergedList = mergeSameItem(newModifiers, newItemsToSelect);
+            if(mergedList) newModifiers = mergedList;
 
-            //if replacement was successful, update order
             setOrder({
                 ...order,
-                OrderItems: orderItems
+                OrderItems: newModifiers
             });
         }
+
     }
 
     const createButton = (buttonData: any, key: any) => {
