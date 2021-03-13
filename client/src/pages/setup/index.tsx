@@ -11,6 +11,7 @@ import UserSetup from "./user-setup";
 import TableSetup from "./table-setup";
 import MenuSetup from "./menu-setup";
 import VerticalCenter from "../../components/vertical-center";
+import './style.css';
 
 export default function Setup(): JSX.Element {
     const history = useHistory();
