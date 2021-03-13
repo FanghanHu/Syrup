@@ -13,7 +13,7 @@ interface ExpandableSideMenuProps extends React.DetailedHTMLProps<React.HTMLAttr
 }
 
 export default function ExpandableSideMenu({children, themeColor=Color.light_gray, expanded, ...restOfProps} : ExpandableSideMenuProps) {
-    const [isExpanded, setExpand] = useState(false);
+    const [isExpanded, setExpand] = useState(expanded);
 
     return (
         <div className={isExpanded?"syrup-expandable-side-menu":"syrup-expandable-side-menu shrink"} {...restOfProps}>
