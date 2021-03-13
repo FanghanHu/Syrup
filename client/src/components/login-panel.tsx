@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
-import { Nav, Tab, Toast, ToastBody } from 'react-bootstrap';
+import { Nav, Tab } from 'react-bootstrap';
 import Button from './button';
 import InputGroup from '../components/input-group';
 import Label from '../components/label';
@@ -12,6 +12,7 @@ import PanelHeader from '../components/panel-header';
 import TextInput from '../components/text-input';
 import { useSetLoginToken } from '../contexts/login-context';
 import { Color } from '../util/Color';
+import SimpleToast from './simple-toast';
 
 export default function LoginPanel({onLogin}) {
 
@@ -99,19 +100,7 @@ export default function LoginPanel({onLogin}) {
                     </Tab.Container>
                 </PanelBody>
             </Panel>
-            <Toast style={{
-                position:"absolute",
-                top:"50%", left:"50%",
-                transform:"translateX(-50%) translateY(-50%)",
-                color: "red"
-                }} show={message !== ""} onClose={() => {setMessage("")}}>
-                <Toast.Header>
-                    <strong>Message:</strong>
-                </Toast.Header>
-                <ToastBody>
-                    {message}
-                </ToastBody>
-            </Toast>
+            <SimpleToast title="Message:" message={message} setMessage={setMessage}/>
         </div>
     );
 }
