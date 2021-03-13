@@ -1,16 +1,22 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import Button from "../components/button";
-import ExpandableSideMenu from "../components/expandable-side-menu";
-import LabelBar from "../components/label-bar";
-import { Color } from "../util/Color";
+import Button from "../../components/button";
+import ExpandableSideMenu from "../../components/expandable-side-menu";
+import LabelBar from "../../components/label-bar";
+import { Color } from "../../util/Color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CheckLoginToken from "../components/check-login-token";
-import { useHistory } from "react-router";
+import CheckLoginToken from "../../components/check-login-token";
+import {Route, useHistory, useRouteMatch } from "react-router-dom";
+import UserSetup from "./user-setup";
+import TableSetup from "./table-setup";
+import MenuSetup from "./menu-setup";
 
 export default function Setup(): JSX.Element {
     const history = useHistory();
     const ButtonTheme = Color.kiwi_green;
+
+    const {url} = useRouteMatch();
+    
 
     return (
         <Container fluid>
@@ -21,13 +27,19 @@ export default function Setup(): JSX.Element {
                         <LabelBar themeColor={Color.sky_blue} className="m-2 h3 text-center text-nowrap p-3">
                             <FontAwesomeIcon icon="cog"/> Back Office
                         </LabelBar>
-                        <Button themeColor={ButtonTheme} className="m-1">
+                        <Button themeColor={ButtonTheme} className="m-1" onClick={() => {
+                            history.replace(`${url}/user`);
+                        }}>
                             <FontAwesomeIcon icon="users"/> User Setup
                         </Button>
-                        <Button themeColor={ButtonTheme} className="m-1">
+                        <Button themeColor={ButtonTheme} className="m-1" onClick={() => {
+                            history.replace(`${url}/menu`);
+                        }}>
                             <FontAwesomeIcon icon="book"/> Menu Setup
                         </Button>
-                        <Button themeColor={ButtonTheme} className="m-1">
+                        <Button themeColor={ButtonTheme} className="m-1" onClick={() => {
+                            history.replace(`${url}/table`);
+                        }}>
                             <FontAwesomeIcon icon="chair"/> Table Setup
                         </Button>
                     </div>
@@ -38,6 +50,10 @@ export default function Setup(): JSX.Element {
                     </Button>
                 </div>
             </ExpandableSideMenu>
+            {/* Routes */}
+            <Route exact path={`${url}/user`} component={UserSetup}/>
+            <Route exact path={`${url}/table`} component={TableSetup}/>
+            <Route exact path={`${url}/menu`} component={MenuSetup}/>
         </Container>
     );
 }

@@ -20,7 +20,7 @@ function App() {
       <ContextProviders>
         <Router>
           <Route path="/" exact component={Login}/>
-          <Route path="/setup" exact component={Setup}/>
+          <Route path="/setup" component={Setup}/>
           <Route path="/login" exact component={Login}/>
           <Route path="/main-menu" exact component={MainMenu}/>
           <Route path="/order" exact component={Order}/>
