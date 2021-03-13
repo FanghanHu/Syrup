@@ -5,13 +5,16 @@ import ExpandableSideMenu from "../components/expandable-side-menu";
 import LabelBar from "../components/label-bar";
 import { Color } from "../util/Color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CheckLoginToken from "../components/check-login-token";
+import { useHistory } from "react-router";
 
 export default function Setup(): JSX.Element {
-
+    const history = useHistory();
     const ButtonTheme = Color.kiwi_green;
 
     return (
         <Container fluid>
+            <CheckLoginToken/>
             <ExpandableSideMenu expanded={true}>
                 <div className="d-flex flex-column justfy-content-center p-2 h-100">
                     <div className="d-flex flex-column flex-grow-1">
@@ -28,7 +31,9 @@ export default function Setup(): JSX.Element {
                             <FontAwesomeIcon icon="chair"/> Table Setup
                         </Button>
                     </div>
-                    <Button themeColor={Color.fire_red} className="m-1">
+                    <Button themeColor={Color.fire_red} className="m-1" onClick={() => {
+                        history.goBack();
+                    }}>
                     <FontAwesomeIcon icon="sign-out-alt"/> Exit
                     </Button>
                 </div>

@@ -38,6 +38,7 @@ export default function MainMenu() {
                     gap: "3px"
                 }}>
                     {createButton("Express", "hamburger", "/order")}
+                    {createButton("Setup", "cog", "/setup")}
                 </div>
             </VerticalCenter>
         </Container>
