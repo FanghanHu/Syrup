@@ -10,6 +10,7 @@ import {Route, useHistory, useRouteMatch } from "react-router-dom";
 import UserSetup from "./user-setup";
 import TableSetup from "./table-setup";
 import MenuSetup from "./menu-setup";
+import VerticalCenter from "../../components/vertical-center";
 
 export default function Setup(): JSX.Element {
     const history = useHistory();
@@ -19,7 +20,7 @@ export default function Setup(): JSX.Element {
     
 
     return (
-        <Container fluid>
+        <Container fluid className="vh-100">
             <CheckLoginToken/>
             <ExpandableSideMenu expanded={true}>
                 <div className="d-flex flex-column justfy-content-center p-2 h-100">
@@ -51,6 +52,26 @@ export default function Setup(): JSX.Element {
                 </div>
             </ExpandableSideMenu>
             {/* Routes */}
+            <Route exact path={`${url}`}> 
+                <VerticalCenter>
+                <div style={{
+                        fontSize: "2.3em",
+                        textAlign: "center",
+                        color: "lightgray",
+                        lineHeight: "1em"
+                    }}>
+                        Welcome to the
+                    </div>
+                    <div style={{
+                        fontSize: "4em",
+                        textAlign: "center",
+                        color: "white",
+                        lineHeight: "1em"
+                    }}>
+                        Back Office
+                    </div>
+                </VerticalCenter>
+            </Route>
             <Route exact path={`${url}/user`} component={UserSetup}/>
             <Route exact path={`${url}/table`} component={TableSetup}/>
             <Route exact path={`${url}/menu`} component={MenuSetup}/>
