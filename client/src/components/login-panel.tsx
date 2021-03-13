@@ -64,7 +64,7 @@ export default function LoginPanel({onLogin}) {
                                 <Nav.Link className="pb-2" eventKey="accessCode"><Button>AccessCode</Button></Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link className="pb-2" eventKey="backOffice"><Button>Back Office</Button></Nav.Link>
+                                <Nav.Link className="pb-2" eventKey="password"><Button>Password</Button></Nav.Link>
                             </Nav.Item>
                         </Nav>
                         <Tab.Content>
@@ -75,7 +75,7 @@ export default function LoginPanel({onLogin}) {
                                 </InputGroup>
                                 <NumberPad className="mt-2" text={accessCode} setText={setAccessCode} onEnter={loginWithAccessCode}/>
                             </Tab.Pane>
-                            <Tab.Pane eventKey="backOffice">
+                            <Tab.Pane eventKey="password">
                                 <InputGroup className="my-2">
                                     <Label>Username:</Label>
                                     <TextInput value={username} onChange={(e)=>{setUsername(e.target.value)} }></TextInput>
