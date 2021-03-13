@@ -13,7 +13,6 @@ import { Color } from "../../util/Color";
 import OrderItemDisplay from "../../components/order-item-display";
 import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { OrderItem } from "../../util/models";
-import { constants } from "node:zlib";
 import { deepEqual } from "../../util/helpers";
 import { useLoginToken } from "../../contexts/login-context";
 
@@ -317,10 +316,9 @@ export default function Order() {
 
             if(!order.id) {
                 //if order is new, create order first.
-                //TODO: use login token
                 const result = await axios.post('/api/order/create/', {
-                    userId: 1,
-                    hash: "DEVELOPMENT_TOKEN"
+                    userId: loginToken.userId,
+                    hash: loginToken.hash
                 });
 
                 orderId = result.data.id;
@@ -333,15 +331,18 @@ export default function Order() {
                 }
             }
 
-            //TODO: send the order with the user's token
+            //edit the order
             const result = await axios.post("/api/order/edit-items", {
-                userId: 1,
-                hash: "DEVELOPMENT_TOKEN",
+                userId: loginToken.userId,
+                hash: loginToken.hash,
                 orderId: orderId,
                 OrderItems: orderItems
             });
-        
+
             setOrder(result.data);
+            sendingOrder = false;
+        } else {
+            alert("Order already sent, waiting for server response.");
         }
     }
 
@@ -365,10 +366,6 @@ export default function Order() {
         );
     }
 
-    const handleError = (err: Error) => {
-        console.error(err);
-        //TODO: properly handle errors
-    }
 
     useEffect(() => {
         const queryButtons = (menuId, setButtons) => {
@@ -379,30 +376,15 @@ export default function Order() {
                 }
             }}).then(result => {
                 setButtons(result.data.Buttons);
-            }).catch(handleError);
+            }).catch(err => {
+                alert("failed to get buttons");
+            });
         }
     
+        //load both side menu and main menu, using default menuId 1 and 2
         queryButtons(1, setMainButtons);
         queryButtons(2, setSideButtons);
-
-        //TODO: rewrite this query to include acutal token
-        axios.post("/api/order/get", {
-            "userId": 1,
-            "hash": "DEVELOPMENT_TOKEN",
-            "orderId": 1,
-            "options": {
-                "include": [{
-                    association: "OrderItems",
-                    include: [{
-                        association: "Modifiers"
-                    }]
-                }]
-            }
-        }).then(result => {
-            setOrder(result.data);
-        });
-        
-    }, [setMainButtons, setSideButtons, setOrder])
+    }, [setMainButtons, setSideButtons])
 
     return (
         <Container fluid id="order-page-container">
