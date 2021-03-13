@@ -8,9 +8,11 @@ import { useLoginToken } from "../contexts/login-context";
 export default function CheckLoginToken() {
     const loginToken = useLoginToken();
     const history = useHistory();
-    if(!loginToken.userId) {
-        history.push("/login");
+    if(loginToken.userId === undefined || loginToken.userId === null) {
+        //using setTimeout because react doesn't like people messing with it during render.
+        setTimeout(() => {
+            history.push("/login");
+        }, 1);
     }
-
     return null;
 }

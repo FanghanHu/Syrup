@@ -118,7 +118,7 @@ export const loginWithPassword = catchError(async (req, res) => {
         //respond with necessary information
         return res.status(200).json({
             fullName: user.fullName,
-            id: user.id,
+            userId: user.id,
             hash
         });
     } else {

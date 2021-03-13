@@ -13,9 +13,7 @@ import TextInput from '../components/text-input';
 import { useSetLoginToken } from '../contexts/login-context';
 import { Color } from '../util/Color';
 
-export default function LoginPanel(props) {
-    const onLogin = props.onLogin;
-    const restOfProps = {...props, onLogin: undefined};
+export default function LoginPanel({onLogin}) {
 
     const setLoginToken = useSetLoginToken();
     const [accessCode, setAccessCode] = useState("");
@@ -55,7 +53,7 @@ export default function LoginPanel(props) {
             left: 0,
             zIndex: 100
         }}>
-            <Panel className="mx-auto" style={{maxWidth:"350px"}} {...restOfProps}>
+            <Panel className="mx-auto" style={{maxWidth:"350px"}}>
                 <PanelHeader>
                     Login
                 </PanelHeader>
@@ -84,7 +82,14 @@ export default function LoginPanel(props) {
                                 </InputGroup>
                                 <InputGroup className="my-2">
                                     <Label>Password:</Label>
-                                    <TextInput type="password" value={password} onChange={(e)=>{setPassword(e.target.value)} }></TextInput>
+                                    <TextInput type="password" value={password} 
+                                    onChange={(e)=>{setPassword(e.target.value)}}
+                                    onKeyDown={(e) => {
+                                        if(e.key === "Enter") {
+                                            loginWithPassword();
+                                        }
+                                    }}
+                                    ></TextInput>
                                 </InputGroup>
                                 <div className="d-flex justify-content-end">
                                     <Button themeColor={Color.gold} onClick={loginWithPassword}>Login</Button>
