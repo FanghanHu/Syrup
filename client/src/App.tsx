@@ -2,7 +2,6 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Test from "./pages/test";
 import Setup from "./pages/setup";
 import Login from "./pages/login";
 import ContextProviders from "./contexts";
@@ -20,7 +19,7 @@ function App() {
     <div className="App">
       <ContextProviders>
         <Router>
-          <Route path="/" exact component={Test}/>
+          <Route path="/" exact component={Login}/>
           <Route path="/setup" exact component={Setup}/>
           <Route path="/login" exact component={Login}/>
           <Route path="/main-menu" exact component={MainMenu}/>

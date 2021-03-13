@@ -14,6 +14,9 @@ import { useSetLoginToken } from '../contexts/login-context';
 import { Color } from '../util/Color';
 
 export default function LoginPanel(props) {
+    const onLogin = props.onLogin;
+    const restOfProps = {...props, onLogin: undefined};
+
     const setLoginToken = useSetLoginToken();
     const [accessCode, setAccessCode] = useState("");
     const [username, setUsername] = useState("");
@@ -25,6 +28,7 @@ export default function LoginPanel(props) {
             accessCode
         }).then(res => {
             setLoginToken(res.data);
+            onLogin();
         }).catch(err => {
             setLoginToken({});
             setMessage(err.response.data);
@@ -36,6 +40,7 @@ export default function LoginPanel(props) {
             username, password
         }).then(res => {
             setLoginToken(res.data);
+            onLogin();
         }).catch(err => {
             setLoginToken({});
             setMessage(err.response.data);
@@ -50,7 +55,7 @@ export default function LoginPanel(props) {
             left: 0,
             zIndex: 100
         }}>
-            <Panel className="mx-auto" style={{maxWidth:"350px"}} {...props}>
+            <Panel className="mx-auto" style={{maxWidth:"350px"}} {...restOfProps}>
                 <PanelHeader>
                     Login
                 </PanelHeader>

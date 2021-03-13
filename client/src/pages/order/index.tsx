@@ -15,8 +15,11 @@ import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { OrderItem } from "../../util/models";
 import { deepEqual } from "../../util/helpers";
 import { useLoginToken } from "../../contexts/login-context";
+import CheckLoginToken from "../../components/check-login-token";
 
 export default function Order() {
+    CheckLoginToken();
+
     const [mainButtons, setMainButtons] = useState([]);
     const [sideButtons, setSideButtons] = useState([]);
     const [selectedItems, setSelectedItems] = useState<OrderItem[]>([]);

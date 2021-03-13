@@ -6,9 +6,11 @@ import { Color } from '../util/Color';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useHistory } from 'react-router-dom';
+import CheckLoginToken from '../components/check-login-token';
 
 export default function MainMenu() {
     const history = useHistory();
+
     const createButton = function(text: string, icon: IconProp, url: string, themeColor:Color=Color.sky_blue) {
         return <div style={{paddingTop:"40%", minHeight: "4em", position:"relative"}}>
             <Button onClick={() => { history.push(url)}} themeColor={themeColor} style={{
@@ -28,6 +30,7 @@ export default function MainMenu() {
 
     return (
         <Container className="vh-100">
+            <CheckLoginToken/>
             <VerticalCenter>
                 <div style={{
                     display: "grid",
