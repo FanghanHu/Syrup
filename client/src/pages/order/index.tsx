@@ -372,7 +372,7 @@ export default function Order() {
 
     useEffect(() => {
         const queryButtons = (menuId, setButtons) => {
-            axios.post("/api/menu/get", {id: menuId, options: {
+            axios.post("/api/menu/get", {data: {id: menuId}, options: {
                 include: {
                     association: "Buttons",
                     include: "Script"

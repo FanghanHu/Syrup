@@ -21,7 +21,7 @@ export default function generateSimpleCrudRouter(model: any) {
         
         get: catchError(async (req:Request, res:Response) => {
             if(!isIdValid(req, res)) return;
-            const id = req.body.id;
+            const id = req.body.data.id;
             const options = req.body.options;
             const item = await model.findByPk(id, {...options});
             if(item) {
@@ -45,7 +45,7 @@ export default function generateSimpleCrudRouter(model: any) {
             if(isTokeninvalid(req, res)) return;
         
             if(!isIdValid(req, res)) return;
-            const id = req.body.id;
+            const id = req.body.data.id;
             const options = req.body.options;
 
             await model.destroy({where: {id}, ...options});
