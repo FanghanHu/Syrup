@@ -44,11 +44,13 @@ export default function TableSetup() {
                     contentEditable={true}
                     suppressContentEditableWarning={true}
                     onBlur={(e) => {
+                        //change table name on exiting edit mode
                         const newName = (e.target as any).innerText;
                         if(newName) {
                             const newTable = {
                                 ...table,
-                                tableName: newName
+                                tableName: newName,
+                                status: "NEW"
                             };
                             updateTable(table, newTable);
                             setSelectedTable(newTable);
@@ -142,7 +144,8 @@ export default function TableSetup() {
                             const newTable = {
                                 ...table,
                                 x: table.x + e.clientX - startX,
-                                y: table.y + e.clientY - startY
+                                y: table.y + e.clientY - startY,
+                                status: "NEW"
                             }
                             updateTable(table, newTable);
                         }}
@@ -154,6 +157,22 @@ export default function TableSetup() {
                             {tableAreaList.map((tableArea, index) => createTableAreaButton(tableArea, index))}
                         </PanelBody>
                         <div className="setup-button-group">
+                            <Button themeColor={Color.kiwi_green} onClick={() => {
+                                const newTable = {
+                                    tableAreaId: selectedTableArea.id,
+                                    tableName: "new table",
+                                    x: 50,
+                                    y: 50,
+                                    status: "NEW"
+                                };
+                                setTableList([...tableList, newTable]);
+                                setSelectedTable(newTable);
+                            }}>Add Table</Button>
+
+                            <Button themeColor={Color.kiwi_green} onClick={() => {
+                                //TODO: save tables and tableAreas
+                            }}>Save</Button>
+
                             <Button themeColor={Color.fire_red} onClick={() => {
                                 history.goBack();
                             }}>Exit</Button>
