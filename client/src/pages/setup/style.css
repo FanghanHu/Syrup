@@ -4,11 +4,29 @@
     font-size: 2em;
 }
 
+.setup-button-group {
+    margin: 3px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px;
+}
+
+.setup-button-group button {
+    width: 100%;
+}
+
 .list-properties-layout {
     display: grid;
     grid-template-columns: 250px auto;
     height: 100%;
     gap: 3px;
+}
+
+.table-setup-grid {
+    display: grid;
+    height: 100%;
+    flex-grow: 1;
+    grid-template-columns: auto 250px;
 }
 
 @media only screen and (max-width: 768px) {

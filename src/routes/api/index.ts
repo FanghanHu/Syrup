@@ -12,6 +12,8 @@ router.use("/button", generateSimpleCrudRouter(db.Button));
 router.use("/script", generateSimpleCrudRouter(db.Script));
 //TODO: filter the information sent to the client, hide password
 router.use("/user", generateSimpleCrudRouter(db.User));
+router.use('/table', generateSimpleCrudRouter(db.Table));
+router.use('/table-area', generateSimpleCrudRouter(db.TableArea));
 
 //Handles all uncaught error by sending them to client
 router.use((error: Error, req, res, next) => {
