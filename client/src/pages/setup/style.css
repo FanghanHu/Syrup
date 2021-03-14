@@ -3,3 +3,16 @@
     text-align: center;
     font-size: 2em;
 }
+
+.list-properties-layout {
+    display: grid;
+    grid-template-columns: 250px auto;
+    height: 100%;
+    gap: 3px;
+}
+
+@media only screen and (max-width: 768px) {
+    .list-properties-layout {
+        grid-template-columns: 100%;
+    }
+}

@@ -19,12 +19,12 @@ export function requestPermission(res: Response, permission: string) {
  * Does not query the id, so row may not exist.
  */
 export function isIdValid(req:Request, res:Response) {
-    const id = req.body.id;
+    const id = req.body.data.id;
     if(id === undefined || id === null) {
         res.status(400).send("You must provide an id.");
         return false;
     }
-    if(parseInt(id) != req.body.id) {
+    if(parseInt(id) != req.body.data.id) {
         res.status(400).send("Id must be an integer.");
         return false;
     }

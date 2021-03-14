@@ -1,21 +1,21 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Toast, ToastBody, ToastProps } from "react-bootstrap";
-import { BsPrefixRefForwardingComponent } from "react-bootstrap/esm/helpers";
 
 
-export interface SimpleToastProps extends BsPrefixRefForwardingComponent<"div", ToastProps> {
+export interface SimpleToastProps extends ToastProps {
     title: string,
     message: string,
-    setMessage: React.Dispatch<React.SetStateAction<string>>
+    setMessage: React.Dispatch<React.SetStateAction<string>>,
+    style?: CSSProperties
 }
 
-export default function SimpleToast({title, message, setMessage, ...restOfProp}) {
+export default function SimpleToast({title, message, setMessage, style, ...restOfProp}: SimpleToastProps) {
     return (
         <Toast style={{
             position:"absolute",
             top:"50%", left:"50%",
             transform:"translateX(-50%) translateY(-50%)",
-            color: "red"
+            ...style
             }} show={message !== ""} onClose={() => {setMessage("")}} {...restOfProp}>
             <Toast.Header>
                 <strong>{title}</strong>
