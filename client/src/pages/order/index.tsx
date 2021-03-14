@@ -17,6 +17,8 @@ import { deepEqual } from "../../util/helpers";
 import { useLoginToken } from "../../contexts/login-context";
 import CheckLoginToken from "../../components/check-login-token";
 import { useHistory } from "react-router";
+import React from "react";
+import SimpleToast from "../../components/simple-toast";
 
 export default function Order() {
     CheckLoginToken();
@@ -29,6 +31,7 @@ export default function Order() {
     const setOrder = useSetOrder();
     const loginToken = useLoginToken();
     const history = useHistory();
+    const [message, setMessage] = useState("");
 
     /**
      * Try to find the item inside the given array.
@@ -319,6 +322,13 @@ export default function Order() {
             let orderItems = order.OrderItems?.filter(orderItem => orderItem.status === "NEW");
             let orderId = order.id;
 
+            //check if there is any new item
+            if(!orderItems || !orderItems.length){
+                setMessage("You must order something before sending the order.");
+                sendingOrder = false;
+                return;
+            }
+
             if(!order.id) {
                 //if order is new, create order first.
                 const result = await axios.post('/api/order/create/', {
@@ -331,7 +341,7 @@ export default function Order() {
             }
 
             //set orderId for all new OrderItems.
-            if(orderItems) {
+            if(orderItems && orderItems.length) {
                 for(const orderItem of orderItems) {
                     orderItem.OrderId = orderId;
                 }
@@ -346,9 +356,10 @@ export default function Order() {
             });
 
             setOrder(result.data);
+            setMessage("Order sent!");
             sendingOrder = false;
         } else {
-            alert("Order already sent, waiting for server response.");
+            setMessage("Order already sent, waiting for server response.");
         }
     }
 
@@ -383,7 +394,7 @@ export default function Order() {
             }}).then(result => {
                 setButtons(result.data.Buttons);
             }).catch(err => {
-                alert("failed to get buttons");
+                setMessage("failed to get buttons");
             });
         }
     
@@ -430,6 +441,7 @@ export default function Order() {
                     <Button themeColor={Color.kiwi_green} onClick={() => {sendOrder()}}>Send</Button>
                 </div>
             </Panel>
+            <SimpleToast title="Message:" message={message} setMessage={setMessage}/>
         </Container>
     );
 }

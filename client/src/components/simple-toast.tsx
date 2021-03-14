@@ -15,6 +15,7 @@ export default function SimpleToast({title, message, setMessage, style, ...restO
             position:"absolute",
             top:"50%", left:"50%",
             transform:"translateX(-50%) translateY(-50%)",
+            zIndex: 99,
             ...style
             }} show={message !== ""} onClose={() => {setMessage("")}} {...restOfProp}>
             <Toast.Header>
