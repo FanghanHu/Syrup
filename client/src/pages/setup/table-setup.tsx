@@ -77,7 +77,9 @@ export default function TableSetup() {
         return (
             <Button key={"table-area-"+key}
                 style={{
-                    width: "100%"
+                    width: "100%",
+                    margin: "3px",
+                    minHeight: "2em"
                 }}
                 onClick={() => {
                     setSelectedTableArea(tableArea)
@@ -85,21 +87,49 @@ export default function TableSetup() {
                 }}
                 themeColor={selectedTableArea===tableArea?Color.kiwi_green:Color.sky_blue}
             >
-                {tableArea.tableAreaName}
+                {selectedTableArea===tableArea?<span
+                    contentEditable={true}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => {
+                        //change table name on exiting edit mode
+                        const newName = (e.target as any).innerText;
+                        if(newName) {
+                            const newTableArea = {
+                                ...tableArea,
+                                tableAreaName: newName,
+                                status: "NEW"
+                            };
+                            const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea, newTableArea);
+                            if(newTableAreaList) {
+                                setTableAreaList(newTableAreaList);
+                                setSelectedTableArea(null);
+                            }
+                        } else {
+                            //reset tableName if a new Name is not provided
+                            (e.target as any).innerText = tableArea.tableAreaName;
+                        }
+                    }}
+                >{tableArea.tableAreaName}</span>:tableArea.tableAreaName}
             </Button>
         )
     }
 
     const fetchTableList = (tableAreaId) => {
-        axios.post("/api/table/list", {
-            options: {
-                where: {
-                    TableAreaId: tableAreaId
+        if(tableAreaId) {
+            axios.post("/api/table/list", {
+                options: {
+                    where: {
+                        TableAreaId: tableAreaId
+                    }
                 }
-            }
-        }).then(res => {
-            setTableList(res.data);
-        })
+            }).then(res => {
+                setTableList(res.data);
+                setSelectedTable(null);
+            })
+        } else {
+            setTableList([]);
+            setSelectedTable(null);
+        }
     }
 
     const updateTable = (targetTable, newTable) => {
@@ -139,7 +169,7 @@ export default function TableSetup() {
                     status: "DELETED"
                 }
                 updateTable(selectedTable, newTable);
-                setSelectedTable(newTable);
+                setSelectedTable(null);
             } else {
                 //new table, just remove from list
                 const newTableList = findAndReplace(tableList, selectedTable);
@@ -152,11 +182,36 @@ export default function TableSetup() {
     }
 
     const createNewTableArea = () => {
-        //TODO:
+        const newTableArea = {
+            tableAreaName: "new area",
+            status: "NEW"
+        };
+        setTableAreaList([...tableAreaList, newTableArea]);
+        setSelectedTableArea(newTableArea);
     }
 
     const deleteTableArea = () => {
-        //TODO:
+        if(selectedTableArea) {
+            if(selectedTableArea.id) {
+                //existing table area, mark for deletion
+                const newTableArea = {
+                    ...selectedTableArea,
+                    status: "DELETED"
+                }
+                const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea, newTableArea);
+                if(newTableAreaList) {
+                    setTableAreaList(newTableAreaList);
+                    setSelectedTableArea(null);
+                }
+            } else {
+                //new table area, just remove from list
+                const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea);
+                if(newTableAreaList) {
+                    setTableAreaList(newTableAreaList);
+                    setSelectedTableArea(null);
+                }
+            }
+        }
     }
 
     useEffect(() => {
