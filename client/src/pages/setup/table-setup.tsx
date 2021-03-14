@@ -9,6 +9,7 @@ import Panel from "../../components/panel";
 import PanelBody from "../../components/panel-body";
 import PanelHeader from "../../components/panel-header";
 import { Color } from "../../util/Color";
+import { findAndReplace } from "../../util/helpers";
 
 export default function TableSetup() {
 
@@ -20,6 +21,10 @@ export default function TableSetup() {
     const history = useHistory();
 
     const createTableButton = (table, key) => {
+        if(table.status === "DELETED") {
+            return null;
+        }
+
         return (
             <Button key={"table-"+key} 
                 style={{
@@ -65,6 +70,10 @@ export default function TableSetup() {
     }
 
     const createTableAreaButton = (tableArea, key) => {
+        if(tableArea.status === "DELETED") {
+            return null;
+        }
+
         return (
             <Button key={"table-area-"+key}
                 style={{
@@ -103,6 +112,51 @@ export default function TableSetup() {
                 return;
             }
         }
+    }
+
+    const createNewTable = () => {
+        const newTable = {
+            tableAreaId: selectedTableArea.id,
+            tableName: "new table",
+            x: 50,
+            y: 50,
+            status: "NEW"
+        };
+        setTableList([...tableList, newTable]);
+        setSelectedTable(newTable);
+    }
+
+    const saveChanges = () => {
+        //TODO: save changes
+    }
+
+    const deleteTable = () => {
+        if(selectedTable) {
+            if(selectedTable.id) {
+                //existing table, mark for deletion
+                const newTable = {
+                    ...selectedTable,
+                    status: "DELETED"
+                }
+                updateTable(selectedTable, newTable);
+                setSelectedTable(newTable);
+            } else {
+                //new table, just remove from list
+                const newTableList = findAndReplace(tableList, selectedTable);
+                if(newTableList) {
+                    setTableList(newTableList);
+                    setSelectedTable(null);
+                }
+            }
+        }
+    }
+
+    const createNewTableArea = () => {
+        //TODO:
+    }
+
+    const deleteTableArea = () => {
+        //TODO:
     }
 
     useEffect(() => {
@@ -157,23 +211,12 @@ export default function TableSetup() {
                             {tableAreaList.map((tableArea, index) => createTableAreaButton(tableArea, index))}
                         </PanelBody>
                         <div className="setup-button-group">
-                            <Button themeColor={Color.kiwi_green} onClick={() => {
-                                const newTable = {
-                                    tableAreaId: selectedTableArea.id,
-                                    tableName: "new table",
-                                    x: 50,
-                                    y: 50,
-                                    status: "NEW"
-                                };
-                                setTableList([...tableList, newTable]);
-                                setSelectedTable(newTable);
-                            }}>Add Table</Button>
-
-                            <Button themeColor={Color.kiwi_green} onClick={() => {
-                                //TODO: save tables and tableAreas
-                            }}>Save</Button>
-
-                            <Button themeColor={Color.fire_red} onClick={() => {
+                            <Button themeColor={Color.dark_gold} onClick={createNewTableArea}>Add Area</Button>
+                            <Button themeColor={Color.fire_red} onClick={deleteTableArea}>Delete Area</Button>
+                            <Button themeColor={Color.kiwi_green} onClick={saveChanges}>Save</Button>
+                            <Button themeColor={Color.dark_gold} onClick={createNewTable}>Add Table</Button>
+                            <Button themeColor={Color.fire_red} onClick={deleteTable}>Delete Table</Button>
+                            <Button themeColor={Color.gray} onClick={() => {
                                 history.goBack();
                             }}>Exit</Button>
                         </div>
