@@ -33,4 +33,8 @@
     .list-properties-layout {
         grid-template-columns: 100%;
     }
+
+    .table-setup-grid {
+        grid-template-columns: auto;
+    }
 }
