@@ -323,7 +323,8 @@ export default function Order() {
                 //if order is new, create order first.
                 const result = await axios.post('/api/order/create/', {
                     userId: loginToken.userId,
-                    hash: loginToken.hash
+                    hash: loginToken.hash,
+                    type: order.type
                 });
 
                 orderId = result.data.id;

@@ -8,13 +8,18 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useHistory } from 'react-router-dom';
 import CheckLoginToken from '../../components/check-login-token';
 import './style.css'
+import { useSetOrder } from '../../contexts/order-context';
 
 export default function MainMenu() {
     const history = useHistory();
+    const setOrder = useSetOrder();
 
-    const createButton = function(text: string, icon: IconProp, url: string, themeColor:Color=Color.sky_blue) {
+    const createButton = function(text: string, icon: IconProp, url: string, themeColor:Color=Color.sky_blue, beforeMove=()=>{}) {
         return <div style={{paddingTop:"40%", minHeight: "4em", position:"relative"}}>
-            <Button onClick={() => { history.push(url)}} themeColor={themeColor} style={{
+            <Button onClick={() => {
+                beforeMove();
+                history.push(url)}
+            } themeColor={themeColor} style={{
                 position:"absolute",
                 width:"100%",
                 whiteSpace: "nowrap",
@@ -35,7 +40,11 @@ export default function MainMenu() {
             <CheckLoginToken/>
             <VerticalCenter>
                 <div className="main-menu-grid">
-                    {createButton("Express", "hamburger", "/order")}
+                    {createButton("To Go", "hamburger", "/order", Color.sky_blue, ()=>{
+                        setOrder({
+                            type: "To Go"
+                        });
+                    })}
                     {createButton("Back Office", "cog", "/setup")}
                 </div>
             </VerticalCenter>
