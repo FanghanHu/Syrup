@@ -382,6 +382,7 @@ export default function TableSetup() {
                 </PanelHeader>
                 <div className="table-setup-grid">
                     <PanelBody
+                        className="position-relative overflow-auto"
                         onDragOver={(e) => {
                             //TODO: prevent user from moving table outside the edge of the frame
                             let isInside = true;
