@@ -13,3 +13,7 @@
   border: 3px solid transparent; /* creates padding around scroll thumb */
   background-clip: padding-box;
 }
+
+*::-webkit-scrollbar-corner {
+  background: rgba(0,0,0,0);
+}
