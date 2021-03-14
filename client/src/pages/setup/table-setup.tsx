@@ -86,6 +86,8 @@ export default function TableSetup() {
             if(replacementTableAreaList) {
                 setTableAreaList(replacementTableAreaList);
             }
+        } else if(newTableAreaList !== tableAreaList) {
+            setTableAreaList(newTableAreaList);
         }
 
         if(selectedTableArea !== newArea) {
