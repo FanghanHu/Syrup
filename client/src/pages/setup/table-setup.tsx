@@ -69,6 +69,32 @@ export default function TableSetup() {
         )
     }
 
+    const switchSelectedTableArea = (newArea, newTableAreaList = tableAreaList) => {
+        if(tableList && tableList.length) {
+            //selectedArea has tables that need saving
+            //create a replacement for selectedArea
+            const newTableArea = {
+                ...selectedTableArea,
+                Tables: tableList
+            }
+            //create a replacement list and replace it.
+            const replacementTableAreaList = findAndReplace(newTableAreaList, selectedTableArea, newTableArea);
+            if(replacementTableAreaList) {
+                setTableAreaList(replacementTableAreaList);
+            }
+        }
+
+        if(selectedTableArea !== newArea) {
+            //only do stuff when newArea is actually a different area.
+            if(newArea.Tables) {
+                setTableList(newArea.Tables);
+            } else {
+                fetchTableList(newArea.id);
+            }
+            setSelectedTableArea(newArea);
+        }
+    } 
+
     const createTableAreaButton = (tableArea, key) => {
         if(tableArea.status === "DELETED") {
             return null;
@@ -81,10 +107,7 @@ export default function TableSetup() {
                     margin: "3px",
                     minHeight: "2em"
                 }}
-                onClick={() => {
-                    setSelectedTableArea(tableArea)
-                    fetchTableList(tableArea.id);
-                }}
+                onClick={() => {switchSelectedTableArea(tableArea)}}
                 themeColor={selectedTableArea===tableArea?Color.kiwi_green:Color.sky_blue}
             >
                 {selectedTableArea===tableArea?<span
@@ -102,7 +125,7 @@ export default function TableSetup() {
                             const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea, newTableArea);
                             if(newTableAreaList) {
                                 setTableAreaList(newTableAreaList);
-                                setSelectedTableArea(null);
+                                setSelectedTableArea(newTableArea);
                             }
                         } else {
                             //reset tableName if a new Name is not provided
@@ -146,7 +169,6 @@ export default function TableSetup() {
 
     const createNewTable = () => {
         const newTable = {
-            tableAreaId: selectedTableArea.id,
             tableName: "new table",
             x: 50,
             y: 50,
@@ -186,8 +208,8 @@ export default function TableSetup() {
             tableAreaName: "new area",
             status: "NEW"
         };
-        setTableAreaList([...tableAreaList, newTableArea]);
-        setSelectedTableArea(newTableArea);
+        const newTableAreaList = [...tableAreaList, newTableArea];
+        switchSelectedTableArea(newTableArea, newTableAreaList);
     }
 
     const deleteTableArea = () => {
