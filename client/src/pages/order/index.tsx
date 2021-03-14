@@ -16,6 +16,7 @@ import { OrderItem } from "../../util/models";
 import { deepEqual } from "../../util/helpers";
 import { useLoginToken } from "../../contexts/login-context";
 import CheckLoginToken from "../../components/check-login-token";
+import { useHistory } from "react-router";
 
 export default function Order() {
     CheckLoginToken();
@@ -27,6 +28,7 @@ export default function Order() {
     const order = useOrder();
     const setOrder = useSetOrder();
     const loginToken = useLoginToken();
+    const history = useHistory();
 
     /**
      * Try to find the item inside the given array.
@@ -419,7 +421,9 @@ export default function Order() {
                     gridTemplateColumns: "1fr 1fr 1fr 1fr",
                     gap:"3px"
                 }}>
-                    <Button themeColor={Color.fire_red}>Exit</Button>
+                    <Button themeColor={Color.fire_red} onClick={() => {
+                        history.goBack();
+                    }}>Exit</Button>
                     <Button>+</Button>
                     <Button>-</Button>
                     <Button themeColor={Color.kiwi_green} onClick={() => {sendOrder()}}>Send</Button>
