@@ -93,7 +93,7 @@ export default function UserSetup() {
                             onChange={(e) => {setPassword(e.target.value)}} inputProps={{type: "password"}}/>
                         </PanelBody>
                         <div className="d-flex flex-row-reverse">
-                            <Button className="m-1" style={{fontSize: "1.2em", width:"4em"}} themeColor={Color.fire_red}
+                            <Button className="m-1" style={{fontSize: "1.2em", width:"4em"}} themeColor={Color.gray}
                                 onClick={() => {
                                     history.goBack();
                                 }}
@@ -145,7 +145,7 @@ export default function UserSetup() {
                                     }
                                 }}
                             >Save</Button>
-                            <Button className="m-1" style={{fontSize: "1.2em", width:"4em"}} themeColor={Color.gold}
+                            <Button className="m-1" style={{fontSize: "1.2em", width:"4em"}} themeColor={Color.dark_gold}
                                 onClick={() => {
                                     displayUserData({});
                                 }}
