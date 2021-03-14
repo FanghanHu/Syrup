@@ -85,6 +85,7 @@ export default function TableSetup() {
             const replacementTableAreaList = findAndReplace(newTableAreaList, selectedTableArea, newTableArea);
             if(replacementTableAreaList) {
                 setTableAreaList(replacementTableAreaList);
+                setSelectedTableArea(newTableArea);
             }
         } else if(newTableAreaList !== tableAreaList) {
             setTableAreaList(newTableAreaList);
