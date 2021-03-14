@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Button from "../../components/button";
 import ExpandableSideMenu from "../../components/expandable-side-menu";
@@ -19,11 +19,12 @@ export default function Setup(): JSX.Element {
 
     const {url} = useRouteMatch();
     
+    const [expanded, setExpanded] = useState(true);
 
     return (
         <Container fluid className="vh-100">
             <CheckLoginToken/>
-            <ExpandableSideMenu expanded={true} style={{
+            <ExpandableSideMenu defaultExpanded={true} expanded={expanded} setExpanded={setExpanded} style={{
                 zIndex: 99
             }}>
                 <div className="d-flex flex-column justfy-content-center p-2 h-100">
@@ -33,16 +34,19 @@ export default function Setup(): JSX.Element {
                         </LabelBar>
                         <Button themeColor={ButtonTheme} className="m-1" onClick={() => {
                             history.replace(`${url}/user`);
+                            setExpanded(false);
                         }}>
                             <FontAwesomeIcon icon="users"/> User Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1" onClick={() => {
                             history.replace(`${url}/menu`);
+                            setExpanded(false);
                         }}>
                             <FontAwesomeIcon icon="book"/> Menu Setup
                         </Button>
                         <Button themeColor={ButtonTheme} className="m-1" onClick={() => {
                             history.replace(`${url}/table`);
+                            setExpanded(false);
                         }}>
                             <FontAwesomeIcon icon="chair"/> Table Setup
                         </Button>
