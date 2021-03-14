@@ -1,12 +1,13 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import Button from "../components/button"
-import VerticalCenter from '../components/vertical-center';
-import { Color } from '../util/Color';
+import Button from "../../components/button"
+import VerticalCenter from '../../components/vertical-center';
+import { Color } from '../../util/Color';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useHistory } from 'react-router-dom';
-import CheckLoginToken from '../components/check-login-token';
+import CheckLoginToken from '../../components/check-login-token';
+import './style.css'
 
 export default function MainMenu() {
     const history = useHistory();
@@ -16,6 +17,7 @@ export default function MainMenu() {
             <Button onClick={() => { history.push(url)}} themeColor={themeColor} style={{
                 position:"absolute",
                 width:"100%",
+                whiteSpace: "nowrap",
                 top:0,
                 left:0,
                 bottom:0,
@@ -32,13 +34,9 @@ export default function MainMenu() {
         <Container className="vh-100">
             <CheckLoginToken/>
             <VerticalCenter>
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                    gap: "3px"
-                }}>
+                <div className="main-menu-grid">
                     {createButton("Express", "hamburger", "/order")}
-                    {createButton("Setup", "cog", "/setup")}
+                    {createButton("Back Office", "cog", "/setup")}
                 </div>
             </VerticalCenter>
         </Container>
