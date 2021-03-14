@@ -110,7 +110,7 @@ export default function TableSetup() {
             <Button key={"table-area-"+key}
                 style={{
                     width: "100%",
-                    margin: "3px",
+                    marginBottom: "6px",
                     minHeight: "2em"
                 }}
                 onClick={() => {switchSelectedTableArea(tableArea)}}
@@ -382,7 +382,7 @@ export default function TableSetup() {
                 </PanelHeader>
                 <div className="table-setup-grid">
                     <PanelBody
-                        className="position-relative overflow-auto"
+                        className="position-relative"
                         onDragOver={(e) => {
                             //TODO: prevent user from moving table outside the edge of the frame
                             let isInside = true;
@@ -409,7 +409,7 @@ export default function TableSetup() {
                         {tableList.map((table, index) => createTableButton(table, index))}
                     </PanelBody>
                     <div className="w-100 h-100 d-flex flex-column">
-                        <PanelBody className="flex-grow-1 overflow-auto" style={{flexBasis: 0}}>
+                        <PanelBody className="flex-grow-1" style={{flexBasis: 0}}>
                             {tableAreaList.map((tableArea, index) => createTableAreaButton(tableArea, index))}
                         </PanelBody>
                         <div className="setup-button-group">

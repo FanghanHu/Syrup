@@ -20,6 +20,7 @@ export default function PanelBody ({children, themeColor=Color.white, style, ...
     borderRadius: "8px",
     boxShadow: "inset 0 0 4px darkgray",
     padding: "10px",
+    overflow: "overlay",
     ...style
   }
 
