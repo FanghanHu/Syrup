@@ -61,7 +61,7 @@ export class Table extends Model<TableAttributes, TableCreationAttributes> imple
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
-        Table.belongsTo(db.TableArea);
+        Table.belongsTo(db.TableArea, {onDelete:"CASCADE"});
         Table.hasMany(db.Order);
     }
 }

@@ -8,6 +8,8 @@ import Button from "../../components/button";
 import Panel from "../../components/panel";
 import PanelBody from "../../components/panel-body";
 import PanelHeader from "../../components/panel-header";
+import SimpleToast from "../../components/simple-toast";
+import { useLoginToken } from "../../contexts/login-context";
 import { Color } from "../../util/Color";
 import { findAndReplace } from "../../util/helpers";
 
@@ -18,7 +20,9 @@ export default function TableSetup() {
     const [selectedTable, setSelectedTable] = useState<any|null>(null);
     const [selectedTableArea, setSelectedTableArea] = useState<any|null>(null);
 
+    const loginToken = useLoginToken();
     const history = useHistory();
+    const [message, setMessage] = useState("");
 
     const createTableButton = (table, key) => {
         if(table.status === "DELETED") {
@@ -178,8 +182,127 @@ export default function TableSetup() {
         setSelectedTable(newTable);
     }
 
-    const saveChanges = () => {
-        //TODO: save changes
+    /**
+     * 
+     * @param tableArea will be inserted into the db if there isn't a id
+     * @param tables tables that relates to the given table area
+     */
+    const saveData = async (tableAreaArg, tablesArg) => {
+        const tableArea = {...tableAreaArg};
+        const tables = tablesArg&&tablesArg.length?[...tablesArg]:[];
+
+        if(tableArea.status === "DELETED" && tableArea.id) {
+            //delete tableArea
+            await axios.post('/api/table-area/delete', {
+                userId: loginToken.userId,
+                hash: loginToken.hash,
+                data: {
+                    id: tableArea.id
+                }
+            });
+        } else {
+            if (tableArea.status === "NEW") {
+                if(tableArea.id) {
+                    //update tableArea
+                    await axios.post("/api/table-area/update", {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: {
+                            id: tableArea.id,
+                            tableAreaName: tableArea.tableAreaName
+                        }
+                    });
+                } else {
+                    //create tableArea
+                    const result = await axios.post("/api/table-area/create", {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: {
+                            tableAreaName: tableArea.tableAreaName
+                        }
+                    });
+                    tableArea.id = result.data.id;
+                }
+            }
+
+            //create or update tables
+            for(const table of tables) {
+                if(table.status === "DELETED" && table.id) {
+                    //delete table
+                    await axios.post("/api/table/delete", {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: {
+                            id: table.id,
+                        }
+                    });
+                } else if(table.status === "NEW") {
+                    //update or create table
+                    if(table.id) {
+                        //update table
+                        await axios.post("/api/table/update", {
+                            userId: loginToken.userId,
+                            hash: loginToken.hash,
+                            data: {
+                                id: table.id,
+                                tableName: table.tableName,
+                                x: table.x,
+                                y: table.y,
+                                icon: table.icon,
+                                TableAreaId: tableArea.id
+                            }
+                        });
+                    } else {
+                        //create table
+                        await axios.post("/api/table/create", {
+                            userId: loginToken.userId,
+                            hash: loginToken.hash,
+                            data: {
+                                tableName: table.tableName,
+                                x: table.x,
+                                y: table.y,
+                                icon: table.icon,
+                                TableAreaId: tableArea.id
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    let savingData = false;
+    const saveChanges = async () => {
+        if(!savingData) {
+            savingData = true;
+            try {
+                for(const tableArea of tableAreaList) {
+                    if(tableArea === selectedTableArea) {
+                        //selected area, use current tables
+                        await saveData(tableArea, tableList);
+                    } else {
+                        //background area, used stored tables
+                        await saveData(tableArea, tableArea.Tables);
+                    }
+                }
+                await axios.post("/api/table-area/list").then((result)=> {
+                    setTableAreaList(result.data);
+                    const tableArea = result.data[0];
+                    if(tableArea && tableArea.id) {
+                        //load tables for the first table area
+                        setSelectedTableArea(tableArea);
+                        fetchTableList(tableArea.id);
+                    }
+                });
+                setMessage("Table and Area data saved.");
+            } catch (err) {
+                setMessage(err.stack);
+            } finally {
+                savingData = false;
+            }
+        } else {
+            setMessage("Working... Please Wait.");
+        }
     }
 
     const deleteTable = () => {
@@ -247,7 +370,6 @@ export default function TableSetup() {
                 fetchTableList(tableArea.id);
             }
         })
-        
     }, [setTableAreaList, setTableList])
 
     return (
@@ -300,6 +422,7 @@ export default function TableSetup() {
                     </div>
                 </div>
             </Panel>
+            <SimpleToast title="Message:" message={message} setMessage={setMessage}/>
         </Container>
     );
 }
