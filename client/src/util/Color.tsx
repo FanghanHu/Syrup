@@ -10,6 +10,7 @@ export const Color = {
   light_green: [143, 196, 20],
   kiwi_green: [93, 146, 0],
   gold: [255, 187, 0],
+  dark_gold: [176, 129, 0]
 } as const;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
