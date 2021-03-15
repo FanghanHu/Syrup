@@ -178,7 +178,50 @@ export const editItems = catchError(async (req: Request, res: Response) => {
         let parsedOrder = await getParsedOrder(req, res);
         return res.status(200).json(parsedOrder);
     } catch (err) {
-        t.rollback();
+        await t.rollback();
+        throw err;
+    }
+});
+
+/**
+ * updates table information and customers information related to an order.
+ */
+export const updateOrderMeta = catchError(async (req: Request, res:Response) => {
+    //check client token
+    if(isTokeninvalid(req, res)) return;
+    
+    const customers = req.body.customers;
+    const table = req.body.table;
+    const orderId = req.body.orderId;
+
+    const t = await db.sequelize.transaction();
+    try {
+        //find and lock the order before edit is done.
+        let order = await getOrderFromOrderId(req, res, {transaction: t, lock: true});
+        if(!order) return;
+
+        //update customers
+        if(customers && customers.length) {
+            for(const customer of customers) {
+                if(customer.id) {
+                    //customers in a order are expected to have an id
+                    await order.addCustomer(customer.id, {transaction: t});
+                }
+            }
+        }
+
+        //update table
+        if(table && table.id) {
+            await order.setTable(table.id, {transaction: t});
+        }
+
+        //commit
+        await t.commit();
+
+        //respond to client
+        res.status(200).send("done");
+    } catch (err) {
+        await t.rollback();
         throw err;
     }
 });

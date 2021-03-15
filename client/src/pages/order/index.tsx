@@ -341,6 +341,23 @@ export default function Order() {
                     orderId = result.data.id;
                 }
 
+                //update order meta (customers, table)
+                if(order.Customers || order.Table) {
+                    const data:any = {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        orderId: orderId
+                    }
+                    if(order.Customers) {
+                        data.customers = order.Customers;
+                    }
+                    if(order.Table) {
+                        data.table = order.Table;
+                    }
+
+                    await axios.post('/api/order/update-meta', data);
+                }
+
                 //set orderId for all new OrderItems.
                 if(orderItems && orderItems.length) {
                     for(const orderItem of orderItems) {
