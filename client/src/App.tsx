@@ -10,6 +10,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import MainMenu from "./pages/main-menu";
 import Order from "./pages/order";
+import CustomerSelection from "./pages/order/customer-selection";
 
 library.add(fas);
 library.add(fab);
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" exact component={Login}/>
           <Route path="/main-menu" exact component={MainMenu}/>
           <Route path="/order" exact component={Order}/>
+          <Route path="/pickup" exact component={CustomerSelection}/>
         </Router>
       </ContextProviders>
     </div>

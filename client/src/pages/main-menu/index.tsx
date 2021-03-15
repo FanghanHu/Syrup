@@ -45,6 +45,11 @@ export default function MainMenu() {
                             type: "To Go"
                         });
                     })}
+                    {createButton("Pick up", "phone", "/pickup", Color.sky_blue, ()=>{
+                        setOrder({
+                            type: "Pick up"
+                        });
+                    })}
                     {createButton("Back Office", "cog", "/setup")}
                 </div>
             </VerticalCenter>
