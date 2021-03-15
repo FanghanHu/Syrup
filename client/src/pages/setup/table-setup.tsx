@@ -373,7 +373,7 @@ export default function TableSetup() {
                 fetchTableList(tableArea.id);
             }
         })
-    }, [setTableAreaList, setTableList])
+    }, [])
 
     return (
         <Container className="vh-100 py-3">

@@ -45,6 +45,11 @@ export default function MainMenu() {
                             type: "To Go"
                         });
                     })}
+                    {createButton("Dine in", "chair", "/table", Color.sky_blue, ()=>{
+                        setOrder({
+                            type: "Dine in"
+                        });
+                    })}
                     {createButton("Pick up", "phone", "/customer", Color.sky_blue, ()=>{
                         setOrder({
                             type: "Pick up"
