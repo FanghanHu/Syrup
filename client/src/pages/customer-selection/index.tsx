@@ -13,6 +13,7 @@ import { useLoginToken } from "../../contexts/login-context";
 import { Color } from "../../util/Color";
 import { findAndReplace } from "../../util/helpers";
 import ListPropertiesLayout from "../setup/list-properties-layout";
+import './style.css';
 
 export default function CustomerSelection() {
     const [customerList, setCustomerList] = useState<any[]>([]);
@@ -74,19 +75,10 @@ export default function CustomerSelection() {
 
     const createInputProps = (fieldName) => {
         return {
+            style: {gridArea: fieldName},
             value:selectedCustomer?(selectedCustomer[fieldName]?selectedCustomer[fieldName]:""):"",
             onChange:changeField(fieldName)
         }
-    }
-
-    const CustomerFieldInput = ({fieldName, title, style={}}) => {
-        return (
-            <LabeledTextInput title={title}
-                style={style}
-                value={selectedCustomer?(selectedCustomer[fieldName]?selectedCustomer[fieldName]:""):""}
-                onChange={changeField(fieldName)}
-            ></LabeledTextInput>
-        );
     }
 
     useEffect(() => {
@@ -109,14 +101,16 @@ export default function CustomerSelection() {
                     </div>
                     <div className="d-flex flex-column h-100">
                         <PanelBody className="flex-grow-1">
-                            <LabeledTextInput {...createInputProps("firstName")} title="First Name"/>
-                            <LabeledTextInput {...createInputProps("lastName")} title="Last Name"/>
-                            <LabeledTextInput {...createInputProps("phone")} title="Phone Number"/>
-                            <LabeledTextInput {...createInputProps("address")} title="Address"/>
-                            <LabeledTextInput {...createInputProps("city")} title="City"/>
-                            <LabeledTextInput {...createInputProps("state")} title="State"/>
-                            <LabeledTextInput {...createInputProps("zip")} title="Zip"/>
-                            <LabeledTextInput {...createInputProps("note")} title="Note"/>
+                            <div className="customer-field-grid">
+                                <LabeledTextInput {...createInputProps("firstName")} title="First Name"/>
+                                <LabeledTextInput {...createInputProps("lastName")} title="Last Name"/>
+                                <LabeledTextInput {...createInputProps("phone")} title="Phone Number"/>
+                                <LabeledTextInput {...createInputProps("address")} title="Address"/>
+                                <LabeledTextInput {...createInputProps("city")} title="City"/>
+                                <LabeledTextInput {...createInputProps("state")} title="State"/>
+                                <LabeledTextInput {...createInputProps("zip")} title="Zip"/>
+                                <LabeledTextInput {...createInputProps("note")} title="Note"/>
+                            </div>
                         </PanelBody>
                         <div className="d-flex flex-row-reverse">
                             <Button className="m-1" style={{fontSize: "1.2em", width:"4em"}} themeColor={Color.gray}

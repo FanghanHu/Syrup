@@ -1,0 +1,29 @@
+.customer-field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: 
+    "firstName lastName phone"
+    "address address address"
+    "city state zip"
+    "note note note";
+    gap:5px
+}
+
+@media only screen and (max-width: 768px) {
+    
+    .customer-field-grid label {
+        font-size: 0.5em;
+    }
+
+    .customer-field-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+        "firstName lastName"
+        "phone phone"
+        "address address"
+        "city state"
+        "zip zip"
+        "note note";
+    }
+}

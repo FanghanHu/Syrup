@@ -10,7 +10,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import MainMenu from "./pages/main-menu";
 import Order from "./pages/order";
-import CustomerSelection from "./pages/order/customer-selection";
+import CustomerSelection from "./pages/customer-selection";
 
 library.add(fas);
 library.add(fab);
