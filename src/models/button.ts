@@ -55,7 +55,7 @@ export class Button extends Model<ButtonAttributes, ButtonCreationAttributes> im
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
-        Button.belongsTo(db.Menu);
+        Button.belongsTo(db.Menu, {onDelete: "CASCADE"});
         Button.belongsTo(db.Script);
     }
 }

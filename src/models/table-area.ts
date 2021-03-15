@@ -46,7 +46,7 @@ export class TableArea extends Model<TableAreaAttributes, TableAreaCreationAttri
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
-        TableArea.hasMany(db.Table);
+        TableArea.hasMany(db.Table, {onDelete: "CASCADE"});
     }
 }
 

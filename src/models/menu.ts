@@ -45,7 +45,7 @@ export class Menu extends Model<MenuAttributes, MenuCreationAttributes> implemen
      * used to declare associations, called by the model index, do not use this anywhere else 
      */
     public static associate(db: DatabaseType) {
-        Menu.hasMany(db.Button);
+        Menu.hasMany(db.Button, {onDelete: "CASCADE"});
     }
 }
 
