@@ -349,16 +349,16 @@ export default function TableSetup() {
                 const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea, newTableArea);
                 if(newTableAreaList) {
                     setTableAreaList(newTableAreaList);
-                    setSelectedTableArea(null);
                 }
             } else {
                 //new table area, just remove from list
                 const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea);
                 if(newTableAreaList) {
                     setTableAreaList(newTableAreaList);
-                    setSelectedTableArea(null);
                 }
             }
+            setSelectedTableArea(null);
+            setTableList([]);
         }
     }
 

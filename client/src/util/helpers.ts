@@ -48,3 +48,10 @@ export function findAndReplace(array: any[], target, replacement?:any|null) {
     }
     return false;
 }
+
+export const Status = {
+    NEW: "NEW",
+    DELETED: "DELETED",
+    VOIDED: "VOIDED",
+    OPEN: "OPEN"
+}
