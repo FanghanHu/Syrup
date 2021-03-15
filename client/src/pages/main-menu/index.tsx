@@ -9,30 +9,39 @@ import { useHistory } from 'react-router-dom';
 import CheckLoginToken from '../../components/check-login-token';
 import './style.css'
 import { useSetOrder } from '../../contexts/order-context';
+import { useSetLoginToken } from '../../contexts/login-context';
 
 export default function MainMenu() {
     const history = useHistory();
     const setOrder = useSetOrder();
+    const setLoginToken = useSetLoginToken();
 
     const createButton = function(text: string, icon: IconProp, url: string, themeColor:Color=Color.sky_blue, beforeMove=()=>{}) {
-        return <div style={{paddingTop:"40%", minHeight: "4em", position:"relative"}}>
-            <Button onClick={() => {
-                beforeMove();
-                history.push(url)}
-            } themeColor={themeColor} style={{
-                position:"absolute",
-                width:"100%",
-                whiteSpace: "nowrap",
-                top:0,
-                left:0,
-                bottom:0,
-                right:0
-            }}>
-                <FontAwesomeIcon icon={icon} style={{fontSize:"2em"}}/>
-                <br/>
-                {text}
-            </Button>
-        </div>
+        return (
+            <div style={{paddingTop:"40%", minHeight: "4em", position:"relative"}}>
+                <Button 
+                    onClick={() => {
+                        beforeMove();
+                        history.push(url)}
+                    } 
+                    themeColor={themeColor} 
+                    style={{
+                        position:"absolute",
+                        width:"100%",
+                        whiteSpace: "nowrap",
+                        top:0,
+                        left:0,
+                        bottom:0,
+                        right:0
+                    }}
+                >
+                    <FontAwesomeIcon icon={icon} style={{fontSize:"2em"}}/>
+                    <br/>
+                    {text}
+                </Button>
+            </div>
+        )
+        
     }
 
     return (
@@ -60,7 +69,10 @@ export default function MainMenu() {
                             type: "Delivery"
                         });
                     })}
-                    {createButton("Back Office", "cog", "/setup")}
+                    {createButton("Back Office", "cog", "/setup", Color.dark_gold)}
+                    {createButton("Logout", "sign-out-alt", "/login", Color.fire_red, ()=>{
+                        setLoginToken({});
+                    })}
                 </div>
             </VerticalCenter>
         </Container>
