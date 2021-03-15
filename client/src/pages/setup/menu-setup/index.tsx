@@ -7,6 +7,8 @@ import { useHistory } from "react-router-dom";
 import Button from "../../../components/button";
 import InputGroup from "../../../components/input-group";
 import Label from "../../../components/label";
+import LabelBar from "../../../components/label-bar";
+import LabeledTextInput from "../../../components/labeled-text-input";
 import Panel from "../../../components/panel";
 import PanelBody from "../../../components/panel-body";
 import PanelHeader from "../../../components/panel-header";
@@ -33,9 +35,11 @@ export default function MenuSetup() {
                 where: {MenuId: menuId}
             }}).then(result => {
                 setButtonList(result.data);
+                selectButton(result.data[0])
             })
         } else {
             setButtonList([]);
+            selectButton(null);
         }
     }
     const loadMenuList = () => {
@@ -44,12 +48,143 @@ export default function MenuSetup() {
             setSelectedMenu(result.data[0]);
         });
     }
+
+    const loadScriptList = () => {
+        axios.post("/api/script/list").then(result => {
+            setScriptList(result.data);
+            setSelectedScript(result.data[0]);
+        });
+    }
+
+    const updateButton = (targetButton, newButton) => {
+        const newbuttonList = findAndReplace(buttonList, targetButton, newButton);
+        if(newbuttonList) {
+            setButtonList(newbuttonList);
+            selectButton(newButton);
+        }
+    }
+
+    const renderScriptUI = () => {
+        if(selectedScript) {
+            const uiList:any = [];
+            for(const key in selectedScript.data.parameters) {
+                const description = selectedScript.data.parameters[key]
+                switch(key) {
+                    case "itemData":
+                        //create parameter on button
+                        if(selectedButton) {
+                            uiList.push(
+                                <div key={"ui-" + uiList.length}>
+                                    <LabelBar themeColor={Color.dark_gold} className="mt-3" >{description}</LabelBar>
+                                    <LabeledTextInput title="Name:" 
+                                        style={{marginTop: "5px"}}
+                                        value={selectedButton?.parameters?.itemData?.itemName || ""} 
+                                        onChange={(e) => {
+                                            const newButton = {
+                                                ...selectedButton,
+                                                buttonName: e.target.value,
+                                                parameters: {
+                                                    ...selectedButton?.parameters,
+                                                    itemData: {
+                                                        ...selectedButton?.parameters?.itemData,
+                                                        itemName: e.target.value
+                                                    }
+                                                },
+                                                status: Status.NEW
+                                            };
+                                            updateButton(selectedButton, newButton);
+                                        }
+                                    }/>
+                                    <LabeledTextInput title="Price:" 
+                                        style={{marginTop: "5px"}}
+                                        value={selectedButton?.parameters?.itemData?.price || ""} 
+                                        onChange={(e) => {
+                                            const newButton = {
+                                                ...selectedButton,
+                                                parameters: {
+                                                    ...selectedButton?.parameters,
+                                                    itemData: {
+                                                        ...selectedButton?.parameters?.itemData,
+                                                        price: e.target.value
+                                                    }
+                                                },
+                                                status: Status.NEW
+                                            };
+                                            updateButton(selectedButton, newButton);
+                                        }
+                                    }/>
+                                    <LabeledTextInput title="Tax Rate:" 
+                                        style={{marginTop: "5px"}}
+                                        value={selectedButton?.parameters?.itemData?.tax || ""} 
+                                        onChange={(e) => {
+                                            const newButton = {
+                                                ...selectedButton,
+                                                parameters: {
+                                                    ...selectedButton?.parameters,
+                                                    itemData: {
+                                                        ...selectedButton?.parameters?.itemData,
+                                                        tax: e.target.value
+                                                    }
+                                                },
+                                                status: Status.NEW
+                                            };
+                                            updateButton(selectedButton, newButton);
+                                        }
+                                    }/>
+                                </div>
+                            );
+                        }
+                        break;
+                    default: 
+                    //TODO: handle unknown script parameters
+                }
+            }
+            return uiList;
+        }
+
+        return null;
+    }
+
     const handleScriptChange = (e) => {
-        //TODO:
+        const script = scriptList.filter(script => parseInt(e.target.value) === script.id)[0];
+        setSelectedScript(script);
+
+        if(selectedButton && script) {
+            //update script for the selected button
+            const newButton = {
+                ...selectedButton,
+                ScriptId: script.id,
+                status: Status.NEW
+            }
+            updateButton(selectedButton, newButton);
+        }
+    }
+
+    const createScripListItem = (script, key) => {
+        return (
+            <option key={"script-" + key} value={key}>
+                {script.scriptName}
+            </option>
+        )
     }
 
     const selectButton = (button) => {
         setSelectedButton(button);
+
+        if(button) {
+            if(button.ScriptId) {
+                //update selected script
+                for(const script of scriptList) {
+                    if(script.id === button.ScriptId) {
+                        //select the button's script
+                        setSelectedScript(script);
+                        break;
+                    }
+                }
+            } else {
+                setSelectedScript(null);
+            }
+        }
     }
 
     const createButtonListItem = (button, key) => {
@@ -100,7 +235,7 @@ export default function MenuSetup() {
                     setButtonList(newButtonList);
                 }
             }
-            setSelectedButton(null);
+            selectButton(null);
         }
     }
     const selectMenu = (menu, newMenuList = menuList) => {
@@ -127,6 +262,7 @@ export default function MenuSetup() {
             if(menu.Buttons) {
                 //use saved buttons if possible
                 setButtonList(menu.Buttons);
+                selectButton(menu.Buttons[0]);
             } else {
                 //load buttons from db
                 loadButtonsFromMenu(menu.id);
@@ -206,11 +342,124 @@ export default function MenuSetup() {
             }
             setSelectedMenu(null);
             setButtonList([]);
+            selectButton(null)
         }
     }
-    const save = () => {
-        //TODO:
+
+    const saveMenu = async (argMenu, argButtons) => {
+        const menu = {...argMenu};
+        const buttons = argButtons&&argButtons.length?[...argButtons]:[];
+
+        if(menu.status === Status.DELETED && menu.id) {
+            // deleting exiting menu
+            await axios.post("/api/menu/delete", {
+                userId: loginToken.userId,
+                hash: loginToken.hash,
+                data: {
+                    id: menu.id
+                }
+            });
+        } else {
+            if(menu.status === Status.NEW) {
+                if(menu.id) {
+                    // update menu
+                    await axios.post("/api/menu/update", {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: {
+                            id: menu.id,
+                            menuName: menu.menuName
+                        }
+                    });
+                } else {
+                    // create menu
+                    const result = await axios.post("/api/menu/create", {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: {
+                            menuName: menu.menuName
+                        }
+                    });
+                    menu.id = result.data.id;
+                }
+            }
+
+            //only processing buttons if the menu isn't deleted, because menu delete will cascade to button
+            //so no point updating a button that's going to be deleted anyways
+            for(const button of buttons) {
+                if(button.status === Status.DELETED && button.id) {
+                    //delete menu
+                    await axios.post("/api/button/delete", {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: {
+                            id: button.id
+                        }
+                    });
+                } else if(button.status === Status.NEW) {
+                    //only process buttons that's marked new
+                    if(button.id) {
+                        //update button
+                        await axios.post("/api/button/update", {
+                            userId: loginToken.userId,
+                            hash: loginToken.hash,
+                            data: {
+                                id: button.id,
+                                MenuId: menu.id,
+                                ScriptId: button.ScriptId,
+                                buttonName: button.buttonName,
+                                translations: button.translations,
+                                parameters: button.parameters
+                            }
+                        });
+                    } else {
+                        //create button
+                        await axios.post("/api/button/create", {
+                            userId: loginToken.userId,
+                            hash: loginToken.hash,
+                            data: {
+                                MenuId: menu.id,
+                                ScriptId: button.ScriptId,
+                                buttonName: button.buttonName,
+                                translations: button.translations,
+                                parameters: button.parameters
+                            }
+                        });
+                    }
+                }
+            }
+        }
     }
+
+    let savingData = false;
+    const save = async () => {
+        if(!savingData) {
+            savingData = true;
+            try {
+                for(const menu of menuList) {
+                    if(menu === selectedMenu) {
+                        //selected menu, save current button list
+                        await saveMenu(menu, buttonList);
+                    } else {
+                        //unselected menu, save stored buttons
+                        await saveMenu(menu, menu.Buttons);
+                    }
+
+                    setMessage("changes saved!");
+                    //reload all the menus and buttons
+                    loadMenuList();
+                    loadButtonsFromMenu(1);
+                }
+            } catch (err) {
+                setMessage(err.stack);
+            } finally {
+                savingData = false;
+            }
+        } else {
+            setMessage("Working... Please Wait.");
+        }
+    }
+
     const exit = () => {
         history.goBack();
     }
@@ -219,6 +468,7 @@ export default function MenuSetup() {
         loadMenuList();
         //load main menu
         loadButtonsFromMenu(1);
+        loadScriptList();
     }, []);
 
     return (
@@ -244,6 +494,7 @@ export default function MenuSetup() {
                                     textAlign: "center"
                                 }}>Script</Label>
                                 <select 
+                                    value={selectedScript?selectedScript.id:0}
                                     style={{
                                         flexGrow:1,
                                         border: "none",
@@ -252,11 +503,11 @@ export default function MenuSetup() {
                                     }}
                                     onChange={handleScriptChange}
                                 >
-                                    {
-                                        //TODO: load all scripts
-                                    }
+                                    <option value={0}>Please select a script</option>
+                                    {scriptList.map((script) => createScripListItem(script, script.id))}
                                 </select>
                             </InputGroup>
+                            {renderScriptUI()}
                         </PanelBody>
                         <div className="menu-setup-buttons">
                             <Button themeColor={Color.dark_gold} onClick={addButton}>Add Button</Button>
