@@ -11,7 +11,7 @@ import PanelHeader from "../../components/panel-header";
 import SimpleToast from "../../components/simple-toast";
 import { useLoginToken } from "../../contexts/login-context";
 import { Color } from "../../util/Color";
-import { findAndReplace } from "../../util/helpers";
+import { findAndReplace, Status } from "../../util/helpers";
 
 export default function TableSetup() {
 
@@ -25,7 +25,7 @@ export default function TableSetup() {
     const [message, setMessage] = useState("");
 
     const createTableButton = (table, key) => {
-        if(table.status === "DELETED") {
+        if(table.status === Status.DELETED) {
             return null;
         }
 
@@ -59,7 +59,7 @@ export default function TableSetup() {
                             const newTable = {
                                 ...table,
                                 tableName: newName,
-                                status: "NEW"
+                                status: Status.NEW
                             };
                             updateTable(table, newTable);
                             setSelectedTable(newTable);
@@ -103,7 +103,7 @@ export default function TableSetup() {
     } 
 
     const createTableAreaButton = (tableArea, key) => {
-        if(tableArea.status === "DELETED") {
+        if(tableArea.status === Status.DELETED) {
             return null;
         }
 
@@ -127,7 +127,7 @@ export default function TableSetup() {
                             const newTableArea = {
                                 ...tableArea,
                                 tableAreaName: newName,
-                                status: "NEW"
+                                status: Status.NEW
                             };
                             const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea, newTableArea);
                             if(newTableAreaList) {
@@ -179,7 +179,7 @@ export default function TableSetup() {
             tableName: "new table",
             x: 50,
             y: 50,
-            status: "NEW"
+            status: Status.NEW
         };
         setTableList([...tableList, newTable]);
         setSelectedTable(newTable);
@@ -194,7 +194,7 @@ export default function TableSetup() {
         const tableArea = {...tableAreaArg};
         const tables = tablesArg&&tablesArg.length?[...tablesArg]:[];
 
-        if(tableArea.status === "DELETED" && tableArea.id) {
+        if(tableArea.status === Status.DELETED && tableArea.id) {
             //delete tableArea
             await axios.post('/api/table-area/delete', {
                 userId: loginToken.userId,
@@ -204,7 +204,7 @@ export default function TableSetup() {
                 }
             });
         } else {
-            if (tableArea.status === "NEW") {
+            if (tableArea.status === Status.NEW) {
                 if(tableArea.id) {
                     //update tableArea
                     await axios.post("/api/table-area/update", {
@@ -230,7 +230,7 @@ export default function TableSetup() {
 
             //create or update tables
             for(const table of tables) {
-                if(table.status === "DELETED" && table.id) {
+                if(table.status === Status.DELETED && table.id) {
                     //delete table
                     await axios.post("/api/table/delete", {
                         userId: loginToken.userId,
@@ -239,7 +239,7 @@ export default function TableSetup() {
                             id: table.id,
                         }
                     });
-                } else if(table.status === "NEW") {
+                } else if(table.status === Status.NEW) {
                     //update or create table
                     if(table.id) {
                         //update table
@@ -314,7 +314,7 @@ export default function TableSetup() {
                 //existing table, mark for deletion
                 const newTable = {
                     ...selectedTable,
-                    status: "DELETED"
+                    status: Status.DELETED
                 }
                 updateTable(selectedTable, newTable);
                 setSelectedTable(null);
@@ -332,7 +332,7 @@ export default function TableSetup() {
     const createNewTableArea = () => {
         const newTableArea = {
             tableAreaName: "new area",
-            status: "NEW"
+            status: Status.NEW
         };
         const newTableAreaList = [...tableAreaList, newTableArea];
         switchSelectedTableArea(newTableArea, newTableAreaList);
@@ -344,7 +344,7 @@ export default function TableSetup() {
                 //existing table area, mark for deletion
                 const newTableArea = {
                     ...selectedTableArea,
-                    status: "DELETED"
+                    status: Status.DELETED
                 }
                 const newTableAreaList = findAndReplace(tableAreaList, selectedTableArea, newTableArea);
                 if(newTableAreaList) {
@@ -402,7 +402,7 @@ export default function TableSetup() {
                                 ...table,
                                 x: table.x + e.clientX - startX,
                                 y: table.y + e.clientY - startY,
-                                status: "NEW"
+                                status: Status.NEW
                             }
                             updateTable(table, newTable);
                         }}
