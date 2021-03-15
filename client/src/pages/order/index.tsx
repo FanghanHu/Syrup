@@ -316,48 +316,55 @@ export default function Order() {
     const sendOrder = async () => {
         //to prevent user from sending the same order multiple times
         if(!sendingOrder) {
-            sendingOrder = true;
+            try {
+                sendingOrder = true;
 
-            //get all NEW orderItems
-            let orderItems = order.OrderItems?.filter(orderItem => orderItem.status === "NEW");
-            let orderId = order.id;
+                //get all NEW orderItems
+                let orderItems = order.OrderItems?.filter(orderItem => orderItem.status === "NEW");
+                let orderId = order.id;
 
-            //check if there is any new item
-            if(!orderItems || !orderItems.length){
-                setMessage("You must order something before sending the order.");
-                sendingOrder = false;
-                return;
-            }
+                //check if there is any new item
+                if(!orderItems || !orderItems.length){
+                    setMessage("You must order something before sending the order.");
+                    sendingOrder = false;
+                    return;
+                }
 
-            if(!order.id) {
-                //if order is new, create order first.
-                const result = await axios.post('/api/order/create/', {
+                if(!order.id) {
+                    //if order is new, create order first.
+                    const result = await axios.post('/api/order/create/', {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        type: order.type
+                    });
+
+                    orderId = result.data.id;
+                }
+
+                //set orderId for all new OrderItems.
+                if(orderItems && orderItems.length) {
+                    for(const orderItem of orderItems) {
+                        orderItem.OrderId = orderId;
+                    }
+                }
+
+                //edit the order
+                const result = await axios.post("/api/order/edit-items", {
                     userId: loginToken.userId,
                     hash: loginToken.hash,
-                    type: order.type
+                    orderId: orderId,
+                    OrderItems: orderItems
                 });
 
-                orderId = result.data.id;
+                setOrder(result.data);
+                setMessage("Order sent!");
+                sendingOrder = false;
+            } catch (err) {
+                console.error(err);
+                setMessage(err.stack);
+            } finally {
+                sendingOrder = false;
             }
-
-            //set orderId for all new OrderItems.
-            if(orderItems && orderItems.length) {
-                for(const orderItem of orderItems) {
-                    orderItem.OrderId = orderId;
-                }
-            }
-
-            //edit the order
-            const result = await axios.post("/api/order/edit-items", {
-                userId: loginToken.userId,
-                hash: loginToken.hash,
-                orderId: orderId,
-                OrderItems: orderItems
-            });
-
-            setOrder(result.data);
-            setMessage("Order sent!");
-            sendingOrder = false;
         } else {
             setMessage("Order already sent, waiting for server response.");
         }
