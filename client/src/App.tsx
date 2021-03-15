@@ -25,7 +25,7 @@ function App() {
           <Route path="/login" exact component={Login}/>
           <Route path="/main-menu" exact component={MainMenu}/>
           <Route path="/order" exact component={Order}/>
-          <Route path="/pickup" exact component={CustomerSelection}/>
+          <Route path="/customer" exact component={CustomerSelection}/>
         </Router>
       </ContextProviders>
     </div>
