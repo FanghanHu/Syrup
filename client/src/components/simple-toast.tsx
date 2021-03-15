@@ -21,7 +21,10 @@ export default function SimpleToast({title, message, setMessage, style, ...restO
             <Toast.Header>
                 <strong>{title}</strong>
             </Toast.Header>
-            <ToastBody>
+            <ToastBody style={{
+                whiteSpace: "pre",
+                overflow: "auto"
+            }}>
                 {message}
             </ToastBody>
         </Toast>
