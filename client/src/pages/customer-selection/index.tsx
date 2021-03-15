@@ -10,19 +10,23 @@ import PanelBody from "../../components/panel-body";
 import PanelHeader from "../../components/panel-header";
 import SimpleToast from "../../components/simple-toast";
 import { useLoginToken } from "../../contexts/login-context";
+import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { Color } from "../../util/Color";
 import { findAndReplace } from "../../util/helpers";
+import { Order } from "../../util/models";
 import ListPropertiesLayout from "../setup/list-properties-layout";
 import './style.css';
 
 export default function CustomerSelection() {
     const [customerList, setCustomerList] = useState<any[]>([]);
-    const [selectedCustomer, setSelectedCustomer] = useState<any|null>(null);
+    const [selectedCustomer, setSelectedCustomer] = useState<any>({});
 
     const [filter, setFilter] = useState("");
     const [message, setMessage] = useState("");
     const history = useHistory();
     const loginToken = useLoginToken();
+    const order = useOrder();
+    const setOrder = useSetOrder();
 
     const loadCustomers = () => {
         axios.post('/api/customer/list').then(result => {
@@ -49,10 +53,60 @@ export default function CustomerSelection() {
                 {displayName}
             </Button>
         )
-    } 
+    }
 
-    const saveAndOrder = () => {
-        //TODO:
+    const addCustomer = () => {
+        selectCustomer({});
+    }
+
+    const addCustomerToOrder = (customer) => {
+        const newOrder = {
+            ...order,
+            Customers: [...(order.Customers?order.Customers:[]), customer]
+        };
+
+        setOrder((newOrder as Order));
+    }
+
+    let savingData = false;
+    const saveAndOrder = async () => {
+        if(!savingData) {
+            savingData = true;
+            try{
+                if(selectedCustomer.id) {
+                    //update existing customer
+                    await axios.post('/api/customer/update', {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: selectedCustomer
+                    });
+                    addCustomerToOrder(selectedCustomer);
+                    history.push("/order");
+                } else {
+                    //create a new customer
+                    const result = await axios.post('/api/customer/create', {
+                        userId: loginToken.userId,
+                        hash: loginToken.hash,
+                        data: selectedCustomer
+                    });
+
+                    //update customer id
+                    const newCustomer = {
+                        ...selectedCustomer,
+                        id: result.data.id
+                    }
+                    addCustomerToOrder(newCustomer);
+                    history.push("/order");
+                }
+            } catch (err) {
+                console.error(err);
+                setMessage(err.stack);
+            } finally {
+                savingData = false;
+            }
+        } else {
+            setMessage("Working... please wait.")
+        }
     }
     
     const updateCustomer = (targetCustomer, newCustomer) => {
@@ -113,11 +167,17 @@ export default function CustomerSelection() {
                             </div>
                         </PanelBody>
                         <div className="d-flex flex-row-reverse">
-                            <Button className="m-1" style={{fontSize: "1.2em", width:"4em"}} themeColor={Color.gray}
+                            <Button className="m-1" themeColor={Color.gray}
                                 onClick={() => {
                                     history.goBack();
                                 }}
                             >Exit</Button>
+                            <Button className="m-1" themeColor={Color.kiwi_green}
+                                onClick={saveAndOrder}
+                            >Save and Order</Button>
+                            <Button className="m-1" themeColor={Color.dark_gold}
+                                onClick={addCustomer}
+                            >Add Customer</Button>
                         </div>
                     </div>
                 </ListPropertiesLayout>
