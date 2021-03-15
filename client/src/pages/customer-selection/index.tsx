@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import Button from "../../components/button";
+import CheckLoginToken from "../../components/check-login-token";
 import LabeledTextInput from "../../components/labeled-text-input";
 import Panel from "../../components/panel";
 import PanelBody from "../../components/panel-body";
@@ -18,6 +19,8 @@ import ListPropertiesLayout from "../setup/list-properties-layout";
 import './style.css';
 
 export default function CustomerSelection() {
+    CheckLoginToken();
+
     const [customerList, setCustomerList] = useState<any[]>([]);
     const [selectedCustomer, setSelectedCustomer] = useState<any>({});
 
@@ -70,6 +73,30 @@ export default function CustomerSelection() {
 
     let savingData = false;
     const saveAndOrder = async () => {
+        //check the current order type and validate customer information for required fields
+        if(order.type) {
+            if(order.type === "Pick up") {
+                //phone number must not be empty
+                if(!selectedCustomer.phone) {
+                    setMessage("You must enter a phone number");
+                    return;
+                }
+
+            } else if (order.type === "Delivery") {
+                //phone number must not be empty
+                if(!selectedCustomer.phone) {
+                    setMessage("You must enter a phone number");
+                    return;
+                }
+
+                //address must not be empty
+                if(!selectedCustomer.address) {
+                    setMessage("You must enter an address");
+                    return;
+                }
+            }
+        }
+
         if(!savingData) {
             savingData = true;
             try{
