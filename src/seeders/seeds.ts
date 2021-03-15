@@ -38,11 +38,11 @@ async function resetDB() {
     const button = await db.Button.create({
         buttonName: "Tonkatsu Ramen",
         parameters: {
-            itemData: `{
-                "itemName": "Ramen",
-                "price": "9.75",
-                "tax": 0.0825,
-            }`
+            itemData: {
+                itemName: "Ramen",
+                price: "9.75",
+                tax: 0.0825
+            }
         },
         ScriptId: script.id
     });
@@ -52,11 +52,11 @@ async function resetDB() {
     await sideMenu.createButton({
         buttonName: "Add onion",
         parameters: {
-            itemData: `{
-                "itemName": "Add onion",
-                "price": "1",
-                "tax": 0.0825,
-            }`
+            itemData: {
+                itemName: "Add onion",
+                price: "1",
+                tax: 0.0825,
+            }
         },
         Script: {
             scriptName: "Order modifier",

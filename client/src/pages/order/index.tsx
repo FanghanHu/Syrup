@@ -372,7 +372,7 @@ export default function Order() {
                 if(parameters) {
                     //put the parameters in
                     for(const key in parameters) {
-                        script = script.replace(`%${key}%`, parameters[key].toString());
+                        script = script.replace(`%${key}%`, JSON.stringify(parameters[key]));
                     }
                 }
 
