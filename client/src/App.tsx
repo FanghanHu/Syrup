@@ -12,6 +12,7 @@ import MainMenu from "./pages/main-menu";
 import Order from "./pages/order";
 import CustomerSelection from "./pages/customer-selection";
 import TableSelection from "./pages/table-selection";
+import Recall from "./pages/recall";
 
 library.add(fas);
 library.add(fab);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/order" exact component={Order}/>
           <Route path="/customer" exact component={CustomerSelection}/>
           <Route path="/table" exact component={TableSelection}/>
+          <Route path="/recall" exact component={Recall}/>
         </Router>
       </ContextProviders>
     </div>
