@@ -434,7 +434,7 @@ export default function Order() {
                     gap:"3px"
                 }}>
                     <Button themeColor={Color.fire_red} onClick={() => {
-                        history.goBack();
+                        history.push('/main-menu');
                     }}>Exit</Button>
                     <Button>+</Button>
                     <Button>-</Button>
