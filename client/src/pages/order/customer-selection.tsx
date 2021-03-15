@@ -29,22 +29,23 @@ export default function CustomerSelection() {
         })
     }
 
-
-
     const selectCustomer = (customer) => {
         setSelectedCustomer(customer);
     }
 
     const createCustomerListItem = (customer, key) => {
+        const displayName = `${customer.firstName} ${customer.lastName}${customer.phone?" - " + customer.phone:""}`;
         return (
             <Button
+                key={key}
                 style={{
                     width: "100%",
-                    marginBottom: "3px"
+                    marginBottom: "3px",
+                    display: filter?displayName.toLowerCase().includes(filter.toLocaleLowerCase())?"block":"none":"block"
                 }}
                 onClick={() => {selectCustomer(customer)}}
             >
-                {`${customer.firstName} ${customer.lastName}${customer.phone?" - " + customer.phone:""}`}
+                {displayName}
             </Button>
         )
     } 
