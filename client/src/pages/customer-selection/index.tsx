@@ -42,7 +42,25 @@ export default function CustomerSelection() {
     }
 
     const createCustomerListItem = (customer, key) => {
-        const displayName = `${customer.firstName} ${customer.lastName}${customer.phone?" - " + customer.phone:""}`;
+        //build a display name
+        let displayName = customer.firstName?customer.firstName:"";
+        if(customer.lastName) {
+            if(customer.firstName) {
+                displayName += " "
+            }
+            displayName += customer.lastName;
+        }
+        if(customer.phone) {
+            if(displayName) {
+                displayName += " - ";
+            }
+            displayName += customer.phone;
+        }
+
+        if(!displayName) {
+            displayName = "Unnamed Customer";
+        }
+
         return (
             <Button
                 key={key}
