@@ -73,7 +73,7 @@ export default function UserSetup() {
                                 themeColor={user.id===userId?Color.kiwi_green:Color.gray}
                                 style={{
                                     marginBottom: "3px",
-                                    display: filter?(user.fullName as string).toLowerCase().includes(filter)?"block":"none":"block"
+                                    display: filter?(user.fullName as string).toLowerCase().includes(filter.toLocaleLowerCase())?"block":"none":"block"
                                 }}
                                 onClick={() => {
                                     displayUserData(user);
