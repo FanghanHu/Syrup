@@ -46,12 +46,23 @@ export default function Payment() {
     }
 
     const createPaymentListItem = (payment, key) => {
+        const date = new Date(payment.createdAt);
         return (
             <tr key={key} style={{
                 textDecoration: payment.status === Status.VOIDED?"line-through":"none"
             }}>
                 <td>{payment.type}</td>
                 <td>{payment.amount}</td>
+                <td>
+                    {
+                        date.toLocaleTimeString('en-US', {
+                            hour12: false,
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        })
+                    }
+                </td>
             </tr>
         );
     }
@@ -131,7 +142,7 @@ export default function Payment() {
     }, []);
 
     return (
-        <Container className="vh-100 position-relative py-3">
+        <Container fluid className="vh-100 position-relative py-3">
             <VerticalCenter>
                 <Panel className="d-flex flex-column mx-auto" 
                     style={{
@@ -160,6 +171,7 @@ export default function Payment() {
                                         <tr>
                                             <th>Type</th>
                                             <th>Amount</th>
+                                            <th>Time</th>
                                         </tr>
                                     </thead>
                                     <tbody>
