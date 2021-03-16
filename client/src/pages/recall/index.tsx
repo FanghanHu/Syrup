@@ -16,6 +16,7 @@ export default function Recall() {
     CheckLoginToken();
 
     const [orderList, setOrderList] = useState<any[]>([]);
+    const [showPaid, setShowPaid] = useState(false);
 
     const [message, setMessage] = useState("");
     const history = useHistory();
@@ -39,6 +40,10 @@ export default function Recall() {
     }
 
     const createOrderListItem = (orderArg, key) => {
+        if(orderArg?.status==="PAID" && !showPaid) {
+            return null;
+        }
+
         const date = new Date(orderArg.createdAt);
         return (
             <tr key={"order-" + key}
@@ -149,6 +154,11 @@ export default function Recall() {
                             history.push("/order");
                         }}
                     >Open</Button>
+                    <Button className="m-1" themeColor={Color.dark_gold}
+                        onClick={() => {
+                            setShowPaid(!showPaid);
+                        }}
+                    >{showPaid?"Hide Paid":"Show Paid"}</Button>
                 </div>
             </Panel>
             <SimpleToast title="Message:" message={message} setMessage={setMessage}/>
