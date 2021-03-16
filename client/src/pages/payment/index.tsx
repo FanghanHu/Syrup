@@ -73,10 +73,24 @@ export default function Payment() {
         if(!isPaying) {
             try{
                 isPaying = true;
-                const amountNum = parseFloat(amount);
+                let amountNum = parseFloat(amount);
                 setAmount("0");
 
                 if(amountNum > 0) {
+                    const totalBeforePayment = getAmountDue();
+                    if(amountNum > totalBeforePayment) {
+                        const change = amountNum - totalBeforePayment;
+                        amountNum = totalBeforePayment;
+                        setMessage("Change: $" + change.toFixed(2));
+                    }
+
+                    if(amountNum < 0.005) {
+                        //paying a less than payable amount
+                        setMessage("Please enter a valid amount.")
+                        isPaying = false;
+                        return;
+                    }
+
                     await axios.post("/api/payment/create", {
                         userId: loginToken.userId,
                         hash: loginToken.hash,
@@ -93,8 +107,11 @@ export default function Payment() {
                     //update order status
                     const amountDue = getAmountDue(result.data);
                     setPaymentList(result.data);
+                    //set the leftover amount to the input field
+                    setAmount(amountDue.toFixed(2));
                     const newOrder = {...order};
-                    if(amountDue <= 0) {
+                    //if the leftover amount is less then payable
+                    if(amountDue <= 0.005) {
                         //change order to paid
                         newOrder.status = "PAID";
                     } else {
@@ -134,6 +151,7 @@ export default function Payment() {
     useEffect(() => {
         loadPayments().then(results => {
             setPaymentList(results.data);
+            setAmount(getAmountDue(results.data).toFixed(2));
         }).catch(err => {
             console.error(err);
             setMessage(err.stack);
