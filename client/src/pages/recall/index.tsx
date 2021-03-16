@@ -39,6 +39,7 @@ export default function Recall() {
     }
 
     const createOrderListItem = (orderArg, key) => {
+        const date = new Date(orderArg.createdAt);
         return (
             <tr key={"order-" + key}
                 onClick={() => {
@@ -87,6 +88,23 @@ export default function Recall() {
                 >
                     {orderArg?.status}
                 </td>
+                <td>
+                    {
+                        date.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        })
+                    } - 
+                    {
+                        date.toLocaleTimeString('en-US', {
+                            hour12: false,
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        })
+                    }
+                </td>
             </tr>
         )
     }
@@ -112,6 +130,7 @@ export default function Recall() {
                                 <th>Customer</th>
                                 <th>Amount</th>
                                 <th>Status</th>
+                                <th>Time</th>
                             </tr>
                         </thead>
                         <tbody>
