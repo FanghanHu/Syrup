@@ -423,11 +423,29 @@ export default function Order() {
                 setMessage("failed to get buttons");
             });
         }
+
+        //update order
+        if(order.id) {
+            axios.post("/api/order/get", {
+                userId: loginToken.userId,
+                hash: loginToken.hash,
+                orderId: order.id,
+                options: {
+                    include: ["Table", "Customers", "OrderItems"]
+                }
+            }).then(results => {
+                console.log(results.data);
+                setOrder(results.data);
+            }).catch(err => {
+                console.error(err);
+                setMessage(err.stack);
+            }) 
+        }
     
         //load both side menu and main menu, using default menuId 1 and 2
         queryButtons(1, setMainButtons);
         queryButtons(2, setSideButtons);
-    }, [setMainButtons, setSideButtons])
+    }, [])
 
     return (
         <Container fluid id="order-page-container">

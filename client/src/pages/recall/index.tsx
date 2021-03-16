@@ -38,13 +38,27 @@ export default function Recall() {
         }) 
     }
 
-    const createOrderListItem = (order, key) => {
+    const createOrderListItem = (orderArg, key) => {
         return (
-            <tr key={"order-" + key}>
-                <td>{order.orderNumber}</td>
-                <td>{order.type}</td>
-                <td>{order?.Table?.tableName}</td>
-                <td>{order?.Customers?.map(customer => {
+            <tr key={"order-" + key}
+                onClick={() => {
+                    if(order===orderArg) {
+                        //click on the same order to open it
+                        history.push("/order");
+                    } else {
+                        //set selected order
+                        setOrder(orderArg);
+                    }
+                }}
+                style={order===orderArg?{
+                    background: "darkGray",
+                    color: "white"
+                }:{}}
+            >
+                <td>{orderArg.orderNumber}</td>
+                <td>{orderArg.type}</td>
+                <td>{orderArg?.Table?.tableName}</td>
+                <td>{orderArg?.Customers?.map(customer => {
                     let displayName = customer.firstName?customer.firstName:"";
                     if(customer.lastName) {
                         if(customer.firstName) {
@@ -64,13 +78,14 @@ export default function Recall() {
                     }
                     return displayName;
                 }).join(", ")}</td>
-                <td>${order?.cache?.total}</td>
+                <td>${orderArg?.cache?.total}</td>
             </tr>
         )
     }
 
     useEffect(() => {
         loadOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -101,6 +116,11 @@ export default function Recall() {
                             history.goBack();
                         }}
                     >Exit</Button>
+                    <Button className="m-1" themeColor={Color.kiwi_green}
+                        onClick={() => {
+                            history.push("/order");
+                        }}
+                    >Open</Button>
                 </div>
             </Panel>
             <SimpleToast title="Message:" message={message} setMessage={setMessage}/>
