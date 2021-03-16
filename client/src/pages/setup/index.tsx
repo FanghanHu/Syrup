@@ -51,7 +51,7 @@ export default function Setup(): JSX.Element {
                             <FontAwesomeIcon icon="chair"/> Table Setup
                         </Button>
                     </div>
-                    <Button themeColor={Color.fire_red} className="m-1" onClick={() => {
+                    <Button themeColor={Color.gray} className="m-1" onClick={() => {
                         history.goBack();
                     }}>
                     <FontAwesomeIcon icon="sign-out-alt"/> Exit
