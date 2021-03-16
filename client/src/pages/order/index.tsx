@@ -377,6 +377,7 @@ export default function Order() {
 
                 setOrder(result.data);
                 setMessage("Order sent!");
+                history.push('/main-menu');
                 sendingOrder = false;
             } catch (err) {
                 console.error(err);
