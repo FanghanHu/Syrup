@@ -117,6 +117,13 @@ export const getOrder = catchError(async (req: Request, res: Response) => {
     }
 });
 
+export const listOrders = catchError(async (req: Request, res: Response) => {
+    if(isTokeninvalid(req, res)) return;
+    const options = req.body.options;
+    const orders = await db.Order.findAll(options);
+    return res.status(200).json(orders);
+});
+
 const updateItems = async (orderItems: any[], t: Transaction, serverId: number,  ParentId?: number) => {
     for(let orderItem of orderItems) {
         //loop through every item
