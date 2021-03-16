@@ -4,8 +4,8 @@ import "./style.css";
 
 export interface OrderItemDisplayProps {
     order: Order;
-    selectedItems: OrderItem[];
-    setSelectedItems: React.Dispatch<React.SetStateAction<OrderItem[]>>;
+    selectedItems?: OrderItem[];
+    setSelectedItems?: React.Dispatch<React.SetStateAction<OrderItem[]>>;
 }
 
 export interface DisplayItems {
@@ -24,7 +24,7 @@ export default function OrderItemDisplay({order, setSelectedItems, selectedItems
         for(const item of items) {
             //render self
             let selfClassName = "order-item-display-grid";
-            if(selectedItems.includes(item.orderItem)) selfClassName += " selected";
+            if(selectedItems && selectedItems.includes(item.orderItem)) selfClassName += " selected";
             if(modifierLevel === 0) selfClassName += " font-weight-bold";
             if(item.orderItem.status === "NEW") selfClassName += " new-item";
             key++;
@@ -33,7 +33,7 @@ export default function OrderItemDisplay({order, setSelectedItems, selectedItems
                     marginLeft: modifierLevel+"em"
                 }} onClick={() => {
                     //TODO: modify this method to allow selection of multiple items
-                    setSelectedItems([item.orderItem]);
+                    setSelectedItems && setSelectedItems([item.orderItem]);
                 }}>
                     <div style={{
                         minWidth: "1em"

@@ -13,6 +13,7 @@ import Order from "./pages/order";
 import CustomerSelection from "./pages/customer-selection";
 import TableSelection from "./pages/table-selection";
 import Recall from "./pages/recall";
+import Payment from "./pages/payment";
 
 library.add(fas);
 library.add(fab);
@@ -30,6 +31,7 @@ function App() {
           <Route path="/customer" exact component={CustomerSelection}/>
           <Route path="/table" exact component={TableSelection}/>
           <Route path="/recall" exact component={Recall}/>
+          <Route path="/payment" exact component={Payment}/>
         </Router>
       </ContextProviders>
     </div>

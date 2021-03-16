@@ -79,6 +79,14 @@ export default function Recall() {
                     return displayName;
                 }).join(", ")}</td>
                 <td>${orderArg?.cache?.total}</td>
+                <td
+                    style ={{
+                        //make paid status appear as green
+                        color: orderArg?.status==="PAID"?"green":"inherit"
+                    }}
+                >
+                    {orderArg?.status}
+                </td>
             </tr>
         )
     }
@@ -103,6 +111,7 @@ export default function Recall() {
                                 <th>Table</th>
                                 <th>Customer</th>
                                 <th>Amount</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>

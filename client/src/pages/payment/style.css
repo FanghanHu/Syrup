@@ -1,0 +1,18 @@
+.payment-page-grid {
+    display: grid;
+    grid-template-columns: 250px 250px 240px;
+    height: 100%;
+    flex-grow: 1;
+    gap: 3px;
+}
+
+@media only screen and (max-width: 768px) {
+    .payment-page-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 40% 40% 60%;
+    }
+
+    .payment-page-controll{
+        grid-row: 1;
+    }
+}

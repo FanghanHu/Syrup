@@ -15,6 +15,7 @@ router.use("/user", generateSimpleCrudRouter(db.User));
 router.use('/table', generateSimpleCrudRouter(db.Table));
 router.use('/table-area', generateSimpleCrudRouter(db.TableArea));
 router.use('/customer', generateSimpleCrudRouter(db.Customer));
+router.use("/payment", generateSimpleCrudRouter(db.Payment));
 
 //Handles all uncaught error by sending them to client
 router.use((error: Error, req, res, next) => {

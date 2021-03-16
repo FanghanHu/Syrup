@@ -100,7 +100,7 @@ export const createOrder = catchError(async (req:Request, res:Response) => {
     //create a NEW order
     const order = await db.Order.create({
         orderNumber,
-        status: "NEW",
+        status: "OPEN",
         type,
         ServerId: userId
     });
@@ -201,6 +201,7 @@ export const updateOrderMeta = catchError(async (req: Request, res:Response) => 
     const table = req.body.table;
     const orderId = req.body.orderId;
     const cache = req.body.cache;
+    const status = req.body.status;
 
     const t = await db.sequelize.transaction();
     try {
@@ -225,6 +226,11 @@ export const updateOrderMeta = catchError(async (req: Request, res:Response) => 
 
         if(cache) {
             order.cache = cache;
+            await order.save({transaction: t});
+        }
+
+        if(status) {
+            order.status = status;
             await order.save({transaction: t});
         }
 

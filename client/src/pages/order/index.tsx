@@ -377,8 +377,8 @@ export default function Order() {
 
                 setOrder(result.data);
                 setMessage("Order sent!");
-                history.push('/main-menu');
                 sendingOrder = false;
+                return true;
             } catch (err) {
                 console.error(err);
                 setMessage(err.stack);
@@ -388,6 +388,7 @@ export default function Order() {
         } else {
             setMessage("Order already sent, waiting for server response.");
         }
+        return false;
     }
 
     const createButton = (buttonData: any, key: any) => {
@@ -435,7 +436,6 @@ export default function Order() {
                     include: ["Table", "Customers", "OrderItems"]
                 }
             }).then(results => {
-                console.log(results.data);
                 setOrder(results.data);
             }).catch(err => {
                 console.error(err);
@@ -475,15 +475,22 @@ export default function Order() {
                     marginTop: "5px",
                     marginBottom: "5px",
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                    gridTemplateColumns: "1fr 1fr 1fr",
                     gap:"3px"
                 }}>
-                    <Button themeColor={Color.fire_red} onClick={() => {
+                    <Button themeColor={Color.kiwi_green} onClick={() => {
+                        if(sendOrder()) {
+                            history.push('/main-menu');
+                        }
+                    }}>Send</Button>
+                    <Button themeColor={Color.dark_gold} onClick={() => {
+                        if(sendOrder()) {
+                            history.push('/payment');
+                        }
+                    }}>Pay</Button>
+                    <Button themeColor={Color.gray} onClick={() => {
                         history.push('/main-menu');
                     }}>Exit</Button>
-                    <Button>+</Button>
-                    <Button>-</Button>
-                    <Button themeColor={Color.kiwi_green} onClick={() => {sendOrder()}}>Send</Button>
                 </div>
             </Panel>
             <SimpleToast title="Message:" message={message} setMessage={setMessage}/>
