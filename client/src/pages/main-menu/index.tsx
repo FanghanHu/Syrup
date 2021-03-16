@@ -70,8 +70,9 @@ export default function MainMenu() {
                         });
                     })}
                     {createButton("Recall", "search", "/recall", Color.kiwi_green)}
+                    {createButton("Reports", "file-alt", "/report", Color.melon_green)}
                     {createButton("Back Office", "cog", "/setup", Color.dark_gold)}
-                    {createButton("Logout", "sign-out-alt", "/login", Color.fire_red, ()=>{
+                    {createButton("Logout", "sign-out-alt", "/login", Color.gray, ()=>{
                         setLoginToken({});
                     })}
                 </div>
