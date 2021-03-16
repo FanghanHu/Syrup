@@ -39,7 +39,34 @@ export default function Recall() {
     }
 
     const createOrderListItem = (order, key) => {
-        //TODO:
+        return (
+            <tr key={"order-" + key}>
+                <td>{order.orderNumber}</td>
+                <td>{order.type}</td>
+                <td>{order?.Table?.tableName}</td>
+                <td>{order?.Customers?.map(customer => {
+                    let displayName = customer.firstName?customer.firstName:"";
+                    if(customer.lastName) {
+                        if(customer.firstName) {
+                            displayName += " "
+                        }
+                        displayName += customer.lastName;
+                    }
+                    if(customer.phone) {
+                        if(displayName) {
+                            displayName += " - ";
+                        }
+                        displayName += customer.phone;
+                    }
+            
+                    if(!displayName) {
+                        displayName = "Unnamed Customer";
+                    }
+                    return displayName;
+                }).join(", ")}</td>
+                <td>${order?.cache?.total}</td>
+            </tr>
+        )
     }
 
     useEffect(() => {
@@ -53,7 +80,7 @@ export default function Recall() {
                     Recall
                 </PanelHeader>
                 <PanelBody className="flex-grow-1 overflow-auto" style={{flexBasis: 0}}>
-                    <Table striped bordered hover className="h-100">
+                    <Table striped bordered hover className="h-100 text-center">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -63,6 +90,9 @@ export default function Recall() {
                                 <th>Amount</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {orderList.map((order, index) => createOrderListItem(order, index))}
+                        </tbody>
                     </Table>
                 </PanelBody>
                 <div className="d-flex flex-row-reverse">
