@@ -200,6 +200,7 @@ export const updateOrderMeta = catchError(async (req: Request, res:Response) => 
     const customers = req.body.customers;
     const table = req.body.table;
     const orderId = req.body.orderId;
+    const cache = req.body.cache;
 
     const t = await db.sequelize.transaction();
     try {
@@ -220,6 +221,11 @@ export const updateOrderMeta = catchError(async (req: Request, res:Response) => 
         //update table
         if(table && table.id) {
             await order.setTable(table.id, {transaction: t});
+        }
+
+        if(cache) {
+            order.cache = cache;
+            await order.save({transaction: t});
         }
 
         //commit

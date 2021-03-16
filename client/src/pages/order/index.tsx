@@ -19,6 +19,7 @@ import CheckLoginToken from "../../components/check-login-token";
 import { useHistory } from "react-router";
 import React from "react";
 import SimpleToast from "../../components/simple-toast";
+import { OrderModel } from "../../util/price-calculation";
 
 export default function Order() {
     CheckLoginToken();
@@ -342,21 +343,22 @@ export default function Order() {
                 }
 
                 //update order meta (customers, table)
-                if(order.Customers || order.Table) {
-                    const data:any = {
-                        userId: loginToken.userId,
-                        hash: loginToken.hash,
-                        orderId: orderId
-                    }
-                    if(order.Customers) {
-                        data.customers = order.Customers;
-                    }
-                    if(order.Table) {
-                        data.table = order.Table;
-                    }
 
-                    await axios.post('/api/order/update-meta', data);
+                const data:any = {
+                    userId: loginToken.userId,
+                    hash: loginToken.hash,
+                    orderId: orderId
                 }
+                if(order.Customers) {
+                    data.customers = order.Customers;
+                }
+                if(order.Table) {
+                    data.table = order.Table;
+                }
+                const orderModel = new OrderModel(order);
+                data.cache = orderModel.total;
+
+                await axios.post('/api/order/update-meta', data);
 
                 //set orderId for all new OrderItems.
                 if(orderItems && orderItems.length) {

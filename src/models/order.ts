@@ -53,6 +53,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> imple
     public orderNumber!: string;
     public status!: string;
     public total?: number;
+    public cache?: OrderCache;
     public type!: "Dine in" | "To Go" | "Pick up" | "Delivery";
 
     public readonly createdAt!: Date;
