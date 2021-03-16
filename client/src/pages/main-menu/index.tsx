@@ -49,7 +49,7 @@ export default function MainMenu() {
             <CheckLoginToken/>
             <VerticalCenter>
                 <div className="main-menu-grid">
-                    {createButton("To Go", "hamburger", "/order", Color.sky_blue, ()=>{
+                    {createButton("To Go", "shopping-bag", "/order", Color.sky_blue, ()=>{
                         setOrder({
                             type: "To Go"
                         });
