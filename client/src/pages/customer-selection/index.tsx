@@ -69,6 +69,7 @@ export default function CustomerSelection() {
                     marginBottom: "3px",
                     display: filter?displayName.toLowerCase().includes(filter.toLocaleLowerCase())?"block":"none":"block"
                 }}
+                themeColor={customer===selectedCustomer?Color.kiwi_green:Color.sky_blue}
                 onClick={() => {selectCustomer(customer)}}
             >
                 {displayName}
