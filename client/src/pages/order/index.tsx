@@ -324,13 +324,6 @@ export default function Order() {
                 let orderItems = order.OrderItems?.filter(orderItem => orderItem.status === "NEW");
                 let orderId = order.id;
 
-                //check if there is any new item
-                if(!orderItems || !orderItems.length){
-                    setMessage("You must order something before sending the order.");
-                    sendingOrder = false;
-                    return false;
-                }
-
                 if(!order.id) {
                     //if order is new, create order first.
                     const result = await axios.post('/api/order/create/', {
