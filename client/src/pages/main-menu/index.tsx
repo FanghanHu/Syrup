@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import Button from "../../components/button-temp"
+import Button from "../../components/button"
 import VerticalCenter from '../../components/vertical-center';
 import { Color } from '../../util/Color';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

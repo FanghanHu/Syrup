@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import PanelHeader from "../../components/panel-header";
-import Panel from "../../components/panel-temp";
+import Panel from "../../components/panel";
 import ListPropertiesLayout from "../setup/list-properties-layout";
 import PanelBody from "../../components/panel-body";
-import Button from "../../components/button-temp";
+import Button from "../../components/button";
 import { useHistory } from "react-router-dom";
 import { useOrder, useSetOrder } from "../../contexts/order-context";
 import { Color } from "../../util/Color";
