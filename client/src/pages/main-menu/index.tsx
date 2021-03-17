@@ -9,12 +9,13 @@ import { useHistory } from 'react-router-dom';
 import CheckLoginToken from '../../components/check-login-token';
 import './style.css'
 import { useSetOrder } from '../../contexts/order-context';
-import { useSetLoginToken } from '../../contexts/login-context';
+import { useLoginToken, useSetLoginToken } from '../../contexts/login-context';
 
 export default function MainMenu() {
     const history = useHistory();
     const setOrder = useSetOrder();
     const setLoginToken = useSetLoginToken();
+    const loginToken = useLoginToken();
 
     const createButton = function(text: string, icon: IconProp, url: string, themeColor:Color=Color.sky_blue, beforeMove=()=>{}) {
         return (
@@ -48,6 +49,7 @@ export default function MainMenu() {
         <Container className="vh-100">
             <CheckLoginToken/>
             <VerticalCenter>
+                <div className="h1 text-center m-3 text-white">Welcome, {loginToken.fullName}.</div>
                 <div className="main-menu-grid">
                     {createButton("To Go", "shopping-bag", "/order", Color.sky_blue, ()=>{
                         setOrder({
@@ -69,10 +71,10 @@ export default function MainMenu() {
                             type: "Delivery"
                         });
                     })}
-                    {createButton("Recall", "search", "/recall", Color.kiwi_green)}
-                    {createButton("Reports", "file-alt", "/report", Color.melon_green)}
-                    {createButton("Back Office", "cog", "/setup", Color.dark_gold)}
-                    {createButton("Logout", "sign-out-alt", "/login", Color.gray, ()=>{
+                    {createButton("Recall", "search", "/recall", Color.sky_blue)}
+                    {createButton("Reports", "file-alt", "/report", Color.sky_blue)}
+                    {createButton("Back Office", "cog", "/setup", Color.sky_blue)}
+                    {createButton("Logout", "sign-out-alt", "/login", Color.sky_blue, ()=>{
                         setLoginToken({});
                     })}
                 </div>
