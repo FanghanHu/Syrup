@@ -1,6 +1,9 @@
 {
   "name": "syrup",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.14.1"
+  },
   "description": "",
   "main": "server.js",
   "devDependencies": {
