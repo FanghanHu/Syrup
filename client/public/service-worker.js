@@ -1,7 +1,10 @@
 /* eslint-disable no-restricted-globals */
 const FILES_TO_CACHE = [
   "/",
-  "/index.html"
+  "/index.html",
+  "/logo64.png",
+  "/logo192.png",
+  "/logo512.png"
 ];
 
 const CACHE_NAME = "static-cache-v2";
