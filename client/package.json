@@ -1,6 +1,6 @@
 {
   "name": "syrup_client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Syrup POS Client",
   "private": true,
   "proxy": "http://localhost:3001/",
