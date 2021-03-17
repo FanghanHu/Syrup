@@ -1,7 +1,7 @@
 {
   "name": "syrup_client",
-  "version": "0.1.0",
-  "description": "Mern Demo",
+  "version": "1.0.0",
+  "description": "Syrup POS Client",
   "private": true,
   "proxy": "http://localhost:3001/",
   "dependencies": {
