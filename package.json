@@ -38,7 +38,8 @@
     "install": "cd client && npm install",
     "build": "rimraf ./build && tsc && cd client && npm run build",
     "heroku-postbuild": "npm run build",
-    "seed": "ts-node ./src/seeders/seeds.ts"
+    "seed": "ts-node ./src/seeders/seeds.ts",
+    "postinstall":"tsc"
   },
   "repository": {
     "type": "git",
