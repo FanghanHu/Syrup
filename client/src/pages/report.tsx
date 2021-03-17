@@ -27,7 +27,6 @@ export default function Report() {
             try{
                 const fromTimeStr = new Date(fromTime).toJSON();
                 const toTimeStr = new Date(toTime).toJSON();
-                console.log(fromTimeStr);
                 const result = await axios.post("/api/report/settlement", {
                     fromTime: fromTimeStr,
                     toTime: toTimeStr
