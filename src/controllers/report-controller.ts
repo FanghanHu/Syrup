@@ -15,9 +15,6 @@ export const settlement = catchError(async (req: Request, res: Response) => {
         toTime.setHours(23, 59, 59, 999);
     }
 
-    console.log(fromTime.toLocaleString());
-    console.log(toTime.toLocaleString());
-
     const dateRange = {
         [Op.and]: [
             {
@@ -40,6 +37,8 @@ export const settlement = catchError(async (req: Request, res: Response) => {
     data.total = 0;
     data.cash = 0;
     data.card = 0;
+    data.fromTime = fromTime;
+    data.toTime = toTime;
 
     for(const order of orders) {
         if(order.status === "PAID" || order.status === "OPEN") {
