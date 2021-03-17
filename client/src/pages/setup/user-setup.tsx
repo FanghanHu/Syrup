@@ -65,7 +65,7 @@ export default function UserSetup() {
                 <ListPropertiesLayout>
                     <div className="d-flex flex-column h-100">
                         <LabeledTextInput className="m-1" title="Filter" value={filter} labelColorTheme={Color.gold}
-                            onChange={(e) => {setFilter(e.target.value)}} labelStyle={{width: "4em", textAlign: "center"}}/>
+                            onChange={(e) => {setFilter(e.target.value)}} labelStyle={{width: "5em", textAlign: "center"}}/>
                         <PanelBody className="flex-grow-1 overflow-auto" style={{flexBasis: 0}}>
                             {userList.map(user => <Button
                                 key={user.id}
