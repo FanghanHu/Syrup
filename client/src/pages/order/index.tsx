@@ -328,7 +328,7 @@ export default function Order() {
                 if(!orderItems || !orderItems.length){
                     setMessage("You must order something before sending the order.");
                     sendingOrder = false;
-                    return;
+                    return false;
                 }
 
                 if(!order.id) {
@@ -478,13 +478,13 @@ export default function Order() {
                     gridTemplateColumns: "1fr 1fr 1fr",
                     gap:"3px"
                 }}>
-                    <Button themeColor={Color.kiwi_green} onClick={() => {
-                        if(sendOrder()) {
+                    <Button themeColor={Color.kiwi_green} onClick={async () => {
+                        if(await sendOrder()) {
                             history.push('/main-menu');
                         }
                     }}>Send</Button>
-                    <Button themeColor={Color.dark_gold} onClick={() => {
-                        if(sendOrder()) {
+                    <Button themeColor={Color.dark_gold} onClick={async () => {
+                        if(await sendOrder()) {
                             history.push('/payment');
                         }
                     }}>Pay</Button>
