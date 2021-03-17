@@ -15,6 +15,7 @@ import TableSelection from "./pages/table-selection";
 import Recall from "./pages/recall";
 import Payment from "./pages/payment";
 import Report from "./pages/report";
+import LandingPage from "./pages/landing-page";
 
 library.add(fas);
 library.add(fab);
@@ -24,7 +25,7 @@ function App() {
     <div className="App">
       <ContextProviders>
         <Router>
-          <Route path="/" exact component={Login}/>
+          <Route path="/" exact component={LandingPage}/>
           <Route path="/setup" component={Setup}/>
           <Route path="/login" exact component={Login}/>
           <Route path="/main-menu" exact component={MainMenu}/>

@@ -1,0 +1,29 @@
+.syrup-title {
+    transition: all 1.5s ease-out;
+    color: transparent;
+    font-size: 5em;
+    line-height: 1em;
+    text-align: center;
+}
+
+.syrup-title-show {
+    color: white;
+}
+
+.syrup-title-top {
+    margin-right: 0.5em;
+    transition: all 1.5s ease-out;
+}
+
+.syrup-title-bottom {
+    margin-left: 0.5em;
+    transition: all 1.5s ease-out;
+}
+
+.syrup-title-show .syrup-title-top {
+    margin-right: 1em;
+}
+
+.syrup-title-show .syrup-title-bottom {
+    margin-left: 1em;
+}
