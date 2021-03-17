@@ -47,6 +47,30 @@ async function resetDB() {
         }
     });
 
+    await db.Script.create({
+        scriptName: "Change Main Menu",
+        data: {
+            parameters: {
+                menuId: "Change the main menu in ordering screen"
+            },
+            script: `
+                changeMainMenu(%menuId%);
+            `
+        }
+    });
+
+    await db.Script.create({
+        scriptName: "Change Side Menu",
+        data: {
+            parameters: {
+                menuId: "Change the side menu in ordering screen"
+            },
+            script: `
+                changeSideMenu(%menuId%);
+            `
+        }
+    });
+
     //user
     const user = await db.User.create({
         fullName: "Boss",

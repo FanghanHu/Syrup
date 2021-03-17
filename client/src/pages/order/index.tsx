@@ -404,21 +404,28 @@ export default function Order() {
         );
     }
 
+    const queryButtons = (menuId, setButtons) => {
+        axios.post("/api/menu/get", {data: {id: menuId}, options: {
+            include: {
+                association: "Buttons",
+                include: "Script"
+            }
+        }}).then(result => {
+            setButtons(result.data.Buttons);
+        }).catch(err => {
+            setMessage("failed to get buttons");
+        });
+    }
+
+    const changeMainMenu = (menuId) => {
+        queryButtons(menuId, setMainButtons);
+    }
+
+    const changeSideMenu = (menuId) => {
+        queryButtons(menuId, setSideButtons);
+    }
 
     useEffect(() => {
-        const queryButtons = (menuId, setButtons) => {
-            axios.post("/api/menu/get", {data: {id: menuId}, options: {
-                include: {
-                    association: "Buttons",
-                    include: "Script"
-                }
-            }}).then(result => {
-                setButtons(result.data.Buttons);
-            }).catch(err => {
-                setMessage("failed to get buttons");
-            });
-        }
-
         //update order
         if(order.id) {
             axios.post("/api/order/get", {
@@ -437,8 +444,9 @@ export default function Order() {
         }
     
         //load both side menu and main menu, using default menuId 1 and 2
-        queryButtons(1, setMainButtons);
-        queryButtons(2, setSideButtons);
+        changeMainMenu(1);
+        changeSideMenu(2);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
