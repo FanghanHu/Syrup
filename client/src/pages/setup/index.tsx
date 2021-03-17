@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
-import Button from "../../components/button";
+import Button from "../../components/button-temp";
 import ExpandableSideMenu from "../../components/expandable-side-menu";
 import LabelBar from "../../components/label-bar";
 import { Color } from "../../util/Color";

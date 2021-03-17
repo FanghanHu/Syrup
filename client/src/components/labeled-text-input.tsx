@@ -2,7 +2,7 @@ import React from "react";
 import { CSSProperties } from "react";
 import { Color } from "../util/Color";
 import InputGroup from "./input-group";
-import Label from "./label";
+import Label from "./label-temp";
 import TextInput, { TextInputProps } from "./text-input";
 
 export interface LabeledTextInputProps extends 

@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
-import Button from "../../components/button";
-import Panel from "../../components/panel";
+import Button from "../../components/button-temp";
+import Panel from "../../components/panel-temp";
 import PanelBody from "../../components/panel-body";
 
 import './style.css';
