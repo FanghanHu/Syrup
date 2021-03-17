@@ -11,7 +11,7 @@ export default function CheckLoginToken() {
     if(loginToken.userId === undefined || loginToken.userId === null) {
         //using setTimeout because react doesn't like people messing with it during render.
         setTimeout(() => {
-            history.push("/login");
+            history.push("/");
         }, 1);
     }
     return null;
