@@ -1,6 +1,6 @@
 'use strict';
 require("dotenv").config();
-
+import * as loadConfig from "../config/config.json";
 import { Model, Sequelize } from 'sequelize';
 import ButtonFactory from './button';
 import ConfigFactory from './config';
