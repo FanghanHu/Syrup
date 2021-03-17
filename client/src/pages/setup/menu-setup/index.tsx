@@ -24,6 +24,7 @@ export default function MenuSetup() {
     const [selectedMenu, setSelectedMenu] = useState<any|null>(null);
     const [selectedButton, setSelectedButton] = useState<any|null>(null);
     const [selectedScript, setSelectedScript] = useState<any|null>(null);
+    const [menuId, setMenuId] = useState<number|null>(null);
 
     const loginToken = useLoginToken();
     const history = useHistory();
@@ -135,6 +136,49 @@ export default function MenuSetup() {
                             );
                         }
                         break;
+                    case "menuId":
+                        uiList.push(
+                            <div key={"ui-" + uiList.length}>
+                                <LabelBar themeColor={Color.dark_gold} className="mt-3" >{description}</LabelBar>
+                                <InputGroup className="mt-3">
+                                    <Label style={{
+                                        width: "4em",
+                                        textAlign: "center"
+                                    }}>Script</Label>
+                                    <select 
+                                        value={selectedButton?.parameters?.menuId || 0}
+                                        style={{
+                                            flexGrow:1,
+                                            border: "none",
+                                            boxShadow: "inset 0 2px 4px gray",
+                                            width: "10px"
+                                        }}
+                                        onChange={(e) => {
+                                            const id = parseInt(e.target.value);
+                                            const menuName = e.target.options[e.target.selectedIndex].text;
+                                            if(id) {
+                                                const newButton = {
+                                                    ...selectedButton,
+                                                    parameters: {
+                                                        ...selectedButton?.parameters,
+                                                        menuId: id
+                                                    },
+                                                    status: Status.NEW,
+                                                    buttonName: menuName
+                                                };
+                                                updateButton(selectedButton, newButton);
+                                            } else {
+                                                setMessage("You need to save the menu first.");
+                                            }
+                                        }}
+                                    >
+                                        <option value={0}>Please select a Menu</option>
+                                        {menuList.map((menu, index) => <option value={menu.id} key={"menu-" + index}>{menu.menuName}</option>)}
+                                    </select>
+                                </InputGroup>
+                            </div>
+                        );
+                    break;
                     default: 
                     //TODO: handle unknown script parameters
                 }
