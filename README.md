@@ -17,7 +17,7 @@ A demo has been deployed on Heroku, you can try it [here](https://syrup-pos.hero
 3. Install mysql, then create a database.
 4. Create a .env file in the repo. 
 5. Enter ```DB_URL=mysql://localhost:3306/?user=YOUR_USERNAME&password=YOUR_PASSWORD&database=DATABASE_NAME``` into .env and save, replace the values with your mysql credential.
-6. ```Run npm run seed```
+6. Run ```npm run seed```
 7. Done
 
 
