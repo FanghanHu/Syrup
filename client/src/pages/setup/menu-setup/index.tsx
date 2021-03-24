@@ -368,6 +368,11 @@ export default function MenuSetup() {
     const deleteMenu = () => {
         if(selectedMenu) {
             if(selectedMenu.id) {
+                if(selectedMenu.id === 1 || selectedMenu.id === 2) {
+                    setMessage("You can not delete this menu.");
+                    return;
+                }
+
                 //existing menu, mark for deletion
                 const newMenu = {
                     ...selectedMenu,
