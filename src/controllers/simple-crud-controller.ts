@@ -27,7 +27,7 @@ export default function generateSimpleCrudRouter(model: any) {
             if(item) {
                 return res.status(200).json(item);
             } else {
-                return res.status(404).send(` with id ${id} not found.`);
+                return res.status(404).send(`item with id ${id} not found.`);
             }
         }),
         
