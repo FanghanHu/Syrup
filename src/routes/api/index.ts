@@ -7,12 +7,12 @@ const env = process.env.NODE_ENV || 'development';
 router.use("/login", require("./login"));
 router.use("/order", require("./order"));
 router.use("/report", require("./report"));
+
+router.use("/user", require("./user"));
 router.use("/item", generateSimpleCrudRouter(db.Item));
 router.use("/menu", generateSimpleCrudRouter(db.Menu));
 router.use("/button", generateSimpleCrudRouter(db.Button));
 router.use("/script", generateSimpleCrudRouter(db.Script));
-//TODO: filter the information sent to the client, hide password
-router.use("/user", generateSimpleCrudRouter(db.User));
 router.use('/table', generateSimpleCrudRouter(db.Table));
 router.use('/table-area', generateSimpleCrudRouter(db.TableArea));
 router.use('/customer', generateSimpleCrudRouter(db.Customer));
