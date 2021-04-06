@@ -1,7 +1,5 @@
 /* eslint-disable no-restricted-globals */
 const FILES_TO_CACHE = [
-  "/",
-  "/index.html",
   "/logo64.png",
   "/logo192.png",
   "/logo512.png"
