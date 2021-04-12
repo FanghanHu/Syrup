@@ -9,6 +9,11 @@ export async function getGlobalConfig(config?: any) {
     return results;
 }
 
+/**
+ * This function reads from global config -> data -> orderNumber.
+ * If a number is found, it is returned and updated to the next number.
+ * @returns the next order number or undefined
+ */
 export async function getNextOrderNumber() {
     const t = await db.sequelize.transaction();
     let orderNumber;
