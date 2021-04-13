@@ -1,6 +1,12 @@
+import { Request, Response } from "express";
 import db from "../models";
+import { catchError } from "../utils/helpers";
 
-
+/**
+ * 
+ * @param config 
+ * @returns 
+ */
 export async function getGlobalConfig(config?: any) {
     const results = await db.Config.findOne({where: {
         UserId: null,
@@ -40,3 +46,24 @@ export async function getNextOrderNumber() {
         throw err;
     }
 }
+
+
+/**
+ * set comanyInfo field in the global config
+ */
+export const setCompanyInfo = catchError(async (req: Request, res: Response) => {
+    //only allow these fields in companyInfo
+    const {name, address, city, state, zip, phone} = req.body;
+    const companyInfo = {name, address, city, state, zip, phone};
+
+    await db.sequelize.query(`UPDATE configs SET data = JSON_SET(data, "$.companyInfo", CAST(? AS JSON)) WHERE UserId is NULL`, {
+        replacements: [JSON.stringify(companyInfo)]
+    });
+
+    return res.status(200).send("success");
+});
+
+export const getCompanyInfo = catchError(async (req: Request, res: Response) => {
+    const globalConfig = await getGlobalConfig();
+    return res.status(200).json(globalConfig.data.companyInfo);
+});

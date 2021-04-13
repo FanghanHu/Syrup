@@ -9,6 +9,7 @@ router.use("/order", require("./order"));
 router.use("/report", require("./report"));
 router.use("/user", require("./user"));
 router.use('/print', require("./print"));
+router.use('/config', require("./config"));
 
 router.use("/item", generateSimpleCrudRouter(db.Item));
 router.use("/menu", generateSimpleCrudRouter(db.Menu));
