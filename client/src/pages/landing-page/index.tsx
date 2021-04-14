@@ -30,6 +30,16 @@ export default function LandingPage() {
                     <div className="syrup-title-bottom">POS</div>
                 </div>
             </VerticalCenter>
+            <div style={{
+                color: "#eee",
+                position: "fixed",
+                top: "70%",
+                width: "60%",
+                left: "20%",
+                textAlign: "center"
+            }}>
+                This project is WIP, if you are interested, please contact me through my email: Fanghan.Hu@gmail.com
+            </div>
         </Container>
     )
 }
