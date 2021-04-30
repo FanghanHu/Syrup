@@ -1,9 +1,8 @@
 .receipt {
     background: white;
-    border: 1px solid black;
-    width: 350px;
-    margin: 0 auto;
-    padding: 2em 1em;
+    width: 100%;
+    padding: 0 20px;
+    font-size: 2rem;
 }
 
 .company-name {

@@ -59,8 +59,8 @@ export default function OrderItemDisplay({order, setSelectedItems, selectedItems
             <div style={{
                 textAlign: "right"
             }}>
-                <div style={{fontSize: "0.5em"}}>SubTotal: {orderModel.total.subtotal}</div>
-                <div style={{fontSize: "0.5em"}}>Tax: {orderModel.total.tax}</div>
+                <div style={{fontSize: "0.8em"}}>SubTotal: {orderModel.total.subtotal}</div>
+                <div style={{fontSize: "0.8em"}}>Tax: {orderModel.total.tax}</div>
                 <div style={{fontWeight: 600}}>Total: {orderModel.total.total}</div>
             </div>
         </div>

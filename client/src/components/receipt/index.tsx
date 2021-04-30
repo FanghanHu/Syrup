@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Container } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Order } from "../../util/models";
 import OrderItemDisplay from "../order-item-display";
 import "./style.css";
+
+declare const window: any;
 
 export default function Receipt(props) {
     const params:any = useParams();
@@ -23,8 +24,16 @@ export default function Receipt(props) {
                 }
             }).then(results => {
                 setOrder(results.data);
+                //set a global variable so server page can tell when the page is loaded when printing.
+                setTimeout(() => {
+                    window.receiptLoaded = true;
+                }, 1);
             }).catch(err => {
                 console.error(err);
+                //set a global variable so server page can tell when the page is loaded when printing.
+                setTimeout(() => {
+                    window.receiptLoaded = true;
+                }, 1);
             });
         }
 
@@ -36,8 +45,7 @@ export default function Receipt(props) {
     }, [orderId]);
 
     return (
-        <Container>
-            <div id="receipt" className="receipt">
+        <div id="receipt" className="receipt">
                 <div className="text-center">
                     <div className="company-name">{companyInfo.name}</div>
                     <div className="company-address">{companyInfo.address}</div>
@@ -50,6 +58,5 @@ export default function Receipt(props) {
                 </div>
                 <OrderItemDisplay order={order}/>
             </div>
-        </Container>
     )
 }
