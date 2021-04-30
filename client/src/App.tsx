@@ -16,6 +16,7 @@ import Recall from "./pages/recall";
 import Payment from "./pages/payment";
 import Report from "./pages/report";
 import LandingPage from "./pages/landing-page";
+import Receipt from "./components/receipt";
 
 library.add(fas);
 library.add(fab);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/recall" exact component={Recall}/>
           <Route path="/payment" exact component={Payment}/>
           <Route path="/report" exact component={Report}/>
+          <Route path="/receipt/:orderId" component={Receipt}/>
         </Router>
       </ContextProviders>
     </div>
