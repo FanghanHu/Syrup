@@ -66,7 +66,7 @@ async function getParsedOrder(req:Request, res:Response, options:Omit<FindOption
         model: db.OrderItem as typeof Model
     }], ...options});
 
-    let parsedOrder:any = {};
+    let parsedOrder:any;
     if(order) {
         //parse the order so we can change the fields
         parsedOrder = order.toJSON();
@@ -108,8 +108,6 @@ export const createOrder = catchError(async (req:Request, res:Response) => {
 });
 
 export const getOrder = catchError(async (req: Request, res: Response) => {
-    if(isTokeninvalid(req, res)) return;
-    
     const options = req.body.options;
     const order = await getParsedOrder(req, res, options);
     if(order) {
